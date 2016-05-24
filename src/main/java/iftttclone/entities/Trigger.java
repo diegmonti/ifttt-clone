@@ -27,6 +27,8 @@ public class Trigger {
 	private Channel channel;
 	@OneToMany(mappedBy = "trigger")
 	private Collection<TriggerField> triggerFields;
+	@OneToMany(mappedBy = "trigger")
+	private Collection<Ingredient> ingredients;
 
 	public Long getId() {
 		return id;
@@ -66,6 +68,14 @@ public class Trigger {
 
 	public void setTriggerFields(Collection<TriggerField> triggerFields) {
 		this.triggerFields = triggerFields;
+	}
+
+	public Collection<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(Collection<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 }
