@@ -11,6 +11,6 @@ public interface ChannelService {
 
 	public List<Channel> getChannels();
 	public Channel getChannel(Long channelId);
-	public Collection<Trigger> getChannelTriggers();
-	public Collection<Action> getChannelActions();
+	public Collection<Trigger> getChannelTriggers(Long channelId);
+	public Collection<Action> getChannelActions(Long channelId);
 }

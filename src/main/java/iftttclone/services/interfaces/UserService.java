@@ -8,6 +8,5 @@ public interface UserService {
 	public boolean authUser(String username, String password);
 	public void updateUser(User user); // user.id != null
 
-	public void getUser(String username);
-	public void getUser(Long userId);
+	public User getUser(Long userId);
 }
