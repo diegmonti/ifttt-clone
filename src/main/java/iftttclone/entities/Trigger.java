@@ -1,6 +1,7 @@
 package iftttclone.entities;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ public class Trigger {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false, unique = true)
+	private String method;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
@@ -29,6 +32,11 @@ public class Trigger {
 	private Collection<TriggerField> triggerFields;
 	@OneToMany(mappedBy = "trigger")
 	private Collection<Ingredient> ingredients;
+	
+	public Trigger() {
+		triggerFields = new HashSet<TriggerField>();
+		ingredients = new HashSet<Ingredient>();
+	}
 
 	public Long getId() {
 		return id;
@@ -36,6 +44,14 @@ public class Trigger {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public String getName() {

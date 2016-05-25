@@ -15,6 +15,8 @@ public class ActionField {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false, unique = true)
+	private String parameter;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
@@ -29,6 +31,14 @@ public class ActionField {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
 	}
 
 	public String getName() {

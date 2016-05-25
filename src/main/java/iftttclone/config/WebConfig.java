@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import iftttclone.channels.Scheduler;
 import iftttclone.entities.*;
 
 @Configuration
@@ -42,5 +43,10 @@ public class WebConfig {
 				.build();
 		
 		return conf.buildSessionFactory(serviceRegistry);
+	}
+	
+	@Bean
+	public Scheduler scheduler() {
+		return new Scheduler();
 	}
 }

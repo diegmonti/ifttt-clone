@@ -1,6 +1,7 @@
 package iftttclone.entities;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ public class Action {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(nullable = false, unique = true)
+	private String method;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
@@ -27,6 +30,10 @@ public class Action {
 	private Channel channel;
 	@OneToMany(mappedBy = "action")
 	private Collection<ActionField> actionFields;
+	
+	public Action() {
+		actionFields = new HashSet<ActionField>();
+	}
 
 	public Long getId() {
 		return id;
@@ -34,6 +41,14 @@ public class Action {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
 	}
 
 	public String getName() {
