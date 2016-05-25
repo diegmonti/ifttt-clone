@@ -19,7 +19,7 @@ public class Action {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String method;
 	@Column(nullable = false)
 	private String name;

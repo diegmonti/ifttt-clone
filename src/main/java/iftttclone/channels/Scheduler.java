@@ -79,7 +79,7 @@ public class Scheduler {
 		trigger.setName(triggerTag.name());
 		trigger.setDescription(triggerTag.description());
 		session.save(trigger);
-		
+
 		// For each parameter
 		for (Parameter parameter : method.getParameters()) {
 			if (parameter.isAnnotationPresent(TriggerFieldTag.class)) {
