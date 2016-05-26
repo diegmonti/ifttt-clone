@@ -2,6 +2,8 @@ package iftttclone.channels;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -35,21 +37,32 @@ public class Scheduler {
 	@Autowired
 	SessionFactory sessionFactory;
 	
-	// TODO bisogna verificare se sono già presenti nel database e, nel caso, aggiornare e non mettere un duplicato
+
 	@PostConstruct
 	public void populateDatabase() {
 		System.err.println("SCHEDULER: start database population");
-		Reflections reflections = new Reflections(this.getClass().getPackage());
-		Set<Class<?>> channelClasses = reflections.getTypesAnnotatedWith(ChannelTag.class);
-		for (final Class<?> channelClass : channelClasses) {
-			System.err.println("SCHEDULER: processing class " + channelClass.getName());
-			addChannel(channelClass);
-		}
-	}
-	
-	private void addChannel(Class<?> channelClass) {
+		
 		Session session = sessionFactory.getCurrentSession();
 		Transaction transaction = session.beginTransaction();
+		
+		Reflections reflections = new Reflections(this.getClass().getPackage());
+		
+		Set<Class<?>> channelClasses = reflections.getTypesAnnotatedWith(ChannelTag.class);
+		
+		
+		@SuppressWarnings("unchecked")
+		List<Channel> channels = (List<Channel>)session.createCriteria(Channel.class).list();
+		
+		for (final Class<?> channelClass : channelClasses) {
+			System.err.println("SCHEDULER: processing class " + channelClass.getName());
+			
+			addChannel(channelClass, session, channels);
+		}
+		
+		transaction.commit();
+	}
+	
+	private void addChannel(Class<?> channelClass, Session session, List<Channel> presentChannels) {
 		
 		// Create a new channel
 		Channel channel = new Channel();
@@ -57,29 +70,65 @@ public class Scheduler {
 		ChannelTag channelTag = channelClass.getAnnotation(ChannelTag.class);
 		channel.setName(channelTag.name());
 		channel.setDescription(channelTag.description());
-		session.save(channel);
+		
+		// search the channel in the list
+		boolean found = false;
+		Collection<Trigger> triggers = null;
+		Collection<Action> actions = null;
+		for(int i = 0; i < presentChannels.size(); i++){
+			if(presentChannels.get(i).getClasspath().equals(channel.getClasspath())){
+				found = true;
+				triggers = presentChannels.get(i).getTriggers();
+				actions = presentChannels.get(i).getActions();
+				channel.setId(presentChannels.get(i).getId());
+				break;
+			}
+		}
+		if(!found) session.save(channel);
 		
 		// For each method
 		for (Method method : channelClass.getMethods()) {
 			if (method.isAnnotationPresent(TriggerTag.class)) {
-				createTrigger(method, channel, session);
+				createTrigger(method, channel, session, triggers);
 			} else if (method.isAnnotationPresent(ActionTag.class)) {
-				createAction(method, channel, session);
+				createAction(method, channel, session, actions);
 			}
 		}
 		
-		transaction.commit();
+		
 	}
 	
-	private void createTrigger(Method method, Channel channel, Session session) {
+	private void createTrigger(Method method, Channel channel, Session session, Collection<Trigger> triggers) {
 		Trigger trigger = new Trigger();
 		trigger.setChannel(channel);
 		trigger.setMethod(method.getName());
 		TriggerTag triggerTag = method.getAnnotation(TriggerTag.class);
 		trigger.setName(triggerTag.name());
 		trigger.setDescription(triggerTag.description());
-		session.save(trigger);
-
+		
+		
+		Collection<TriggerField> fields = null;
+		Collection<Ingredient> ingredients = null;
+		if(triggers == null) {
+			System.out.println("triggers are null for " + channel.getName());
+			session.save(trigger);
+		}
+		else{
+			// here i suppose that "Channel + triggerName" must be unique
+			boolean triggerFound = false;
+			
+			for(Trigger t : triggers){
+				if(channel.getId() == t.getChannel().getId() && t.getName().equals(trigger.getName())){
+					triggerFound = true;
+					fields = t.getTriggerFields();
+					ingredients = t.getIngredients();
+					trigger.setId(t.getId());
+					break;
+				}
+			}
+			if(!triggerFound) session.save(trigger);
+		}
+		
 		// For each parameter
 		for (Parameter parameter : method.getParameters()) {
 			if (parameter.isAnnotationPresent(TriggerFieldTag.class)) {
@@ -89,7 +138,23 @@ public class Scheduler {
 				TriggerFieldTag triggerFieldTag = parameter.getAnnotation(TriggerFieldTag.class);
 				triggerField.setName(triggerFieldTag.name());
 				triggerField.setDescription(triggerFieldTag.description());
-				session.save(triggerField);
+				
+				if(fields == null){ 
+					session.save(triggerField);
+					System.out.println("fields are null here for " + trigger.getChannel().getName() + " - " + trigger.getName());
+				}
+				else{
+					// need to search if this field is there
+					boolean fieldFound = false;
+					for(TriggerField f : fields){
+						if(f.getTrigger().getId() == triggerField.getTrigger().getId() && // if it belongs to the same trigge
+								f.getName().equals(triggerField.getName())); // and has the same name
+						// if is the same field
+						fieldFound = true;
+						break;
+					}
+					if(!fieldFound) session.save(triggerField);
+				}
 			}
 		}
 		
@@ -101,19 +166,47 @@ public class Scheduler {
 				ingredient.setName(ingredientTag.name());
 				ingredient.setDescription(ingredientTag.description());
 				ingredient.setExample(ingredientTag.example());
-				session.save(ingredient);
+				
+				if(ingredients == null) session.save(ingredient);
+				else {
+					// need to search if this field is there
+					boolean ingredientFound = false;
+					for(Ingredient i : ingredients){
+						if(i.getTrigger().getId() == ingredient.getTrigger().getId() && // if it belongs to the same trigge
+								i.getName().equals(ingredient.getName())); // and has the same name
+						// if is the same ingredient
+						ingredientFound = true;
+						break;
+					}
+					if(!ingredientFound) session.save(ingredient);
+				}
 			}
 		}
 	}
 	
-	private void createAction(Method method, Channel channel, Session session) {
+	private void createAction(Method method, Channel channel, Session session, Collection<Action> actions) {
 		Action action = new Action();
 		action.setChannel(channel);
 		action.setMethod(method.getName());
 		ActionTag actionTag = method.getAnnotation(ActionTag.class);
 		action.setName(actionTag.name());
 		action.setDescription(actionTag.description());
-		session.save(action);
+		
+		Collection<ActionField> actionFields= null;
+		if (actions == null) session.save(action);
+		else{
+			boolean actionFound = false;
+			for(Action a : actions){
+				if(a.getChannel().getId() == action.getChannel().getId() && 
+						a.getName().equals(action.getName())){
+					actionFound = true;
+					actionFields = a.getActionFields();
+					action.setId(a.getId());
+					break;
+				}
+			}
+			if(!actionFound) session.save(action);
+		}
 		
 		// For each parameter
 		for (Parameter parameter : method.getParameters()) {
@@ -124,7 +217,20 @@ public class Scheduler {
 				ActionFieldTag actionFieldTag = parameter.getAnnotation(ActionFieldTag.class);
 				actionField.setName(actionFieldTag.name());
 				actionField.setDescription(actionFieldTag.description());
-				session.save(actionField);
+				
+				if(actionFields == null ) session.save(actionField);
+				else
+				{
+					
+					boolean actionFieldFound = false;
+					for(ActionField af : actionFields){
+						if(af.getAction().getId() == actionField.getAction().getId() &&
+								af.getName().equals(actionField.getName()) ) 
+							actionFieldFound = true;
+					}
+					if(!actionFieldFound) session.save(actionField);
+				}
+				
 			}
 		}
 	}
