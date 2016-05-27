@@ -9,18 +9,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "channel_trigger_field")
 public class TriggerField {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@JsonIgnore
 	@Column(nullable = false)
 	private String parameter;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
 	private String description;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_trigger_id", nullable = false)
 	private Trigger trigger;

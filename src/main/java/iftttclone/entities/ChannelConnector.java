@@ -21,7 +21,7 @@ public class ChannelConnector {
 	private Long id;
 	@Column(nullable = false)
 	private String token;
-	private String options; //TODO if needed
+	private String options; // TODO if needed
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;

@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "channel_trigger_ingredient")
 public class Ingredient {
@@ -21,6 +23,7 @@ public class Ingredient {
 	private String description;
 	@Column(nullable = false)
 	private String example;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_trigger_id", nullable = false)
 	private Trigger trigger;

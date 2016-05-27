@@ -11,20 +11,25 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "channel")
 public class Channel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@JsonIgnore
 	@Column(nullable = false, unique = true)
 	private String classpath;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
 	private String description;
+	@JsonIgnore
 	@OneToMany(mappedBy = "channel")
 	private Collection<Trigger> triggers;
+	@JsonIgnore
 	@OneToMany(mappedBy = "channel")
 	private Collection<Action> actions;
 

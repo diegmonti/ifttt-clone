@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "channel_trigger")
@@ -25,14 +28,15 @@ public class Trigger {
 	private String name;
 	@Column(nullable = false)
 	private String description;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;
-	@OneToMany(mappedBy = "trigger")
+	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
 	private Collection<TriggerField> triggerFields;
-	@OneToMany(mappedBy = "trigger")
+	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
 	private Collection<Ingredient> ingredients;
-	
+
 	public Trigger() {
 		triggerFields = new HashSet<TriggerField>();
 		ingredients = new HashSet<Ingredient>();

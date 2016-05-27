@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,24 +14,28 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "channel_action")
 public class Action {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@JsonIgnore
 	@Column(nullable = false)
 	private String method;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
 	private String description;
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;
-	@OneToMany(mappedBy = "action")
+	@OneToMany(mappedBy = "action", fetch = FetchType.EAGER)
 	private Collection<ActionField> actionFields;
-	
+
 	public Action() {
 		actionFields = new HashSet<ActionField>();
 	}
