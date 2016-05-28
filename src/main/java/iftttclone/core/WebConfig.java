@@ -6,7 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import iftttclone.services.ChannelServiceImpl;
+import iftttclone.services.UserServiceImpl;
 import iftttclone.services.interfaces.ChannelService;
+import iftttclone.services.interfaces.UserService;
 
 @Configuration
 @EnableWebMvc
@@ -17,5 +19,9 @@ public class WebConfig {
 	public ChannelService channelService() {
 		return new ChannelServiceImpl();
 	}
-
+	
+	@Bean
+	public UserService userService(){
+		return new UserServiceImpl();
+	}
 }
