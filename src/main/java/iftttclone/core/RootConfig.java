@@ -15,10 +15,12 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@ComponentScan("iftttclone")
+@EnableScheduling
+@ComponentScan("iftttclone.core")
 @EnableJpaRepositories("iftttclone.repositories")
 public class RootConfig {
 	
@@ -53,11 +55,6 @@ public class RootConfig {
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(factory);
 		return txManager;
-	}
-	
-	@Bean
-	public DatabasePopulator databasePopulator() {
-		return new DatabasePopulator();
 	}
 
 }

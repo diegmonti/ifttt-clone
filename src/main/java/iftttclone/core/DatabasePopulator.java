@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.channels.annotation.ActionFieldTag;
@@ -37,6 +38,7 @@ import iftttclone.repositories.TriggerRepository;
  * channel. If the field of an annotation is changed, the database is updated
  * the next time the application is deployed.
  */
+@Component
 public class DatabasePopulator {
 	@Autowired
 	private ChannelRepository channels;
