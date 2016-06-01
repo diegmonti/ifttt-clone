@@ -1,6 +1,5 @@
 package iftttclone.channels;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,7 @@ import iftttclone.channels.annotation.TriggerFieldTag;
 import iftttclone.channels.annotation.TriggerTag;
 
 @ChannelTag(name = "Gmail", description = "A channel for Gmail")
-public class GmailChannel {
+public class GmailChannel extends AbstractChannel {
 	
 	
 	@TriggerTag(name = "New Email", description = "This trigger fires when the user recives an email")
@@ -21,8 +20,7 @@ public class GmailChannel {
 	public Map<String, String> newEmailRecived(
 			@TriggerFieldTag(name = "emailSender", description = "the email address of the person who wrote me") String username,
 			@TriggerFieldTag(name = "emailSubject", description = "the subject of the email") String subject,
-			@TriggerFieldTag(name = "emailDate", description = "the timestamp of the reception of the email") Date dateReceived,
-			Date lastRun) {
+			@TriggerFieldTag(name = "emailDate", description = "the timestamp of the reception of the email") String dateReceived) {
 		
 		// TODO: do something
 		

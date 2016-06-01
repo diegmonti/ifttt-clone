@@ -1,11 +1,11 @@
 package iftttclone.entities;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,14 +28,14 @@ public class Recipe {
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
-	@OneToMany(mappedBy = "recipe")
-	@MapKey(name = "name")
+	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+	@MapKey(name = "parameter")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
-	@OneToMany(mappedBy = "recipe")
-	@MapKey(name = "name")
+	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+	@MapKey(name = "parameter")
 	private Map<String, RecipeActionField> recipeActionFields;
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
@@ -45,13 +45,11 @@ public class Recipe {
 	@Column(name = "creation_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationTime;
-	@Column(name = "last_run")
+	@Column(name = "last_run", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastRun;
 	@Column(nullable = false)
 	private Integer runs;
-	@OneToMany(mappedBy = "recipe")
-	private Collection<RecipeLog> recipeLogs;
 
 	public Long getId() {
 		return id;
@@ -139,14 +137,6 @@ public class Recipe {
 
 	public void setRuns(Integer runs) {
 		this.runs = runs;
-	}
-
-	public Collection<RecipeLog> getRecipeLogs() {
-		return recipeLogs;
-	}
-
-	public void setRecipeLogs(Collection<RecipeLog> recipeLogs) {
-		this.recipeLogs = recipeLogs;
 	}
 
 }

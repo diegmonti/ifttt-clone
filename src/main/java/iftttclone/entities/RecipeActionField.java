@@ -16,7 +16,7 @@ public class RecipeActionField {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private String name;
+	private String parameter;
 	@Column(nullable = false)
 	private String value;
 	@ManyToOne
@@ -31,12 +31,12 @@ public class RecipeActionField {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getParameter() {
+		return parameter;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
 	}
 
 	public String getValue() {

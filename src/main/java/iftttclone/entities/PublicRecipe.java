@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,14 +27,14 @@ public class PublicRecipe {
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
-	@OneToMany(mappedBy = "publicRecipe")
-	@MapKey(name = "name")
+	@OneToMany(mappedBy = "publicRecipe", fetch = FetchType.EAGER)
+	@MapKey(name = "parameter")
 	private Map<String, PublicRecipeTriggerField> publicRecipeTriggerFields;
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
-	@OneToMany(mappedBy = "publicRecipe")
-	@MapKey(name = "name")
+	@OneToMany(mappedBy = "publicRecipe", fetch = FetchType.EAGER)
+	@MapKey(name = "parameter")
 	private Map<String, PublicRecipeActionField> PublicRecipeActionFields;
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)

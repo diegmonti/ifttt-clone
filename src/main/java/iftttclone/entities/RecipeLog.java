@@ -26,7 +26,13 @@ public class RecipeLog {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
 	@Column(nullable = false)
-	private String event; // TODO enumeration?
+	private RecipeLogEvent event;
+	
+	public RecipeLog(Recipe recipe, RecipeLogEvent event) {
+		this.recipe = recipe;
+		this.timestamp = new Date();
+		this.event = event;
+	}
 
 	public Long getId() {
 		return id;
@@ -52,11 +58,11 @@ public class RecipeLog {
 		this.timestamp = timestamp;
 	}
 
-	public String getEvent() {
+	public RecipeLogEvent getEvent() {
 		return event;
 	}
 
-	public void setEvent(String event) {
+	public void setEvent(RecipeLogEvent event) {
 		this.event = event;
 	}
 
