@@ -2,8 +2,5 @@
 .mvn
 .settings
 bin
-src/main/webapp/css
-src/main/webapp/fonts
-src/main/webapp/js/libs
 target
 .project
