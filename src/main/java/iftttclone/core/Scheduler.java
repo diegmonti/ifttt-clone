@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.channels.AbstractChannel;
+import iftttclone.channels.GmailChannel;
 import iftttclone.entities.Action;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;

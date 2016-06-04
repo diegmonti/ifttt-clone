@@ -56,5 +56,4 @@ public class RootConfig {
 		txManager.setEntityManagerFactory(factory);
 		return txManager;
 	}
-
 }
