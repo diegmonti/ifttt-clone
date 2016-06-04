@@ -1,9 +1,10 @@
+.classpath
 .idea
 .mvn
+.project
 .settings
 bin
 src/main/webapp/css/libs
 src/main/webapp/fonts
 src/main/webapp/js/libs
 target
-.project
