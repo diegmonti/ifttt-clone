@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.channels.AbstractChannel;
-import iftttclone.channels.GmailChannel;
 import iftttclone.entities.Action;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
@@ -62,13 +61,13 @@ public class Scheduler {
 					if (triggerResult != null) {
 						System.err.println("SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
+						recipe.setLastRun(new Date());
+						recipe.setRuns(recipe.getRuns() + 1);
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.RUN));
 					} else {
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.CHECK));
 					}
 
-					recipe.setLastRun(new Date());
-					recipe.setRuns(recipe.getRuns() + 1);
 					recipeRepository.save(recipe);
 				}
 

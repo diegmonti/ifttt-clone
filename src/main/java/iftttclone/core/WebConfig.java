@@ -12,16 +12,16 @@ import iftttclone.services.interfaces.UserService;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("iftttclone.controllers")
+@ComponentScan(basePackages = "iftttclone")
 public class WebConfig {
 
 	@Bean
 	public ChannelService channelService() {
 		return new ChannelServiceImpl();
 	}
-	
+
 	@Bean
-	public UserService userService(){
+	public UserService userService() {
 		return new UserServiceImpl();
 	}
 }

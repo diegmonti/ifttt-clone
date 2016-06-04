@@ -118,7 +118,7 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>${project.basedir}/src/main/resources/wro</directory>
+				<directory>${project.basedir}/src/main/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
@@ -138,8 +138,8 @@
 					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
 					<cssDestinationFolder>${project.basedir}/src/main/webapp/css/libs</cssDestinationFolder>
 					<jsDestinationFolder>${project.basedir}/src/main/webapp/js/libs</jsDestinationFolder>
-					<wroFile>${project.basedir}/src/main/resources/wro/wro.xml</wroFile>
-					<extraConfigFile>${project.basedir}/src/main/resources/wro/wro.properties</extraConfigFile>
+					<wroFile>${project.basedir}/src/main/resources/wro.xml</wroFile>
+					<extraConfigFile>${project.basedir}/src/main/resources/wro.properties</extraConfigFile>
 					<contextFolder>${project.basedir}/src/main/webapp</contextFolder>
 				</configuration>
 				<dependencies>
