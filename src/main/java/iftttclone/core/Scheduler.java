@@ -61,13 +61,13 @@ public class Scheduler {
 					if (triggerResult != null) {
 						System.err.println("SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
+						recipe.setLastRun(new Date());
+						recipe.setRuns(recipe.getRuns() + 1);
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.RUN));
 					} else {
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.CHECK));
 					}
 
-					recipe.setLastRun(new Date());
-					recipe.setRuns(recipe.getRuns() + 1);
 					recipeRepository.save(recipe);
 				}
 
