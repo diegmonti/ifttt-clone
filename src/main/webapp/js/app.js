@@ -48,6 +48,9 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
             url : postUrl
           }).then(function successCallback (response){
             console.log(response);
+            console.log(response.data.url);
+            $window.open(response.data.url, '_blank');
+
           }, function errorCallback(response){
             console.log(response);
           });

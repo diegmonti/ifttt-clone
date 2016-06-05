@@ -33,6 +33,7 @@ import iftttclone.entities.User;
 
 @RestController
 @RequestMapping(value="/google")
+@CrossOrigin
 public class GoogleAuthController {
 
 	
@@ -66,8 +67,8 @@ public class GoogleAuthController {
 	}
 	
 	@RequestMapping(value="/mail/auth", method = RequestMethod.POST)
-	@CrossOrigin()
-	public ResponseEntity<String> gmailAuth(HttpServletRequest req, HttpServletResponse res){
+	
+	public AuthRedirect gmailAuth(HttpServletRequest req, HttpServletResponse res){
 		try{
 			JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 			InputStreamReader clientSecret = new InputStreamReader(getClass().getResourceAsStream("/client_secret.json"));
@@ -84,20 +85,27 @@ public class GoogleAuthController {
 				   .build();
 			
 			User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (flow.loadCredential(user.getUsername()) != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			if (flow.loadCredential(user.getUsername()) != null) return null; // return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			
 			
+			AuthRedirect ar = new AuthRedirect();
+			ar.url = flow.newAuthorizationUrl()
+					.setRedirectUri("http://localhost:8080/ifttt-clone/api/google/mail/callback") // google does not accept relative path
+					.build();
+			return ar;
 			
+			/*
 			res.sendRedirect(
 					flow.newAuthorizationUrl()
 						.setRedirectUri("http://localhost:8080/ifttt-clone/api/google/mail/callback") // google does not accept relative path
 						.build()
 					);
+					*/
 			
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return null ;//new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(value="/calendar/auth", method = RequestMethod.GET)
@@ -144,6 +152,8 @@ public class GoogleAuthController {
 			
 			if (flow.loadCredential(id) != null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			
+			
+			
 			res.sendRedirect(
 					flow.newAuthorizationUrl()
 						.setRedirectUri("http://localhost:8080")
@@ -176,14 +186,16 @@ public class GoogleAuthController {
 	    
 	    // Exchange authorization code for user credentials.
 	    GoogleTokenResponse tokenResponse = flow.newTokenRequest(req.getParameter("code"))
-	        .setRedirectUri("http://localhost:8080/api/google/mail/callback").execute();
+	        .setRedirectUri("http://localhost:8080/ifttt-clone/api/google/mail/callback").execute();
 	    // Save the credentials for this user so we can access them from the main servlet.
 	    flow.createAndStoreCredential(tokenResponse, "user");
-	    res.sendRedirect("index.html");
+	    res.sendRedirect("/index.html"); // TODO: this redirect is wrong. Send the new URL so the 
 	    
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	    
+	}
+	private class AuthRedirect {
+		public String url;
 	}
 }
