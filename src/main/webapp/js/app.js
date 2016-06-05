@@ -8,24 +8,25 @@ schedulerApp.config(['$routeProvider', '$httpProvider', function ($routeProvider
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
         controllerAs: 'controller'
-    }).otherwise('/');
+    })
+    .when('/signIn', {
+      templateUrl: 'partials/signIn.html',
+      controller: 'SignInController',
+      controllerAs: 'controller'
+    })
+    .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
 
-schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http',
-    function ($scope, $rootScope, $routeParams, $location, $http) {
-        // i need to download the channels. TODO: In future limit this number to 25 or something like that
+schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
+    function ($scope, $rootScope, $routeParams, $location, $http, $window) {
 
-        // Simple GET request example:
+        $scope.channels = [];
         $http({
             method: 'GET',
             url: 'api/channels'
         }).then(function successCallback(response) {
 
-            console.log(response.data);
-
-            $scope.channels = [];
-            console.log(response.data.length / 4 + 1);
             for (var i = 0; i < (response.data.length / 4) + 1; i++) {
                 $scope.channels[i] = [];
             }
@@ -36,11 +37,23 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
                     description: response.data[i].description
                 };
             }
-            console.log($scope.channels);
-
         }, function errorCallback(response) {
             console.log("error: " + response);
         });
+
+        $scope.connectToService = function(postUrl) {
+          console.log(postUrl);
+          $http({
+            method:'POST',
+            url : postUrl
+          }).then(function successCallback (response){
+            console.log(response);
+          }, function errorCallback(response){
+            console.log(response);
+          });
+        }
+
+
     }]
 );
 
@@ -89,4 +102,8 @@ schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
                 $location.path("/");
             });
         }
+    }]);
+
+schedulerApp.controller('SignInController', ['$rootScope', '$http', '$location',
+    function ($rootScope, $http, $location) {
     }]);
