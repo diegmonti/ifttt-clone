@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import iftttclone.channels.annotation.ActionFieldTag;
-import iftttclone.channels.annotation.ActionTag;
-import iftttclone.channels.annotation.ChannelTag;
-import iftttclone.channels.annotation.IngredientTag;
-import iftttclone.channels.annotation.IngredientsTag;
-import iftttclone.channels.annotation.TriggerFieldTag;
-import iftttclone.channels.annotation.TriggerTag;
+import iftttclone.channels.annotations.ActionFieldTag;
+import iftttclone.channels.annotations.ActionTag;
+import iftttclone.channels.annotations.ChannelTag;
+import iftttclone.channels.annotations.IngredientTag;
+import iftttclone.channels.annotations.IngredientsTag;
+import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.TriggerTag;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.Channel;
@@ -77,8 +77,10 @@ public class DatabasePopulator {
 	private void populateChannel(Class<?> channelClass, Channel channel) {
 		channel.setClasspath(channelClass.getName());
 		ChannelTag channelTag = channelClass.getAnnotation(ChannelTag.class);
+		channel.setId(channelTag.name().toLowerCase().replace(" ", "_"));
 		channel.setName(channelTag.name());
 		channel.setDescription(channelTag.description());
+		channel.setWithConnection(channelTag.withConnection());
 
 		channels.save(channel);
 

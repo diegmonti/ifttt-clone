@@ -32,6 +32,11 @@
 	<div class="container">
 		<div data-ng-view></div>
 	</div>
+	
+	<form method="post" action="api/channels/google_calendar/activate">
+		<input type="text" name="_csrf" value="CSRF Token">
+		<button type="submit">Connect</button>
+	</form>
 
 	<script src="js/app.js" type="text/javascript"></script>
 </body>

@@ -3,14 +3,21 @@ package iftttclone.services;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
+import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.Trigger;
+import iftttclone.entities.User;
+import iftttclone.exceptions.ResourceNotFoundException;
 import iftttclone.repositories.ActionRepository;
+import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.TriggerRepository;
+import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.ChannelService;
 
 public class ChannelServiceImpl implements ChannelService {
@@ -20,40 +27,80 @@ public class ChannelServiceImpl implements ChannelService {
 	private TriggerRepository triggers;
 	@Autowired
 	private ActionRepository actions;
+	@Autowired
+	private UserRepository userRepository;
+	@Autowired
+	private ChannelConnectorRepository channelConnectorRepository;
 
 	@Override
 	@Transactional
 	public Collection<Channel> getChannels() {
-		return channels.findAll();
+		Collection<Channel> collection = channels.findAll();
+
+		// Get the current user, if exists
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (auth.isAuthenticated()) {
+			User user = userRepository.getUserByUsername(auth.getName());
+			for (Channel channel : collection) {
+				ChannelConnector channelConnector = channelConnectorRepository
+						.getChannelConnectorByChannelAndUser(channel, user);
+				if (channelConnector != null) {
+					if (channelConnector.getConnectionTime() != null)
+						channel.setConnected(true);
+				}
+			}
+		}
+
+		return collection;
 	}
 
 	@Override
 	@Transactional
-	public Channel getChannel(Long channelId) {
+	public Channel getChannel(String channelId) {
 		Channel channel = channels.findOne(channelId);
+
 		if (channel == null) {
-			// TODO throw new Exception();
+			throw new ResourceNotFoundException();
 		}
+
+		// Get the current user, if exists
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (auth.isAuthenticated()) {
+			User user = userRepository.getUserByUsername(auth.getName());
+			ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
+					user);
+			if (channelConnector != null) {
+				if (channelConnector.getConnectionTime() != null)
+					channel.setConnected(true);
+			}
+		}
+
 		return channel;
 	}
 
 	@Override
 	@Transactional
-	public Collection<Trigger> getChannelTriggers(Long channelId) {
+	public Collection<Trigger> getChannelTriggers(String channelId) {
 		Channel channel = channels.findOne(channelId);
+
 		if (channel == null) {
-			// TODO throw new Exception();
+			throw new ResourceNotFoundException();
 		}
+
 		return triggers.getTriggersByChannel(channel);
 	}
 
 	@Override
 	@Transactional
-	public Collection<Action> getChannelActions(Long channelId) {
+	public Collection<Action> getChannelActions(String channelId) {
 		Channel channel = channels.findOne(channelId);
+
 		if (channel == null) {
-			// TODO throw new Exception();
+			throw new ResourceNotFoundException();
 		}
+
 		return actions.getActionsByChannel(channel);
 	}
 

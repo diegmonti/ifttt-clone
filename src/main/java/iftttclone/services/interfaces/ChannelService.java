@@ -10,10 +10,10 @@ public interface ChannelService {
 
 	public Collection<Channel> getChannels();
 
-	public Channel getChannel(Long channelId);
+	public Channel getChannel(String channelName);
 
-	public Collection<Trigger> getChannelTriggers(Long channelId);
+	public Collection<Trigger> getChannelTriggers(String channelName);
 
-	public Collection<Action> getChannelActions(Long channelId);
+	public Collection<Action> getChannelActions(String channelName);
 
 }

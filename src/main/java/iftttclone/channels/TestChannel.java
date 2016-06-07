@@ -3,14 +3,14 @@ package iftttclone.channels;
 import java.util.HashMap;
 import java.util.Map;
 
-import iftttclone.channels.annotation.ActionTag;
-import iftttclone.channels.annotation.ActionFieldTag;
-import iftttclone.channels.annotation.ChannelTag;
-import iftttclone.channels.annotation.IngredientTag;
-import iftttclone.channels.annotation.TriggerTag;
-import iftttclone.channels.annotation.TriggerFieldTag;
+import iftttclone.channels.annotations.ActionFieldTag;
+import iftttclone.channels.annotations.ActionTag;
+import iftttclone.channels.annotations.ChannelTag;
+import iftttclone.channels.annotations.IngredientTag;
+import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.TriggerTag;
 
-@ChannelTag(name = "Test channel", description = "A fake channel for testing")
+@ChannelTag(name = "Test channel", description = "A fake channel for testing", withConnection = false)
 public class TestChannel extends AbstractChannel {
 
 	@TriggerTag(name = "Simple trigger", description = "Example")

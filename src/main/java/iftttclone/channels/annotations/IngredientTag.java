@@ -1,4 +1,4 @@
-package iftttclone.channels.annotation;
+package iftttclone.channels.annotations;
 
 import java.lang.annotation.Repeatable;
 

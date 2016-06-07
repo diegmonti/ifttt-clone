@@ -21,16 +21,17 @@ public class ChannelConnector {
 	private Long id;
 	@Column(nullable = false)
 	private String token;
-	private String options; // TODO if needed
+	@Column(name = "refresh_token")
+	private String refreshToken;
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
-	@Column(name = "creation_time", nullable = false)
+	@Column(name = "connection_time")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationTime;
+	private Date connectionTime;
 
 	public Long getId() {
 		return id;
@@ -48,12 +49,12 @@ public class ChannelConnector {
 		this.token = token;
 	}
 
-	public String getOptions() {
-		return options;
+	public String getRefreshToken() {
+		return refreshToken;
 	}
 
-	public void setOptions(String options) {
-		this.options = options;
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 
 	public Channel getChannel() {
@@ -72,12 +73,12 @@ public class ChannelConnector {
 		this.user = user;
 	}
 
-	public Date getCreationTime() {
-		return creationTime;
+	public Date getConnectionTime() {
+		return connectionTime;
 	}
 
-	public void setCreationTime(Date creationTime) {
-		this.creationTime = creationTime;
+	public void setConnectionTime(Date connectionTime) {
+		this.connectionTime = connectionTime;
 	}
 
 }

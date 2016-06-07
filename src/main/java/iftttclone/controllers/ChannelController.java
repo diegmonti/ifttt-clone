@@ -25,17 +25,17 @@ public class ChannelController {
 	}
 
 	@RequestMapping(value = "/{channelId}", method = RequestMethod.GET)
-	public Channel getChannel(@PathVariable Long channelId) {
+	public Channel getChannel(@PathVariable String channelId) {
 		return channelService.getChannel(channelId);
 	}
 
 	@RequestMapping(value = "/{channelId}/triggers", method = RequestMethod.GET)
-	public Collection<Trigger> getChannelTriggers(@PathVariable Long channelId) {
+	public Collection<Trigger> getChannelTriggers(@PathVariable String channelId) {
 		return channelService.getChannelTriggers(channelId);
 	}
 
 	@RequestMapping(value = "/{channelId}/actions", method = RequestMethod.GET)
-	public Collection<Action> getChannelActions(@PathVariable Long channelId) {
+	public Collection<Action> getChannelActions(@PathVariable String channelId) {
 		return channelService.getChannelActions(channelId);
 	}
 
