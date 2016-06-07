@@ -21,6 +21,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.google.api.client.util.store.DataStoreFactory;
+
 @Configuration
 @EnableScheduling
 @ComponentScan("iftttclone.core")
@@ -62,5 +64,10 @@ public class RootConfig {
 		JpaTransactionManager txManager = new JpaTransactionManager();
 		txManager.setEntityManagerFactory(factory);
 		return txManager;
+	}
+	
+	@Bean DataStoreFactory dataStoreFactory(){
+		// TODO: implement this
+		return null;
 	}
 }
