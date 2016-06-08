@@ -1,5 +1,7 @@
 package iftttclone.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
 
@@ -8,7 +10,7 @@ import iftttclone.entities.PublicRecipe;
 
 public interface PublicRecipeRepository extends Repository<PublicRecipe, Long> {
 
-	Iterable<PublicRecipe> findAll(Pageable pageable);
+	List<PublicRecipe> findAll(Pageable pageable);
 	
 	PublicRecipe findOne(Long id);
 
@@ -16,10 +18,10 @@ public interface PublicRecipeRepository extends Repository<PublicRecipe, Long> {
 	
 	void delete(PublicRecipe publicRecipe);
 	
-	Iterable<PublicRecipe> findAllByTriggerChannel(Pageable pageable, Channel channel);
+	List<PublicRecipe> findAllByTriggerChannel(Pageable pageable, Channel channel);
 	
-	Iterable<PublicRecipe> findAllByActionChannel(Pageable pageable, Channel channel);
+	List<PublicRecipe> findAllByActionChannel(Pageable pageable, Channel channel);
 	
-	Iterable<PublicRecipe> findAllByTriggerChannelAndActionChannel(Pageable pageable, Channel channel);
+	List<PublicRecipe> findAllByTriggerChannelAndActionChannel(Pageable pageable, Channel channel);
 
 }
