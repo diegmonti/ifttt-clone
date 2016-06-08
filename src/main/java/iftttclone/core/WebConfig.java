@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "iftttclone")
+@ComponentScan(basePackages = "iftttclone.controllers")
 public class WebConfig {
 	
 }

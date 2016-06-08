@@ -36,7 +36,7 @@ import iftttclone.services.interfaces.UserService;
 
 @Configuration
 @EnableScheduling
-@ComponentScan("iftttclone.core")
+@ComponentScan(basePackages = {"iftttclone.core", "iftttclone.services"})
 @EnableJpaRepositories("iftttclone.repositories")
 @PropertySource(value = { "classpath:application.properties" })
 public class RootConfig {
