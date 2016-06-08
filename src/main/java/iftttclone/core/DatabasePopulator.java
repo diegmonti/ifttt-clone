@@ -56,13 +56,13 @@ public class DatabasePopulator {
 	@PostConstruct
 	@Transactional
 	private void populateDatabase() {
-		System.err.println("SCHEDULER: Start database population");
+		System.err.println("POPULATOR: Start database population");
 
 		Reflections reflections = new Reflections("iftttclone.channels");
 		Set<Class<?>> channelClasses = reflections.getTypesAnnotatedWith(ChannelTag.class);
 
 		for (final Class<?> channelClass : channelClasses) {
-			System.err.println("SCHEDULER: Processing class " + channelClass.getName());
+			System.err.println("POPULATOR: Processing class " + channelClass.getName());
 
 			Channel oldChannel = channels.getChannelByClasspath(channelClass.getName());
 			if (oldChannel == null)
@@ -71,7 +71,7 @@ public class DatabasePopulator {
 				populateChannel(channelClass, oldChannel);
 		}
 
-		System.err.println("SCHEDULER: End database population");
+		System.err.println("POPULATOR: End database population");
 	}
 
 	private void populateChannel(Class<?> channelClass, Channel channel) {

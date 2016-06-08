@@ -2,10 +2,11 @@ package iftttclone.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -61,7 +62,7 @@ public class Scheduler {
 					if (triggerResult != null) {
 						System.err.println("SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
-						recipe.setLastRun(new Date());
+						recipe.setLastRun(Calendar.getInstance(TimeZone.getTimeZone(recipe.getUser().getTimezone())).getTime());
 						recipe.setRuns(recipe.getRuns() + 1);
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.RUN));
 					} else {

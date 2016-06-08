@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import iftttclone.entities.Channel;
-
 public abstract interface AbstractConnectorService {
 
 	@PreAuthorize("isAuthenticated()")
