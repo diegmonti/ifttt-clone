@@ -11,4 +11,6 @@ public @interface TriggerFieldTag {
 	String name();
 
 	String description();
+	
+	boolean canBePublic();
 }

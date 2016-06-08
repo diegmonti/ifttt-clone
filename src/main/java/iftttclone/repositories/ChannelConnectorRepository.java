@@ -10,5 +10,7 @@ public interface ChannelConnectorRepository extends Repository<ChannelConnector,
 
 	ChannelConnector getChannelConnectorByChannelAndUser(Channel channel, User user);
 	
-	ChannelConnector save(ChannelConnector channel);
+	ChannelConnector save(ChannelConnector channelConnector);
+	
+	void delete(ChannelConnector channelConnector);
 }

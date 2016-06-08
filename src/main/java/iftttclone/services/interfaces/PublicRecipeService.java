@@ -12,7 +12,7 @@ public interface PublicRecipeService {
 	public Collection<PublicRecipe> searchRecipes(String name);
 
 	@PreAuthorize("isAuthenticated()")
-	public Long addRecipe(PublicRecipe recipe);
+	public Long createOrUpdateRecipe(PublicRecipe recipe);
 
 	public PublicRecipe getRecipe(Long recipeId);
 

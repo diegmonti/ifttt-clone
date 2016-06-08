@@ -11,4 +11,6 @@ public @interface ActionFieldTag {
 	String name();
 
 	String description();
+	
+	boolean canBePublic();
 }

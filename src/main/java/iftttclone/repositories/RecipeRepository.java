@@ -9,5 +9,7 @@ public interface RecipeRepository extends Repository<Recipe, Long> {
 	Iterable<Recipe> findAll();
 
 	Recipe save(Recipe recipe);
+	
+	void delete(Recipe recipe);
 
 }

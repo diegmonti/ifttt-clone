@@ -35,7 +35,7 @@ public class PublicRecipe {
 	private Action action;
 	@OneToMany(mappedBy = "publicRecipe", fetch = FetchType.EAGER)
 	@MapKey(name = "parameter")
-	private Map<String, PublicRecipeActionField> PublicRecipeActionFields;
+	private Map<String, PublicRecipeActionField> publicRecipeActionFields;
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -93,11 +93,11 @@ public class PublicRecipe {
 	}
 
 	public Map<String, PublicRecipeActionField> getPublicRecipeActionFields() {
-		return PublicRecipeActionFields;
+		return publicRecipeActionFields;
 	}
 
 	public void setPublicRecipeActionFields(Map<String, PublicRecipeActionField> publicRecipeActionFields) {
-		PublicRecipeActionFields = publicRecipeActionFields;
+		this.publicRecipeActionFields = publicRecipeActionFields;
 	}
 
 	public User getUser() {

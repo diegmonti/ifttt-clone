@@ -16,8 +16,8 @@ public class TestChannel extends AbstractChannel {
 	@TriggerTag(name = "Simple trigger", description = "Example")
 	@IngredientTag(name = "Key1", description = "", example = "")
 	@IngredientTag(name = "Key2", description = "", example = "")
-	public Map<String, String> simpleTrigger(@TriggerFieldTag(name = "Value", description = "Example") String value,
-			@TriggerFieldTag(name = "Run", description = "Example") String run) {
+	public Map<String, String> simpleTrigger(@TriggerFieldTag(name = "Value", description = "Example", canBePublic = true) String value,
+			@TriggerFieldTag(name = "Run", description = "Example", canBePublic = false) String run) {
 		System.err.println("This is the simple trigger");
 		System.err.println("The value is: " + value);
 
@@ -31,7 +31,7 @@ public class TestChannel extends AbstractChannel {
 	}
 
 	@ActionTag(name = "Simple action", description = "Example")
-	public void simpleAction(@ActionFieldTag(name = "Value", description = "Example") String value) {
+	public void simpleAction(@ActionFieldTag(name = "Value", description = "Example", canBePublic = true) String value) {
 		System.err.println("This is the simple action");
 		System.err.println("The value is: " + value);
 	}

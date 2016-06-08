@@ -20,6 +20,8 @@ public class ActionField {
 	@JsonIgnore
 	@Column(nullable = false)
 	private String parameter;
+	@Column(name = "can_publish", nullable = false)
+	private boolean canBePublic;
 	@Column(nullable = false)
 	private String name;
 	@Column(nullable = false)
@@ -43,6 +45,14 @@ public class ActionField {
 
 	public void setParameter(String parameter) {
 		this.parameter = parameter;
+	}
+
+	public boolean isCanBePublic() {
+		return canBePublic;
+	}
+
+	public void setCanBePublic(boolean canBePublic) {
+		this.canBePublic = canBePublic;
 	}
 
 	public String getName() {

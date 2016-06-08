@@ -38,14 +38,14 @@ public class GmailChannel extends AbstractChannel {
 	@Autowired
 	UserRepository userRepository;
 
-	@TriggerTag(name = "New Email", description = "This trigger fires when the user recives an email")
-	@IngredientTag(name = "EmailText", description = "The text of the email", example = "Hi there!")
-	@IngredientTag(name = "Receiver", description = "The email address of the person who will receive the fired email", example = "Hi there!")
+	@TriggerTag(name = "New Email From with Subject", description = "This trigger fires when the user recives an email from someone with a specific subject")
+	@IngredientTag(name = "Sender", description = "The email address of the person who sent the email", example = "somebody@gmail.com")
+	@IngredientTag(name = "ReceivedAt", description = "The timestamp of the reception of the email", example = "23/05/2016 13:09")
+	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public Map<String, String> newEmailRecived(
-			@TriggerFieldTag(name = "username", description = "the username of the recipe creator") String username,
-			@TriggerFieldTag(name = "emailSender", description = "the email address of the person who wrote me") String sender,
-			@TriggerFieldTag(name = "emailSubject", description = "the subject of the email") String subject,
-			@TriggerFieldTag(name = "emailDate", description = "the timestamp of the reception of the email") String dateReceived) {
+			String username,
+			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", canBePublic = false) String sender,
+			@TriggerFieldTag(name = "Subject", description = "The subject of the email", canBePublic = true) String subject) {
 
 		try {
 
@@ -83,9 +83,9 @@ public class GmailChannel extends AbstractChannel {
 
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@ActionFieldTag(name = "EmailReceiver", description = "email address of the receiver") String receiver,
-			@ActionFieldTag(name = "EmailSubject", description = "Subject of the email") String subject,
-			@ActionFieldTag(name = "EmailText", description = "Text of the email") String text) {
+			@ActionFieldTag(name = "Receiver", description = "Email address of the receiver", canBePublic = false) String receiver,
+			@ActionFieldTag(name = "Subject", description = "Subject of the email", canBePublic = true) String subject,
+			@ActionFieldTag(name = "BodyPlain", description = "The plain text of the email", canBePublic = true) String text) {
 
 		// here we send the email
 	}
