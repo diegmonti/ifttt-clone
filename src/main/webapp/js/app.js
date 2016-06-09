@@ -72,7 +72,7 @@ schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
             } : {};
 
             $http.get('api/user', {headers: headers}).then(function (response) {
-                if (response.data.name) {
+                if (response.data.username) {
                     $rootScope.authenticated = true;
                 } else {
                     $rootScope.authenticated = false;

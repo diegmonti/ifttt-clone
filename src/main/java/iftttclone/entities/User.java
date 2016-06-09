@@ -14,28 +14,38 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 @Entity
 @Table(name = "user")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonIgnore
 	private Long id;
 	@Column(nullable = false, unique = true)
 	private String username;
 	@Column(nullable = false)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	@Column(nullable = false)
 	private String email;
 	@Column(nullable = false)
 	private String timezone;
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Collection<ChannelConnector> connectedChannels;
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Collection<Recipe> recipes;
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private Collection<PublicRecipe> publicRecipes;
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "public_recipe_id"))
+	@JsonIgnore
 	private Collection<PublicRecipe> favoritePublicRecipes;
 
 	public Long getId() {
