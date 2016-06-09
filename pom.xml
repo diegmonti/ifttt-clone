@@ -168,11 +168,6 @@
 					    <artifactId>momentjs</artifactId>
 					    <version>2.13.0</version>
 					</dependency>
-					<dependency>
-					    <groupId>org.webjars</groupId>
-					    <artifactId>moment-timezone</artifactId>
-					    <version>0.5.1</version>
-					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
