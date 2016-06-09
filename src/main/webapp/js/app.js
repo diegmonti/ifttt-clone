@@ -109,4 +109,25 @@ schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
 
 schedulerApp.controller('SignInController', ['$rootScope', '$http', '$location',
     function ($rootScope, $http, $location) {
+      var self = this;
+      self.credentials = {};
+
+      self.signIn = function (){
+        $http({
+          method: 'POST',
+          url: 'api/user',
+          data: $.param({
+                username : self.credentials.username,
+                password : self.credentials.password,
+                email : self.credentials.email
+        }),
+        headers : {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+            }
+      }).then(function () {
+            $rootScope.authenticated = false;
+            $location.path("/");
+        });
+      }
+
     }]);

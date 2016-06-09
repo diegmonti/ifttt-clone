@@ -17,4 +17,8 @@
 		<js>webjar:tether/1.3.2/dist/js/tether.min.js</js>
 		<css>webjar:tether/1.3.2/dist/css/tether.min.css</css>
 	</group>
+
+	<group name="moment">
+		<js>webjar:momentjs/2.13.0/moment.min.js</js>
+	</group>
 </groups>
