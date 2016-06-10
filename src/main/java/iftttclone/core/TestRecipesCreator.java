@@ -36,6 +36,7 @@ public class TestRecipesCreator {
 	private boolean weatherTestsDone;
 	
 	@TransactionalEventListener()
+	@Transactional
 	public void createTests(TestEvent event){
 		System.err.println("-CHANNEL_TESTS: begin");
 		
@@ -55,8 +56,7 @@ public class TestRecipesCreator {
 		System.err.println("-CHANNEL_TESTS: end");
 	}
 	
-	@Transactional
-	public void weatherTests(User user){
+	private void weatherTests(User user){
 		if(this.weatherTestsDone){
 			return;
 		}
