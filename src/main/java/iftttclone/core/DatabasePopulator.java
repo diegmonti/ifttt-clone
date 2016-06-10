@@ -4,10 +4,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,10 +53,24 @@ public class DatabasePopulator {
 	private ActionRepository actions;
 	@Autowired
 	private ActionFieldRepository actionFields;
+	
+	/*private final ApplicationEventPublisher publisher;
+	
+	@Autowired
+    public DatabasePopulator(ApplicationEventPublisher publisher){
+		this.publisher = publisher;
+	}*/
 
-	@PostConstruct
+	@EventListener
 	@Transactional
-	private void populateDatabase() {
+	//public boolean populateDatabase(ContextRefreshedEvent event) {
+	//public void populateDatabase(ContextRefreshedEvent event) {
+	public TestEvent populateDatabase(ContextRefreshedEvent event) {
+		// this avoids double calling (one for ContextLoaderListener and another for DispatcherServlet)
+		if(event.getApplicationContext().getParent() != null){
+			return null;
+		}
+		
 		System.err.println("--POPULATOR: Start database population");
 
 		Reflections reflections = new Reflections("iftttclone.channels");
@@ -72,6 +87,8 @@ public class DatabasePopulator {
 		}
 
 		System.err.println("--POPULATOR: End database population");
+		
+		return new TestEvent();
 	}
 
 	private void populateChannel(Class<?> channelClass, Channel channel) {

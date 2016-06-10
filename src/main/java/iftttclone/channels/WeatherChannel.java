@@ -52,7 +52,8 @@ public class WeatherChannel extends AbstractChannel {
 		triggerTime.set(Calendar.MINUTE, Integer.parseInt(minutes));
 		Date ttDate = triggerTime.getTime();
 		/*System.err.println("nowDate: " + now);
-		System.err.println("TTDate: " + ttDate);*/
+		System.err.println("TTDate: " + ttDate);
+		System.err.println("LastRunDate: " + this.getLastRun());*/
 		// problem with for example 23:59 since most likely this would run later (next day) and so will never fire
 			// ifttt has intervals of 15 minutes so the last time is 23:45, something like this can be done
 		if(ttDate.after(now) || this.getLastRun().after(ttDate)){	// now is after tt and lastRun was before tt
@@ -175,7 +176,8 @@ public class WeatherChannel extends AbstractChannel {
 		triggerTime.set(Calendar.MINUTE, tmp.get(Calendar.MINUTE));
 		Date ttDate = triggerTime.getTime();
 		/*System.err.println("nowDate: " + now);
-		System.err.println("TTDate: " + ttDate);*/
+		System.err.println("TTDate: " + ttDate);
+		System.err.println("LastRunDate: " + this.getLastRun());*/
 		if(ttDate.after(now) || this.getLastRun().after(ttDate)){	// now is after tt and lastRun was before tt
 			return null;
 		}
