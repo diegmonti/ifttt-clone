@@ -56,23 +56,12 @@ public class TestRecipesCreator {
 	}
 	
 	@Transactional
-	public void weatherTests(User user/*TestEvent event*/){
-		// this avoids calling when the tests were inserted
-		//if(users.getUserByUsername("testUser") != null){
-		// this avoids calling when the tests for this channel were inserted, this is preferable over previous
+	public void weatherTests(User user){
 		if(this.weatherTestsDone){
 			return;
 		}
 		
 		System.err.println("--WEATHER_TESTS: begin");
-		
-		System.err.println("--WEATHER_TESTS: creating user");
-		/*User user = new User();
-		user.setUsername("testUser");
-		user.setPassword("password");
-		user.setEmail("user.test@gmail.com");
-		user.setTimezone("UTC");
-		users.save(user);*/
 		
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		
