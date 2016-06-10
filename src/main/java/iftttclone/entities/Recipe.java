@@ -3,6 +3,7 @@ package iftttclone.entities;
 import java.util.Date;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,13 +29,13 @@ public class Recipe {
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
-	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
-	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeActionField> recipeActionFields;
 	@ManyToOne

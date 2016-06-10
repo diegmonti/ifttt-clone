@@ -17,7 +17,7 @@ public class RecipeActionField {
 	private Long id;
 	@Column(nullable = false)
 	private String parameter;
-	@Column(nullable = false)
+	@Column(nullable = false, length = 512)
 	private String value;
 	@ManyToOne
 	@JoinColumn(name = "recipe_id", nullable = false)

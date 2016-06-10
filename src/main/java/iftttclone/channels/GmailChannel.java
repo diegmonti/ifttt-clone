@@ -43,9 +43,9 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "ReceivedAt", description = "The timestamp of the reception of the email", example = "23/05/2016 13:09")
 	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public Map<String, String> newEmailRecived(
-			String username,
 			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", canBePublic = false) String sender,
-			@TriggerFieldTag(name = "Subject", description = "The subject of the email", canBePublic = true) String subject) {
+			@TriggerFieldTag(name = "Subject", description = "The subject of the email", canBePublic = true) String subject,
+			String username) {
 
 		try {
 

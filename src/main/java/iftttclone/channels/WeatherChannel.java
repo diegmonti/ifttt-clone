@@ -51,6 +51,8 @@ public class WeatherChannel extends AbstractChannel {
 		triggerTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
 		triggerTime.set(Calendar.MINUTE, Integer.parseInt(minutes));
 		Date ttDate = triggerTime.getTime();
+		/*System.err.println("nowDate: " + now);
+		System.err.println("TTDate: " + ttDate);*/
 		// problem with for example 23:59 since most likely this would run later (next day) and so will never fire
 			// ifttt has intervals of 15 minutes so the last time is 23:45, something like this can be done
 		if(ttDate.after(now) || this.getLastRun().after(ttDate)){	// now is after tt and lastRun was before tt
@@ -79,26 +81,6 @@ public class WeatherChannel extends AbstractChannel {
 		this.addExtraIngredients(rootNode, result);
 		result.put("SunriseTime", rootNode.findPath("astronomy").findPath("sunrise").asText());
 		
-		/*String tempUnit = rootNode.findPath("units").findPath("temperature").asText();	// "" if not found
-		int currTemp = rootNode.findPath("item").findPath("condition").findPath("temp").asInt();	// 0 if not found
-		int highTemp = rootNode.findPath("item").findPath("forecast").findPath("high").asInt();	// 0 if not found
-		int lowTemp = rootNode.findPath("item").findPath("forecast").findPath("low").asInt();	// 0 if not found
-		DateFormat fromFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a z", Locale.ENGLISH);
-		DateFormat toFormat = new SimpleDateFormat("dd MMM yyyy HH:mm z", Locale.ENGLISH);
-		Date checkT = fromFormat.parse(rootNode.findPath("item").findPath("pubDate").asText());
-		if(checkT == null){
-			checkT = Calendar.getInstance().getTime();
-		}
-		
-		result.put("CurrTempFahrenheit", Integer.toString(getTemp(currTemp, tempUnit, "f")));
-		result.put("CurrTempCelsius", Integer.toString(getTemp(currTemp, tempUnit, "c")));
-		result.put("HighTempFahrenheit", Integer.toString(getTemp(highTemp, tempUnit, "f")));
-		result.put("HighTempCelsius", Integer.toString(getTemp(highTemp, tempUnit, "c")));
-		result.put("LowTempFahrenheit", Integer.toString(getTemp(lowTemp, tempUnit, "f")));
-		result.put("LowTempCelsius", Integer.toString(getTemp(lowTemp, tempUnit, "c")));
-		result.put("Condition", rootNode.findPath("item").findPath("condition").findPath("text").asText());
-		result.put("SunriseTime", rootNode.findPath("astronomy").findPath("sunrise").asText());
-		result.put("CheckTime", toFormat.format(checkT));*/
 		return result;
 	}
 	
@@ -130,6 +112,9 @@ public class WeatherChannel extends AbstractChannel {
 		String tempUnit = rootNode.findPath("units").findPath("temperature").asText();	// "" if not found
 		int currTemp = rootNode.findPath("item").findPath("condition").findPath("temp").asInt();	// 0 if not found
 		currTemp = getTemp(currTemp, tempUnit, unit);
+		/*System.err.println("currTemp: " + currTemp);
+		System.err.println("upperTemp: " + upper);
+		System.err.println("lowerTemp: " + lower);*/
 		if(!upper.isEmpty() && (currTemp > Integer.parseInt(upper))){
 			return null;
 		}
@@ -189,6 +174,8 @@ public class WeatherChannel extends AbstractChannel {
 		triggerTime.set(Calendar.HOUR_OF_DAY, tmp.get(Calendar.HOUR_OF_DAY));
 		triggerTime.set(Calendar.MINUTE, tmp.get(Calendar.MINUTE));
 		Date ttDate = triggerTime.getTime();
+		/*System.err.println("nowDate: " + now);
+		System.err.println("TTDate: " + ttDate);*/
 		if(ttDate.after(now) || this.getLastRun().after(ttDate)){	// now is after tt and lastRun was before tt
 			return null;
 		}
@@ -221,9 +208,6 @@ public class WeatherChannel extends AbstractChannel {
 			JsonNode rootNode = objectMapper.readTree(jsonIn).findPath("query").findPath("results").findPath("channel");
 			//JsonNode rootNode = objectMapper.readTree(jsonIn);
 			
-			//rootNode.findValue("query").findValue("results").findValue("channel");
-			//rootNode.findPath("query").findPath("results").findPath("channel");
-			
 			if(rootNode.isMissingNode()){
 				return null;
 			}
@@ -236,9 +220,6 @@ public class WeatherChannel extends AbstractChannel {
 	
 	private void addCommonIngredients(JsonNode rootNode, Map<String, String> result){
 		String tempUnit = rootNode.findPath("units").findPath("temperature").asText();	// "" if not found
-		/*if(tempUnit.equals("")){	// should not happen
-			tempUnit = "f";
-		}*/
 		int currTemp = rootNode.findPath("item").findPath("condition").findPath("temp").asInt();	// 0 if not found
 		DateFormat fromFormat = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm a z", Locale.ENGLISH);
 		DateFormat toFormat = new SimpleDateFormat("dd MMM yyyy HH:mm z", Locale.ENGLISH);

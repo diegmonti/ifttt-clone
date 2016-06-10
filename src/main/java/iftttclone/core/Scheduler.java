@@ -44,7 +44,7 @@ public class Scheduler {
 	@Transactional
 	@Scheduled(fixedRate = 30000)
 	public void run() {
-		System.err.println("SCHEDULER: Start processing recipes");
+		System.err.println("----SCHEDULER: Start processing recipes");
 		Iterator<Recipe> recipes = recipeRepository.findAll().iterator();
 		Recipe recipe;
 
@@ -55,12 +55,12 @@ public class Scheduler {
 
 				// Check if the recipe is active
 				if (recipe.isActive()) {
-					System.err.println("SCHEDULER: processing recipe " + recipe.getTitle());
+					System.err.println("----SCHEDULER: processing recipe " + recipe.getTitle());
 					triggerResult = runTrigger(recipe);
 
 					// Run the action?
 					if (triggerResult != null) {
-						System.err.println("SCHEDULER: running action for recipe " + recipe.getTitle());
+						System.err.println("----SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
 						recipe.setLastRun(Calendar.getInstance(TimeZone.getTimeZone(recipe.getUser().getTimezone())).getTime());
 						recipe.setRuns(recipe.getRuns() + 1);
@@ -73,11 +73,11 @@ public class Scheduler {
 				}
 
 			} catch (ReflectiveOperationException e) {
-				System.err.println("SCHEDULER: Reflective operation exception " + e.getMessage());
+				System.err.println("----SCHEDULER: Reflective operation exception " + e.getMessage());
 				recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.ERROR));
 			}
 		}
-		System.err.println("SCHEDULER: End processing recipes");
+		System.err.println("----SCHEDULER: End processing recipes");
 	}
 
 	@SuppressWarnings("unchecked")
