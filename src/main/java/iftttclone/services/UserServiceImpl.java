@@ -1,24 +1,21 @@
 package iftttclone.services;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Utils;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.UserService;
 
+@Transactional
 public class UserServiceImpl implements UserService {
-	private static final String TIMEZONE_ID = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
-
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
@@ -32,58 +29,76 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void createUser(User user) {
-		checkUser(user);
-
-		// Encode password
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-		userRepository.save(user);
-	}
-
-	@Override
-	public void updateUser(User user) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void checkUser(User user) {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		String email = user.getEmail();
 		String timezone = user.getTimezone();
 
 		if (username == null || password == null || email == null || timezone == null) {
-			throw new InvalidRequestException();
+			throw new InvalidRequestException("All fields must be present");
 		}
 
-		// Password requirements
+		if (userRepository.getUserByUsername(username) != null) {
+			throw new InvalidRequestException("The chosen username is already registered");
+		}
+
 		if (password.equals("")) {
-			throw new InvalidRequestException();
+			throw new InvalidRequestException("The password cannot be empty");
 		}
 
-		// Email requirements
-		if (!email.contains("@")) {
-			throw new InvalidRequestException();
+		if (!Utils.isValidEmail(email)) {
+			throw new InvalidRequestException("Enter a valid email address");
 		}
 
-		List<String> allTimezones = Arrays.asList(TimeZone.getAvailableIDs());
-		if (!allTimezones.contains(timezone)) {
-			throw new InvalidRequestException();
+		if (!Utils.isValidTimezone(timezone)) {
+			throw new InvalidRequestException("Select a valid timezone");
 		}
 
+		// Encode password
+		user.setPassword(passwordEncoder.encode(password));
+
+		userRepository.save(user);
+	}
+
+	@Override
+	public void updateUser(User stub) {
+		String password = stub.getPassword();
+		String email = stub.getEmail();
+		String timezone = stub.getTimezone();
+
+		// Get current user
+		User user = getUser();
+
+		if (password != null) {
+			if (!password.equals("")) {
+				user.setPassword(passwordEncoder.encode(password));
+			} else {
+				throw new InvalidRequestException("The password cannot be empty");
+			}
+		}
+
+		if (email != null) {
+			if (Utils.isValidEmail(email)) {
+				user.setEmail(email);
+			} else {
+				throw new InvalidRequestException("Enter a valid email address");
+			}
+		}
+
+		if (timezone != null) {
+			if (Utils.isValidTimezone(timezone)) {
+				user.setTimezone(timezone);
+			} else {
+				throw new InvalidRequestException("Select a valid timezone");
+			}
+		}
+
+		userRepository.save(user);
 	}
 
 	@Override
 	public Set<String> getTimezones() {
-		String[] allTimezones = TimeZone.getAvailableIDs();
-		Set<String> timezones = new TreeSet<String>();
-
-		for (String timezone : allTimezones) {
-			if (timezone.matches(TIMEZONE_ID))
-				timezones.add(timezone);
-		}
-
-		return timezones;
+		return Utils.getTimezones();
 	}
 
 }

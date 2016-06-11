@@ -1,5 +1,13 @@
 package iftttclone.core;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
@@ -20,6 +28,36 @@ public class Utils {
 		url.append(contextPath);
 
 		return url.toString();
+	}
+
+	public static boolean isValidEmail(String email) {
+		String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(email);
+		return m.matches();
+	}
+
+	public static Set<String> getTimezones() {
+		String timezoneId = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
+		String[] allTimezones = TimeZone.getAvailableIDs();
+		Set<String> timezones = new TreeSet<String>();
+
+		for (String timezone : allTimezones) {
+			if (timezone.matches(timezoneId))
+				timezones.add(timezone);
+		}
+
+		return timezones;
+	}
+
+	public static boolean isValidTimezone(String timezone) {
+		List<String> allTimezones = Arrays.asList(TimeZone.getAvailableIDs());
+
+		if (allTimezones.contains(timezone)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

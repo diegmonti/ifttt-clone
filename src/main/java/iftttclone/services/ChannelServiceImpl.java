@@ -20,6 +20,7 @@ import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.ChannelService;
 
+@Transactional
 public class ChannelServiceImpl implements ChannelService {
 	@Autowired
 	private ChannelRepository channels;
@@ -33,7 +34,6 @@ public class ChannelServiceImpl implements ChannelService {
 	private ChannelConnectorRepository channelConnectorRepository;
 
 	@Override
-	@Transactional
 	public Collection<Channel> getChannels() {
 		Collection<Channel> collection = channels.findAll();
 
@@ -56,7 +56,6 @@ public class ChannelServiceImpl implements ChannelService {
 	}
 
 	@Override
-	@Transactional
 	public Channel getChannel(String channelId) {
 		Channel channel = channels.findOne(channelId);
 
@@ -81,7 +80,6 @@ public class ChannelServiceImpl implements ChannelService {
 	}
 
 	@Override
-	@Transactional
 	public Collection<Trigger> getChannelTriggers(String channelId) {
 		Channel channel = channels.findOne(channelId);
 
@@ -93,7 +91,6 @@ public class ChannelServiceImpl implements ChannelService {
 	}
 
 	@Override
-	@Transactional
 	public Collection<Action> getChannelActions(String channelId) {
 		Channel channel = channels.findOne(channelId);
 

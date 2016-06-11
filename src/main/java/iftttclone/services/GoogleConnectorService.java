@@ -94,7 +94,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
-	@Transactional
 	public void validateConnection(String path, String code, String token) throws IOException {
 		// Get the current user
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

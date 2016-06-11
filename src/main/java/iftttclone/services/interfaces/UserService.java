@@ -14,8 +14,8 @@ public interface UserService {
 	@PreAuthorize("isAnonymous()")
 	public void createUser(User user);
 
-	@PreAuthorize("#user.username == authentication.name")
-	public void updateUser(User user);
+	@PreAuthorize("isAuthenticated()")
+	public void updateUser(User stub);
 
 	public Set<String> getTimezones();
 

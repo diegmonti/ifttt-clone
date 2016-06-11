@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -36,10 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// The methods of the interfaces must be annotated with @PreAuthorize
-		http.httpBasic().and().authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and()
-				.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class).csrf()
-				.csrfTokenRepository(csrfTokenRepository()).and().logout().logoutUrl("/api/user/logout");
+		// XXX CSRF must be enabled when JS works! This is only for easier testing.
+		// disable() -> and() to enable again.
+		http.httpBasic().and().authorizeRequests().antMatchers("/**").permitAll().anyRequest()
+				.authenticated().and().addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class).csrf()
+				.csrfTokenRepository(csrfTokenRepository()).disable().logout().logoutUrl("/api/user/logout");
 	}
 
 	private CsrfTokenRepository csrfTokenRepository() {
