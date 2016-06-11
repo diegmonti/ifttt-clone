@@ -19,9 +19,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public Map<String, String> newEventStarted(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", canBePublic = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", canBePublic = true) String descKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", canBePublic = false) String locationKW) {
+			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
+			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descKW,
+			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
 
 		// TODO: do something
 
@@ -36,9 +36,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public Map<String, String> newEventAdded(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", canBePublic = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", canBePublic = true) String descKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", canBePublic = false) String locationKW) {
+			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
+			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descKW,
+			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
 		
 		// TODO: do something
 		
@@ -48,10 +48,10 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
 	public void createEvent(
-			@ActionFieldTag(name = "Title", description = "The title of the event", canBePublic = true) String title,
-			@ActionFieldTag(name = "Description", description = "The description of the event", canBePublic = true) String description,
-			@ActionFieldTag(name = "Where", description = "The location of the event", canBePublic = false) String location,
-			@ActionFieldTag(name = "WhenStarts", description = "When the event starts", canBePublic = false) String starts) {
+			@ActionFieldTag(name = "Title", description = "The title of the event", isPublishable = true) String title,
+			@ActionFieldTag(name = "Description", description = "The description of the event", isPublishable = true) String description,
+			@ActionFieldTag(name = "Where", description = "The location of the event", isPublishable = false) String location,
+			@ActionFieldTag(name = "WhenStarts", description = "When the event starts", isPublishable = false) String starts) {
 		
 		// TODO: do something
 		

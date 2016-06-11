@@ -14,18 +14,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "channel_trigger_field")
 public class TriggerField {
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@JsonIgnore
 	@Column(nullable = false)
 	private String parameter;
-	@Column(name = "can_publish", nullable = false)
-	private boolean canBePublic;
+
+	@Column(nullable = false)
+	private boolean publishable;
+
 	@Column(nullable = false)
 	private String name;
+
 	@Column(nullable = false)
 	private String description;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_trigger_id", nullable = false)
@@ -47,12 +53,12 @@ public class TriggerField {
 		this.parameter = parameter;
 	}
 
-	public boolean isCanBePublic() {
-		return canBePublic;
+	public boolean isPublishable() {
+		return publishable;
 	}
 
-	public void setCanBePublic(boolean canBePublic) {
-		this.canBePublic = canBePublic;
+	public void setPublishable(boolean publishable) {
+		this.publishable = publishable;
 	}
 
 	public String getName() {

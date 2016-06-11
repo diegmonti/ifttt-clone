@@ -12,5 +12,5 @@ public @interface TriggerFieldTag {
 
 	String description();
 	
-	boolean canBePublic();
+	boolean isPublishable();
 }

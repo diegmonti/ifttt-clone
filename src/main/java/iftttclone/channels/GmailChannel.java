@@ -43,8 +43,8 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "ReceivedAt", description = "The timestamp of the reception of the email", example = "23/05/2016 13:09")
 	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public Map<String, String> newEmailRecived(
-			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", canBePublic = false) String sender,
-			@TriggerFieldTag(name = "Subject", description = "The subject of the email", canBePublic = true) String subject,
+			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", isPublishable = false) String sender,
+			@TriggerFieldTag(name = "Subject", description = "The subject of the email", isPublishable = true) String subject,
 			String username) {
 
 		try {
@@ -83,9 +83,9 @@ public class GmailChannel extends AbstractChannel {
 
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@ActionFieldTag(name = "Receiver", description = "Email address of the receiver", canBePublic = false) String receiver,
-			@ActionFieldTag(name = "Subject", description = "Subject of the email", canBePublic = true) String subject,
-			@ActionFieldTag(name = "BodyPlain", description = "The plain text of the email", canBePublic = true) String text) {
+			@ActionFieldTag(name = "Receiver", description = "Email address of the receiver", isPublishable = false) String receiver,
+			@ActionFieldTag(name = "Subject", description = "Subject of the email", isPublishable = true) String subject,
+			@ActionFieldTag(name = "BodyPlain", description = "The plain text of the email", isPublishable = true) String text) {
 
 		// here we send the email
 	}

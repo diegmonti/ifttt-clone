@@ -12,5 +12,5 @@ public @interface ActionFieldTag {
 
 	String description();
 	
-	boolean canBePublic();
+	boolean isPublishable();
 }

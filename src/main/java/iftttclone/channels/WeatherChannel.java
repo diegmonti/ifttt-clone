@@ -41,9 +41,9 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "SunriseTime", description = "When the sunrise will take place", example = "23/05/2016 05:15")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public Map<String, String> tomorrowWeatherReport(
-			@TriggerFieldTag(name = "location", description="The location the user is intrested in", canBePublic = false) String location,
-			@TriggerFieldTag(name = "checkHour", description="The hour the trigger will fire", canBePublic = true) String hour, 
-			@TriggerFieldTag(name = "checkMinutes", description="The minutes the trigger will fire", canBePublic = true) String minutes){
+			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location,
+			@TriggerFieldTag(name = "checkHour", description="The hour the trigger will fire", isPublishable = true) String hour, 
+			@TriggerFieldTag(name = "checkMinutes", description="The minutes the trigger will fire", isPublishable = true) String minutes){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
 		Date now = triggerTime.getTime();
@@ -91,10 +91,10 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "Condition", description = "The weather condition", example = "Sunny")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public Map<String, String> currentTemperature(
-			@TriggerFieldTag(name = "location", description="The location the user is intrested in", canBePublic = false) String location,
-			@TriggerFieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", canBePublic = true) String lower, 
-			@TriggerFieldTag(name = "upperTemp", description="Fires if less than or equal to this value", canBePublic = true) String upper, 
-			@TriggerFieldTag(name = "degrees", description="The unit of measure", canBePublic = true) String unit){
+			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location,
+			@TriggerFieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", isPublishable = true) String lower, 
+			@TriggerFieldTag(name = "upperTemp", description="Fires if less than or equal to this value", isPublishable = true) String upper, 
+			@TriggerFieldTag(name = "degrees", description="The unit of measure", isPublishable = true) String unit){
 		
 		String yql = "select units.temperature, item.condition.temp, item.condition.text, item.pubDate "
 				+ "from weather.forecast where woeid = " + location;
@@ -139,7 +139,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "LowTempFahrenheit", description = "Today's low temperature registered in degrees Fahrenheit", example = "18")
 	@IngredientTag(name = "LowTempCelsius", description = "Today's low temperature registered in degrees Celsius", example = "23")
 	public Map<String, String> sunrise(
-			@TriggerFieldTag(name = "location", description="The location the user is intrested in", canBePublic = false) String location){
+			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
 		Date now = triggerTime.getTime();
