@@ -1,7 +1,5 @@
 package iftttclone.core;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
@@ -22,17 +20,6 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import com.google.api.client.util.store.DataStoreFactory;
-
-import iftttclone.services.ChannelServiceImpl;
-import iftttclone.services.GmailConnectorServiceImpl;
-import iftttclone.services.GoogleCalendarConnectorServiceImpl;
-import iftttclone.services.UserServiceImpl;
-import iftttclone.services.interfaces.ChannelService;
-import iftttclone.services.interfaces.GmailConnectorService;
-import iftttclone.services.interfaces.GoogleCalendarConnectorService;
-import iftttclone.services.interfaces.UserService;
 
 @Configuration
 @EnableScheduling
@@ -76,33 +63,5 @@ public class RootConfig {
 		txManager.setEntityManagerFactory(factory);
 		return txManager;
 	}
-	
-	@Bean DataStoreFactory dataStoreFactory(){
-		// TODO: implement this
-		return null;
-	}
-	
-	
-	// Services
-	
-	@Bean
-	public ChannelService channelService() {
-		return new ChannelServiceImpl();
-	}
 
-	@Bean
-	public UserService userService() {
-		return new UserServiceImpl();
-	}
-
-	@Bean
-	public GmailConnectorService gmailConnectorService() throws GeneralSecurityException, IOException {
-		return new GmailConnectorServiceImpl();
-	}
-
-	@Bean
-	public GoogleCalendarConnectorService googleCalendarConnectorService()
-			throws GeneralSecurityException, IOException {
-		return new GoogleCalendarConnectorServiceImpl();
-	}
 }

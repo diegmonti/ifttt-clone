@@ -18,37 +18,50 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "recipe")
 public class Recipe {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(nullable = false)
 	private String title;
+
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
+
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
+
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
+
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeActionField> recipeActionFields;
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
+
 	@Column(nullable = false)
 	private boolean active;
+
 	@Column(name = "creation_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationTime;
+
 	@Column(name = "last_run", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastRun;
+
 	@Column(nullable = false)
 	private Integer runs;
 

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class SecurityUser extends User implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public SecurityUser(User user) {
 		if (user != null) {
 			this.setId(user.getId());

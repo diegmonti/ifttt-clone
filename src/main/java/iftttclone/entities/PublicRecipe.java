@@ -20,27 +20,36 @@ public class PublicRecipe {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(nullable = false)
 	private String title;
+
 	@Column(nullable = false)
 	private String description;
+
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
+
 	@OneToMany(mappedBy = "publicRecipe", fetch = FetchType.EAGER)
 	@MapKey(name = "parameter")
 	private Map<String, PublicRecipeTriggerField> publicRecipeTriggerFields;
+
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
+
 	@OneToMany(mappedBy = "publicRecipe", fetch = FetchType.EAGER)
 	@MapKey(name = "parameter")
 	private Map<String, PublicRecipeActionField> publicRecipeActionFields;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
+
 	@Column(nullable = false)
 	private Integer adds;
+
 	@Column(nullable = false)
 	private Integer favorites;
 

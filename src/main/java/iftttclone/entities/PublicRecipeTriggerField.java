@@ -9,16 +9,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "public_recipe_trigger_field")
 public class PublicRecipeTriggerField {
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(nullable = false)
 	private String parameter;
+
 	@Column(nullable = false)
 	private String value;
+
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "public_recipe_id", nullable = false)
 	private PublicRecipe publicRecipe;

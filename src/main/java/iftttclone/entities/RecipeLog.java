@@ -19,15 +19,18 @@ public class RecipeLog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@ManyToOne
 	@JoinColumn(name = "recipe_id", nullable = false)
 	private Recipe recipe;
+
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
+
 	@Column(nullable = false)
 	private RecipeLogEvent event;
-	
+
 	public RecipeLog(Recipe recipe, RecipeLogEvent event) {
 		this.recipe = recipe;
 		this.timestamp = new Date();

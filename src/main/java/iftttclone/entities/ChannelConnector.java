@@ -19,16 +19,21 @@ public class ChannelConnector {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	@Column(nullable = false)
 	private String token;
+
 	@Column(name = "refresh_token")
 	private String refreshToken;
+
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
+
 	@Column(name = "connection_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date connectionTime;

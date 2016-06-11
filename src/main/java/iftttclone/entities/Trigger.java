@@ -1,7 +1,7 @@
 package iftttclone.entities;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,28 +19,31 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "channel_trigger")
 public class Trigger {
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@JsonIgnore
 	@Column(nullable = false)
 	private String method;
+
 	@Column(nullable = false)
 	private String name;
+
 	@Column(nullable = false)
 	private String description;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;
-	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
-	private Collection<TriggerField> triggerFields;
-	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
-	private Collection<Ingredient> ingredients;
 
-	public Trigger() {
-		triggerFields = new HashSet<TriggerField>();
-		ingredients = new HashSet<Ingredient>();
-	}
+	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
+	private Set<TriggerField> triggerFields;
+
+	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
+	private Set<Ingredient> ingredients;
 
 	public Long getId() {
 		return id;
@@ -86,7 +89,7 @@ public class Trigger {
 		return triggerFields;
 	}
 
-	public void setTriggerFields(Collection<TriggerField> triggerFields) {
+	public void setTriggerFields(Set<TriggerField> triggerFields) {
 		this.triggerFields = triggerFields;
 	}
 
@@ -94,7 +97,7 @@ public class Trigger {
 		return ingredients;
 	}
 
-	public void setIngredients(Collection<Ingredient> ingredients) {
+	public void setIngredients(Set<Ingredient> ingredients) {
 		this.ingredients = ingredients;
 	}
 

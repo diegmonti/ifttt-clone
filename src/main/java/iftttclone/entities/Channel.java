@@ -1,7 +1,6 @@
 package iftttclone.entities;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,28 +16,30 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Channel {
 	@Id
 	private String id;
+
 	@JsonIgnore
 	@Column(nullable = false, unique = true)
 	private String classpath;
+
 	@Column(nullable = false)
 	private String name;
+
 	@Column(nullable = false)
 	private String description;
+
 	@Transient
 	private boolean isConnected;
+
 	@Column(name = "with_connection", nullable = false)
 	private boolean isWithConnection;
-	@JsonIgnore
-	@OneToMany(mappedBy = "channel")
-	private Collection<Trigger> triggers;
-	@JsonIgnore
-	@OneToMany(mappedBy = "channel")
-	private Collection<Action> actions;
 
-	public Channel() {
-		triggers = new HashSet<Trigger>();
-		actions = new HashSet<Action>();
-	}
+	@JsonIgnore
+	@OneToMany(mappedBy = "channel")
+	private Set<Trigger> triggers;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "channel")
+	private Set<Action> actions;
 
 	public String getId() {
 		return id;
@@ -88,19 +89,19 @@ public class Channel {
 		this.isWithConnection = isWithConnection;
 	}
 
-	public Collection<Trigger> getTriggers() {
+	public Set<Trigger> getTriggers() {
 		return triggers;
 	}
 
-	public void setTriggers(Collection<Trigger> triggers) {
+	public void setTriggers(Set<Trigger> triggers) {
 		this.triggers = triggers;
 	}
 
-	public Collection<Action> getActions() {
+	public Set<Action> getActions() {
 		return actions;
 	}
 
-	public void setActions(Collection<Action> actions) {
+	public void setActions(Set<Action> actions) {
 		this.actions = actions;
 	}
 

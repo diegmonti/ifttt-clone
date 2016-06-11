@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.Utils;
@@ -14,6 +15,7 @@ import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.UserService;
 
+@Component
 @Transactional
 public class UserServiceImpl implements UserService {
 	@Autowired
