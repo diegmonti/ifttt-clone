@@ -107,10 +107,19 @@ schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
         }
     }]);
 
-schedulerApp.controller('SignInController', ['$rootScope', '$http', '$location',
-    function ($rootScope, $http, $location) {
+schedulerApp.controller('SignInController', ['$scope', '$rootScope', '$http', '$location',
+    function ($scope, $rootScope, $http, $location) {
       var self = this;
       self.credentials = {};
+
+      $http({
+        method: 'GET',
+        url: 'api/user/timezones',
+      }).then(function successCallback(data){
+        $scope.timezones = data.data;
+      }, function errorCallback(data){
+        console.error(data);
+      });
 
       self.signIn = function (){
         $http({
@@ -119,7 +128,8 @@ schedulerApp.controller('SignInController', ['$rootScope', '$http', '$location',
           data: $.param({
                 username : self.credentials.username,
                 password : self.credentials.password,
-                email : self.credentials.email
+                email : self.credentials.email,
+                timezone : self.credentials.timezone
         }),
         headers : {
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
