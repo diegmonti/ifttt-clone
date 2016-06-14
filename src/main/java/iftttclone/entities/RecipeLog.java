@@ -13,13 +13,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "recipe_log")
 public class RecipeLog {
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "recipe_id", nullable = false)
 	private Recipe recipe;
@@ -30,6 +34,10 @@ public class RecipeLog {
 
 	@Column(nullable = false)
 	private RecipeLogEvent event;
+
+	public RecipeLog() {
+		// Default constructor
+	}
 
 	public RecipeLog(Recipe recipe, RecipeLogEvent event) {
 		this.recipe = recipe;

@@ -1,6 +1,6 @@
 package iftttclone.repositories;
 
-import java.util.Collection;
+import java.util.Set;
 
 import org.springframework.data.repository.Repository;
 
@@ -11,7 +11,7 @@ public interface RecipeRepository extends Repository<Recipe, Long> {
 
 	Iterable<Recipe> findAll();
 
-	Collection<Recipe> findRecipeByUser(User user);
+	Set<Recipe> findRecipeByUser(User user);
 
 	Recipe findRecipeByIdAndUser(Long id, User user);
 

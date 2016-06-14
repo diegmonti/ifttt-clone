@@ -2,6 +2,7 @@ package iftttclone.entities;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,14 +20,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "recipe")
 public class Recipe {
+	@JsonView(View.Summary.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonView(View.Summary.class)
 	@Column(nullable = false)
 	private String title;
 
@@ -51,19 +55,27 @@ public class Recipe {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
+	@JsonView(View.Summary.class)
 	@Column(nullable = false)
 	private boolean active;
 
+	@JsonView(View.Summary.class)
 	@Column(name = "creation_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationTime;
 
+	@JsonView(View.Summary.class)
 	@Column(name = "last_run", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastRun;
 
+	@JsonView(View.Summary.class)
 	@Column(nullable = false)
 	private Integer runs;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+	private Set<RecipeLog> logs;
 
 	public Long getId() {
 		return id;
@@ -151,6 +163,14 @@ public class Recipe {
 
 	public void setRuns(Integer runs) {
 		this.runs = runs;
+	}
+
+	public Set<RecipeLog> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(Set<RecipeLog> logs) {
+		this.logs = logs;
 	}
 
 }
