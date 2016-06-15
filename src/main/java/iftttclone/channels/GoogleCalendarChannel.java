@@ -10,7 +10,7 @@ import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.TriggerFieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 
-@ChannelTag(name = "GoogleCalendar", description = "The channel for google calendar", withConnection = true)
+@ChannelTag(name = "Google Calendar", description = "The channel for google calendar", withConnection = true)
 public class GoogleCalendarChannel extends AbstractChannel {
 
 	@TriggerTag(name = "EventStarted", description = "This trigger fires when an event starts, it can be filtered with some keywords. Left blank if not needed")

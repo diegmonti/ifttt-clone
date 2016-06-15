@@ -25,7 +25,7 @@ import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.TriggerFieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 
-@ChannelTag(name="WeatherChannel", description="The channel that handles wheather", withConnection = false)
+@ChannelTag(name="Weather Channel", description="The channel that handles wheather", withConnection = false)
 public class WeatherChannel extends AbstractChannel {
 	private final String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q=";
 	private final String charset = StandardCharsets.UTF_8.name();

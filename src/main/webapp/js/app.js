@@ -35,7 +35,7 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
                 $scope.channels[Math.floor(i / 3)][i % 3] = {
                     title: response.data[i].name,
                     description: response.data[i].description,
-                    link : "img/" +  response.data[i].name + ".png"
+                    link : "img/" +  response.data[i].id + ".png"
                 };
             }
         }, function errorCallback(response) {

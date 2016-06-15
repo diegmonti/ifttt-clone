@@ -10,7 +10,7 @@ import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.TriggerFieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 
-@ChannelTag(name = "TestChannel", description = "A fake channel for testing", withConnection = false)
+@ChannelTag(name = "Test Channel", description = "A fake channel for testing", withConnection = false)
 public class TestChannel extends AbstractChannel {
 
 	@TriggerTag(name = "Simple trigger", description = "Example")
