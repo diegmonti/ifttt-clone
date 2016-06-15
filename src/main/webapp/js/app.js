@@ -34,7 +34,8 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
             for (i = 0; i < response.data.length; i++) {
                 $scope.channels[Math.floor(i / 3)][i % 3] = {
                     title: response.data[i].name,
-                    description: response.data[i].description
+                    description: response.data[i].description,
+                    link : "img/" +  response.data[i].name + ".png"
                 };
             }
         }, function errorCallback(response) {
@@ -132,7 +133,8 @@ schedulerApp.controller('SignInController', ['$scope', '$rootScope', '$http', '$
                 timezone : self.credentials.timezone
         }),
         headers : {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
             }
       }).then(function () {
             $rootScope.authenticated = false;
