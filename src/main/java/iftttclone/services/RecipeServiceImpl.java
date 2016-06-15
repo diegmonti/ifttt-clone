@@ -42,11 +42,15 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
+		recipe.setTriggerChannelId(recipe.getTrigger().getChannel().getId());
+		recipe.setTriggerMethod(recipe.getTrigger().getMethod());
+		recipe.setActionChannelId(recipe.getAction().getChannel().getId());
+		recipe.setActionMethod(recipe.getAction().getMethod());
 		return recipe;
 	}
 
 	@Override
-	public Recipe addRecipe(Recipe stub) {
+	public Recipe addRecipe(Recipe recipe) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -74,16 +78,16 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
-		
+
 		// Check if it is already active
 		if (recipe.isActive()) {
 			throw new InvalidRequestException("The recipe is already active");
 		}
-		
+
 		// Add log entry
 		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.ACTIVE);
 		recipeLogRepository.save(recipeLog);
-		
+
 		// Turn on
 		recipe.setActive(true);
 		recipeRepository.save(recipe);
@@ -96,19 +100,25 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
-		
+
 		// Check if it is already not active
 		if (!recipe.isActive()) {
 			throw new InvalidRequestException("The recipe is already not active");
 		}
-		
+
 		// Add log entry
 		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.INACTIVE);
 		recipeLogRepository.save(recipeLog);
-		
+
 		// Turn off
 		recipe.setActive(false);
 		recipeRepository.save(recipe);
+	}
+
+	@Override
+	public void publish(Long id) {
+		// TODO Auto-generated method stub
+		return;
 	}
 
 	@Override

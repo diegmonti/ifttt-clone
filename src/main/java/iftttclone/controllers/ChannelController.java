@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
 import iftttclone.entities.Trigger;
+import iftttclone.entities.View;
 import iftttclone.services.interfaces.ChannelService;
 
 @RestController
@@ -19,6 +22,7 @@ public class ChannelController {
 	@Autowired
 	ChannelService channelService;
 
+	@JsonView(View.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Collection<Channel> getChannels() {
 		return channelService.getChannels();

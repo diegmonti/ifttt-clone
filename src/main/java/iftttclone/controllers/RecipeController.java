@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -29,8 +32,9 @@ public class RecipeController {
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Recipe addRecipe() {
-		return null;
+	@ResponseStatus(HttpStatus.CREATED)
+	public Recipe addRecipe(@RequestBody Recipe recipe) {
+		return recipeService.addRecipe(recipe);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -39,28 +43,32 @@ public class RecipeController {
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public Recipe updateRecipe(@PathVariable Long id) {
-		return null;
+	public Recipe updateRecipe(@PathVariable Long id, @RequestBody Recipe stub) {
+		return recipeService.updateRecipe(stub);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteRecipe(@PathVariable Long id) {
 		recipeService.deleteRecipe(id);
 	}
 	
 	@RequestMapping(value = "/{id}/on", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void turnOn(@PathVariable Long id) {
 		recipeService.turnOn(id);
 	}
 	
 	@RequestMapping(value = "/{id}/off", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void turnOff(@PathVariable Long id) {
 		recipeService.turnOff(id);
 	}
 	
 	@RequestMapping(value = "/{id}/publish", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	public void publish(@PathVariable Long id) {
-		
+		recipeService.publish(id);
 	}
 	
 	@RequestMapping(value = "/{id}/logs", method = RequestMethod.GET)

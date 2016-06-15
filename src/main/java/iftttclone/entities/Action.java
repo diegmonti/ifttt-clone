@@ -1,6 +1,6 @@
 package iftttclone.entities;
 
-import java.util.Set;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "channel_action")
 public class Action {
+	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -38,7 +40,8 @@ public class Action {
 	private Channel channel;
 
 	@OneToMany(mappedBy = "action", fetch = FetchType.EAGER)
-	private Set<ActionField> actionFields;
+	@MapKey(name = "parameter")
+	private Map<String, ActionField> actionFields;
 
 	public Long getId() {
 		return id;
@@ -80,11 +83,11 @@ public class Action {
 		this.channel = channel;
 	}
 
-	public Set<ActionField> getActionFields() {
+	public Map<String, ActionField> getActionFields() {
 		return actionFields;
 	}
 
-	public void setActionFields(Set<ActionField> actionFields) {
+	public void setActionFields(Map<String, ActionField> actionFields) {
 		this.actionFields = actionFields;
 	}
 

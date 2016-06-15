@@ -1,7 +1,6 @@
 package iftttclone.entities;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,10 +40,12 @@ public class Trigger {
 	private Channel channel;
 
 	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
-	private Set<TriggerField> triggerFields;
+	@MapKey(name = "parameter")
+	private Map<String, TriggerField> triggerFields;
 
 	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
-	private Set<Ingredient> ingredients;
+	@MapKey(name = "name")
+	private Map<String, Ingredient> ingredients;
 
 	public Long getId() {
 		return id;
@@ -85,19 +87,19 @@ public class Trigger {
 		this.channel = channel;
 	}
 
-	public Collection<TriggerField> getTriggerFields() {
+	public Map<String, TriggerField> getTriggerFields() {
 		return triggerFields;
 	}
 
-	public void setTriggerFields(Set<TriggerField> triggerFields) {
+	public void setTriggerFields(Map<String, TriggerField> triggerFields) {
 		this.triggerFields = triggerFields;
 	}
 
-	public Collection<Ingredient> getIngredients() {
+	public Map<String, Ingredient> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(Set<Ingredient> ingredients) {
+	public void setIngredients(Map<String, Ingredient> ingredients) {
 		this.ingredients = ingredients;
 	}
 

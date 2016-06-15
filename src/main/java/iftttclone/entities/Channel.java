@@ -1,19 +1,23 @@
 package iftttclone.entities;
 
-import java.util.Set;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name = "channel")
 public class Channel {
+	@JsonView(View.Summary.class)
 	@Id
 	private String id;
 
@@ -21,25 +25,29 @@ public class Channel {
 	@Column(nullable = false, unique = true)
 	private String classpath;
 
+	@JsonView(View.Summary.class)
 	@Column(nullable = false)
 	private String name;
 
+	@JsonView(View.Summary.class)
 	@Column(nullable = false)
 	private String description;
 
+	@JsonView(View.Summary.class)
 	@Transient
-	private boolean isConnected;
+	private boolean connected;
 
+	@JsonView(View.Summary.class)
 	@Column(name = "with_connection", nullable = false)
-	private boolean isWithConnection;
+	private boolean withConnection;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "channel")
-	private Set<Trigger> triggers;
+	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
+	@MapKey(name = "method")
+	private Map<String, Trigger> triggers;
 
-	@JsonIgnore
-	@OneToMany(mappedBy = "channel")
-	private Set<Action> actions;
+	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
+	@MapKey(name = "method")
+	private Map<String, Action> actions;
 
 	public String getId() {
 		return id;
@@ -74,34 +82,34 @@ public class Channel {
 	}
 
 	public boolean isConnected() {
-		return isConnected;
+		return connected;
 	}
 
-	public void setConnected(boolean isConnected) {
-		this.isConnected = isConnected;
+	public void setConnected(boolean connected) {
+		this.connected = connected;
 	}
 
 	public boolean isWithConnection() {
-		return isWithConnection;
+		return withConnection;
 	}
 
-	public void setWithConnection(boolean isWithConnection) {
-		this.isWithConnection = isWithConnection;
+	public void setWithConnection(boolean withConnection) {
+		this.withConnection = withConnection;
 	}
 
-	public Set<Trigger> getTriggers() {
+	public Map<String, Trigger> getTriggers() {
 		return triggers;
 	}
 
-	public void setTriggers(Set<Trigger> triggers) {
+	public void setTriggers(Map<String, Trigger> triggers) {
 		this.triggers = triggers;
 	}
 
-	public Set<Action> getActions() {
+	public Map<String, Action> getActions() {
 		return actions;
 	}
 
-	public void setActions(Set<Action> actions) {
+	public void setActions(Map<String, Action> actions) {
 		this.actions = actions;
 	}
 

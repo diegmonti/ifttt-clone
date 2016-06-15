@@ -19,6 +19,7 @@ public class RecipeTriggerField {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@Column(nullable = false)
 	private String parameter;
 

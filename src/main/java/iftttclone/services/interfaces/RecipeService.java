@@ -15,7 +15,7 @@ public interface RecipeService {
 
 	public Recipe getRecipe(Long id);
 
-	public Recipe addRecipe(Recipe stub);
+	public Recipe addRecipe(Recipe recipe);
 
 	public Recipe updateRecipe(Recipe stub);
 
@@ -25,9 +25,8 @@ public interface RecipeService {
 
 	public void turnOff(Long id);
 
-	public List<RecipeLog> getRecipeLogs(Long id, Integer page);
+	public void publish(Long id);
 
-	// TODO
-	// public void publish();
+	public List<RecipeLog> getRecipeLogs(Long id, Integer page);
 
 }

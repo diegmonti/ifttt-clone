@@ -18,14 +18,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "recipe")
 public class Recipe {
 	@JsonView(View.Summary.class)
+	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,17 +38,31 @@ public class Recipe {
 	@Column(nullable = false)
 	private String title;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
+
+	@Transient
+	private String triggerChannelId;
+
+	@Transient
+	private String triggerMethod;
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
+
+	@Transient
+	private String actionChannelId;
+
+	@Transient
+	private String actionMethod;
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
@@ -60,16 +78,19 @@ public class Recipe {
 	private boolean active;
 
 	@JsonView(View.Summary.class)
+	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "creation_time", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date creationTime;
 
 	@JsonView(View.Summary.class)
+	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "last_run", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastRun;
 
 	@JsonView(View.Summary.class)
+	@JsonProperty(access = Access.READ_ONLY)
 	@Column(nullable = false)
 	private Integer runs;
 
@@ -101,6 +122,22 @@ public class Recipe {
 		this.trigger = trigger;
 	}
 
+	public String getTriggerChannelId() {
+		return triggerChannelId;
+	}
+
+	public void setTriggerChannelId(String triggerChannelId) {
+		this.triggerChannelId = triggerChannelId;
+	}
+
+	public String getTriggerMethod() {
+		return triggerMethod;
+	}
+
+	public void setTriggerMethod(String triggerMethod) {
+		this.triggerMethod = triggerMethod;
+	}
+
 	public Map<String, RecipeTriggerField> getRecipeTriggerFields() {
 		return recipeTriggerFields;
 	}
@@ -115,6 +152,22 @@ public class Recipe {
 
 	public void setAction(Action action) {
 		this.action = action;
+	}
+
+	public String getActionChannelId() {
+		return actionChannelId;
+	}
+
+	public void setActionChannelId(String actionChannelId) {
+		this.actionChannelId = actionChannelId;
+	}
+
+	public String getActionMethod() {
+		return actionMethod;
+	}
+
+	public void setActionMethod(String actionMethod) {
+		this.actionMethod = actionMethod;
 	}
 
 	public Map<String, RecipeActionField> getRecipeActionFields() {
