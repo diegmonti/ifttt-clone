@@ -1,9 +1,10 @@
-var schedulerApp = angular.module('schedulerApp', ['ngRoute']);
+var iftttclone = angular.module('schedulerApp', ['ngRoute']);
 
-schedulerApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
+iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
         templateUrl: 'partials/channels.html',
-        controller: 'ChannelsController'
+        controller: 'ChannelsController',
+        controllerAs : 'controller'
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
@@ -14,13 +15,18 @@ schedulerApp.config(['$routeProvider', '$httpProvider', function ($routeProvider
       controller: 'SignInController',
       controllerAs: 'controller'
     })
+    .when('/channel/:channelID', {
+      templateUrl: 'partials/channel.html',
+      controller: 'ChannelController',
+      controllerAs: 'controller'
+    })
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
 
-schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
-    function ($scope, $rootScope, $routeParams, $location, $http, $window) {
-
+iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$location',
+    function ($scope, $rootScope, $routeParams, $location, $http, $window, $location) {
+      var self = this;
         $scope.channels = [];
         $http({
             method: 'GET',
@@ -33,6 +39,7 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
 
             for (i = 0; i < response.data.length; i++) {
                 $scope.channels[Math.floor(i / 3)][i % 3] = {
+                    id: response.data[i].id,
                     title: response.data[i].name,
                     description: response.data[i].description,
                     link : "img/" +  response.data[i].id + ".png"
@@ -42,6 +49,11 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
             console.log("error: " + response);
         });
 
+        self.selectChannel = function(channelID){
+          console.log("selectChannel" + channelID);
+
+          $location.path('/channel/'+channelID);
+        }
         $scope.connectToService = function(postUrl) {
           console.log(postUrl);
           $http({
@@ -58,10 +70,11 @@ schedulerApp.controller('ChannelsController', ['$scope', '$rootScope', '$routePa
         }
 
 
+
     }]
 );
 
-schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
+iftttclone.controller('LoginController', ['$rootScope', '$http', '$location',
     function ($rootScope, $http, $location) {
         var self = this;
 
@@ -108,7 +121,7 @@ schedulerApp.controller('LoginController', ['$rootScope', '$http', '$location',
         }
     }]);
 
-schedulerApp.controller('SignInController', ['$scope', '$rootScope', '$http', '$location',
+iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$location',
     function ($scope, $rootScope, $http, $location) {
       var self = this;
       self.credentials = {};
@@ -143,3 +156,27 @@ schedulerApp.controller('SignInController', ['$scope', '$rootScope', '$http', '$
       }
 
     }]);
+
+iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$location','$routeParams', function($scope, $rootScope, $http, $location, $routeParams){
+
+
+
+
+  $http({
+    method:'GET',
+    url : 'api/channels/'+ $routeParams.channelID,
+  }).then(
+    function (response){ // successCallback
+      $scope.channel = {};
+      $scope.channel.title = response.data.name;
+      $scope.channel.link = "img/"+response.data.id + ".png";
+      $scope.channel.description = response.data.description;
+      $scope.error = false;
+      // TODO: add toConnect field!
+    },
+    function(response){ // error callback
+      $scope.error = true;
+    }
+  );
+
+}]);

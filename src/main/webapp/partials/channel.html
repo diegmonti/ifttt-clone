@@ -1,0 +1,29 @@
+<div class="alert alert-danger" data-ng-show="error">
+    Il canale selezionato non esiste
+</div>
+
+
+<div class="row">
+   <!-- // here i put the channel discription-->
+  <div class="col-lg-5 col-lg-offset-1">
+    <img src={{channel.link}} />
+  </div>
+
+  <div class="col-lg-5">
+    <div class="row">
+      <h1>{{channel.title}}</h1>
+    </div>
+    <div class="row">
+      <p>{{channel.description}}</p>
+    </div>
+
+    <div class="row" data-ng-show="toConnect">
+      <a href="#" class="btn btn-primary">Connect</a>
+    </div>
+
+  </div>
+
+</div>
+
+<hr />
+<!-- Here it goes the list of public recipes which use that channel-->

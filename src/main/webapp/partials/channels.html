@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row" data-ng-repeat="group in channels"> <!-- the $scope.channels is a structure which contains arrays of channel objects.  -->
-    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in group"> <!-- Each element is  -->
+    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in group" data-ng-click="controller.selectChannel(channel.id)"> <!-- Each element is  -->
 
       <img class="card-img-top" src={{channel.link}} alt="Card image cap" width="100%">
       <div class="card-block">
         <h4 class="card-title">{{channel.title}}</h4>
         <p class="card-text">{{channel.description}}</p>
-        <button class="btn btn-primary" data-ng-show="authenticated" data-ng-click="connectToService('api/google/mail/auth')">Connect</button>
+        <button class="btn btn-primary" data-ng-show="authenticated" data-ng-click="connectToService('api/google/mail/auth')">Connect</button>  <!-- TODO: : modify   -->
       </div>
     </div>
   </div>
