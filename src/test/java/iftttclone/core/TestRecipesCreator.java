@@ -7,15 +7,8 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-/*import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;*/
-//import org.springframework.transaction.event.TransactionalEventListener;
 
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
@@ -27,7 +20,6 @@ import iftttclone.repositories.RecipeRepository;
 import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 
-//@Order
 @Component
 public class TestRecipesCreator {
 	@Autowired
@@ -42,9 +34,7 @@ public class TestRecipesCreator {
 	private RecipeRepository recipes;
 	private boolean weatherTestsDone;
 	
-	//@TransactionalEventListener()
 	@Transactional
-	//public void createTests(TestEvent event){
 	public void createTests(){
 		System.err.println("-CHANNEL_TESTS: begin");
 		

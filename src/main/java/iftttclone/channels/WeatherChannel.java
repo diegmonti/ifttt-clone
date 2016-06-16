@@ -209,7 +209,6 @@ public class WeatherChannel extends AbstractChannel {
 			
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode rootNode = objectMapper.readTree(jsonIn).findPath("query").findPath("results").findPath("channel");
-			//JsonNode rootNode = objectMapper.readTree(jsonIn);
 			
 			if(rootNode.isMissingNode()){
 				return null;

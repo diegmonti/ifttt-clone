@@ -58,11 +58,10 @@ public class DatabasePopulator {
 
 	@EventListener
 	@Transactional
-	//public TestEvent populateDatabase(ContextRefreshedEvent event) {
 	public void populateDatabase(ContextRefreshedEvent event) {
 		// this avoids double calling (one for ContextLoaderListener and another for DispatcherServlet)
 		if(event.getApplicationContext().getParent() != null){
-			return ;
+			return;
 		}
 		
 		System.err.println("--POPULATOR: Start database population");
@@ -81,8 +80,6 @@ public class DatabasePopulator {
 		}
 
 		System.err.println("--POPULATOR: End database population");
-		
-		//return new TestEvent();
 	}
 
 	private void populateChannel(Class<?> channelClass, Channel channel) {
