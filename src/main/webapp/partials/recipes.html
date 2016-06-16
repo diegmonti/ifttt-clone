@@ -1,0 +1,30 @@
+
+<div data-ng-repeat="recipe in recipes">
+<div class="row">
+  <div class="col-lg-9">
+    <div class="row">
+      <span>IF</span>
+      <span>
+        <picture>
+           <img class="img-responsive" src={{recipe.triggerChannelImage}} style="height:110px"/>
+        </picture>
+      </span>
+
+      <span>THEN</span><span> <img  sizes="100px" class="img-responsive" src={{recipe.actionChannelImage}} style="height:110px"/>
+    </span>
+    </div>
+    <div class="row"><h2>{{recipe.title}}<h2></div>
+  </div>
+
+  <div class="col-lg-3">
+    <div class="row"></div>
+    <div class="row">Created on {{recipe.created}}</div>
+    <div class="row">last run on {{recipe.lastRun}}</div>
+    <div class="row">run on {{recipe.timesRun}} times</div>
+  </div>
+</div>
+<div class="row">
+<hr /><hr />
+</div>
+
+</div>
