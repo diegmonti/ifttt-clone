@@ -44,8 +44,8 @@ public class TestRecipesCreator {
 		if(user == null){
 			System.err.println("-CHANNEL_TESTS: creating user");
 			user = new User();
-			user.setUsername("testUser");
-			user.setPassword("password");
+			user.setUsername("user");
+			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m");
 			user.setEmail("user.test@gmail.com");
 			user.setTimezone("UTC");
 			users.save(user);
