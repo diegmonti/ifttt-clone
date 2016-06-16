@@ -17,15 +17,13 @@ public interface RecipeService {
 
 	public Recipe addRecipe(Recipe recipe);
 
-	public Recipe updateRecipe(Recipe stub);
+	public Recipe updateRecipe(Long id, Recipe stub);
 
 	public void deleteRecipe(Long id);
 
 	public void turnOn(Long id);
 
 	public void turnOff(Long id);
-
-	public void publish(Long id);
 
 	public List<RecipeLog> getRecipeLogs(Long id, Integer page);
 
