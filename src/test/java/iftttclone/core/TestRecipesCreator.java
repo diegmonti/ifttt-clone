@@ -7,9 +7,15 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
+/*import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;*/
+//import org.springframework.transaction.event.TransactionalEventListener;
 
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
@@ -21,6 +27,7 @@ import iftttclone.repositories.RecipeRepository;
 import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 
+//@Order
 @Component
 public class TestRecipesCreator {
 	@Autowired
@@ -35,9 +42,10 @@ public class TestRecipesCreator {
 	private RecipeRepository recipes;
 	private boolean weatherTestsDone;
 	
-	@TransactionalEventListener()
+	//@TransactionalEventListener()
 	@Transactional
-	public void createTests(TestEvent event){
+	//public void createTests(TestEvent event){
+	public void createTests(){
 		System.err.println("-CHANNEL_TESTS: begin");
 		
 		User user = users.getUserByUsername("testUser");
@@ -64,9 +72,12 @@ public class TestRecipesCreator {
 		System.err.println("--WEATHER_TESTS: begin");
 		
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar yesterday = (Calendar) now.clone();
+		yesterday.add(Calendar.DAY_OF_MONTH, -1);
+		String location = "24358";
 		
 		
-		System.err.println("--WEATHER_TESTS: creating tomorrowReport");
+		System.err.println("--WEATHER_TESTS: creating tomorrowReport");	// should run once
 		Recipe r = this.createBasicRecipe(user, now);
 		r.setTitle("tomorrowReport");
 		
@@ -74,13 +85,13 @@ public class TestRecipesCreator {
 		
 		Map<String, RecipeTriggerField> rtfs = new HashMap<String, RecipeTriggerField>();
 		RecipeTriggerField rtf = this.createBasicRecipeTriggerField(0, r);
-		rtf.setValue("24358");
+		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		rtf = this.createBasicRecipeTriggerField(1, r);
 		rtf.setValue( Integer.toString(now.get(Calendar.HOUR_OF_DAY)) );
 		rtfs.put("arg1", rtf);
 		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue( Integer.toString(now.get(Calendar.MINUTE)+2) );
+		rtf.setValue( Integer.toString(now.get(Calendar.MINUTE)+1) );
 		rtfs.put("arg2", rtf);
 		
 		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
@@ -97,14 +108,14 @@ public class TestRecipesCreator {
 		
 		
 		// Both temperatures, Celsius
-		System.err.println("--WEATHER_TESTS: creating currentTemperature1");
+		System.err.println("--WEATHER_TESTS: creating currentTemperature1");	// should always run
 		r = this.createBasicRecipe(user, now);
 		r.setTitle("currentTemperature1");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channels.getChannelByClasspath("iftttclone.channels.WeatherChannel")));
 		
 		rtfs.clear();
 		rtf = this.createBasicRecipeTriggerField(0, r);
-		rtf.setValue("24358");
+		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		rtf = this.createBasicRecipeTriggerField(1, r);
 		rtf.setValue("12");
@@ -127,13 +138,13 @@ public class TestRecipesCreator {
 		
 		
 		// One temperatures, Fahrenheit
-		System.err.println("--WEATHER_TESTS: creating currentTemperature2");
+		System.err.println("--WEATHER_TESTS: creating currentTemperature2");	// should always run
 		r = this.createBasicRecipe(user, now);
 		r.setTitle("currentTemperature2");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channels.getChannelByClasspath("iftttclone.channels.WeatherChannel")));
 		rtfs.clear();
 		rtf = this.createBasicRecipeTriggerField(0, r);
-		rtf.setValue("24358");
+		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		rtf = this.createBasicRecipeTriggerField(1, r);
 		rtf.setValue("");
@@ -155,14 +166,44 @@ public class TestRecipesCreator {
 		recipes.save(r);
 		
 		
-		System.err.println("--WEATHER_TESTS: creating sunrise");
+		// Null intersection
+		System.err.println("--WEATHER_TESTS: creating currentTemperature3");	// should never run
 		r = this.createBasicRecipe(user, now);
+		r.setTitle("currentTemperature3");
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channels.getChannelByClasspath("iftttclone.channels.WeatherChannel")));
+		
+		rtfs.clear();
+		rtf = this.createBasicRecipeTriggerField(0, r);
+		rtf.setValue(location);
+		rtfs.put("arg0", rtf);
+		rtf = this.createBasicRecipeTriggerField(1, r);
+		rtf.setValue("22");
+		rtfs.put("arg1", rtf);
+		rtf = this.createBasicRecipeTriggerField(2, r);
+		rtf.setValue("18");
+		rtfs.put("arg2", rtf);
+		rtf = this.createBasicRecipeTriggerField(3, r);
+		rtf.setValue("c");
+		rtfs.put("arg3", rtf);
+		
+		raf = this.createBasicRecipeActionField(r);
+		raf.setValue("CurrTempFahrenheit: {{CurrTempFahrenheit}}\nCurrTempCelsius: {{CurrTempCelsius}}"
+				+ "\nCondition: {{Condition}}\nCheckTime: {{CheckTime}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(rtfs);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+		
+		System.err.println("--WEATHER_TESTS: creating sunrise");	// should run once
+		r = this.createBasicRecipe(user, yesterday);
 		r.setTitle("sunrise");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("sunrise", channels.getChannelByClasspath("iftttclone.channels.WeatherChannel")));
 		
 		rtfs.clear();
 		rtf = this.createBasicRecipeTriggerField(0, r);
-		rtf.setValue("24358");
+		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		
 		rafs.clear();

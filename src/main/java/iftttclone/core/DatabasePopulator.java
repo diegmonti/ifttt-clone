@@ -8,6 +8,7 @@ import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ import iftttclone.repositories.TriggerRepository;
  * channel. If the field of an annotation is changed, the database is updated
  * the next time the application is deployed.
  */
+@Order(1)
 @Component
 public class DatabasePopulator {
 	@Autowired
@@ -56,10 +58,11 @@ public class DatabasePopulator {
 
 	@EventListener
 	@Transactional
-	public TestEvent populateDatabase(ContextRefreshedEvent event) {
+	//public TestEvent populateDatabase(ContextRefreshedEvent event) {
+	public void populateDatabase(ContextRefreshedEvent event) {
 		// this avoids double calling (one for ContextLoaderListener and another for DispatcherServlet)
 		if(event.getApplicationContext().getParent() != null){
-			return null;
+			return ;
 		}
 		
 		System.err.println("--POPULATOR: Start database population");
@@ -79,7 +82,7 @@ public class DatabasePopulator {
 
 		System.err.println("--POPULATOR: End database population");
 		
-		return new TestEvent();
+		//return new TestEvent();
 	}
 
 	private void populateChannel(Class<?> channelClass, Channel channel) {

@@ -24,8 +24,8 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
 
-iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$location',
-    function ($scope, $rootScope, $routeParams, $location, $http, $window, $location) {
+iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
+    function ($scope, $rootScope, $routeParams, $location, $http, $window) {
       var self = this;
         $scope.channels = [];
         $http({
@@ -128,7 +128,7 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
 
       $http({
         method: 'GET',
-        url: 'api/user/timezones',
+        url: 'api/user/timezones'
       }).then(function successCallback(data){
         $scope.timezones = data.data;
       }, function errorCallback(data){
@@ -139,14 +139,13 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         $http({
           method: 'POST',
           url: 'api/user',
-          data: $.param({
+          data: {
                 username : self.credentials.username,
                 password : self.credentials.password,
                 email : self.credentials.email,
                 timezone : self.credentials.timezone
-        }),
+        },
         headers : {
-          'Accept': 'application/json',
           'Content-Type': 'application/json'
             }
       }).then(function () {
@@ -159,24 +158,21 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
 
 iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$location','$routeParams', function($scope, $rootScope, $http, $location, $routeParams){
 
-
-
-
-  $http({
-    method:'GET',
-    url : 'api/channels/'+ $routeParams.channelID,
-  }).then(
-    function (response){ // successCallback
-      $scope.channel = {};
-      $scope.channel.title = response.data.name;
-      $scope.channel.link = "img/"+response.data.id + ".png";
-      $scope.channel.description = response.data.description;
-      $scope.error = false;
-      // TODO: add toConnect field!
-    },
-    function(response){ // error callback
-      $scope.error = true;
-    }
-  );
+      $http({
+        method:'GET',
+        url : 'api/channels/'+ $routeParams.channelID,
+      }).then(
+        function (response){ // successCallback
+          $scope.channel = {};
+          $scope.channel.title = response.data.name;
+          $scope.channel.link = "img/"+response.data.id + ".png";
+          $scope.channel.description = response.data.description;
+          $scope.error = false;
+          // TODO: add toConnect field!
+        },
+        function(response){ // error callback
+          $scope.error = true;
+        }
+      );
 
 }]);

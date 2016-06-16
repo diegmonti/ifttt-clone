@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -66,12 +67,8 @@ public class RecipeController {
 	}
 
 	@RequestMapping(value = "/{id}/logs", method = RequestMethod.GET)
-	public List<RecipeLog> getRecipeLogs(@PathVariable Long id) {
+	public List<RecipeLog> getRecipeLogs(@PathVariable Long id, @RequestParam(value="page", required=false, defaultValue="1") Integer page) {
 		return recipeService.getRecipeLogs(id, 1);
 	}
-
-	@RequestMapping(value = "/{id}/logs/{page}", method = RequestMethod.GET)
-	public List<RecipeLog> getMoreRecipeLogs(@PathVariable Long id, @PathVariable Integer page) {
-		return recipeService.getRecipeLogs(id, page);
-	}
+	
 }

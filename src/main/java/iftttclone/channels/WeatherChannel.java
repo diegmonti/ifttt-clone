@@ -50,6 +50,7 @@ public class WeatherChannel extends AbstractChannel {
 		Calendar tomorrow = (Calendar) triggerTime.clone();
 		triggerTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
 		triggerTime.set(Calendar.MINUTE, Integer.parseInt(minutes));
+		triggerTime.set(Calendar.SECOND, 0);
 		Date ttDate = triggerTime.getTime();
 		/*System.err.println("nowDate: " + now);
 		System.err.println("TTDate: " + ttDate);
@@ -163,7 +164,7 @@ public class WeatherChannel extends AbstractChannel {
 		if(sunriseText.isEmpty()){	// should not happen (404 or 400)
 			return null;
 		}
-		DateFormat sunriseFormat = new SimpleDateFormat("hh:mm a");	// not sure if giving today so following
+		DateFormat sunriseFormat = new SimpleDateFormat("hh:mm a");	// not sure if giving today
 		Date sunriseDate;
 		try {
 			sunriseDate = sunriseFormat.parse(sunriseText);
