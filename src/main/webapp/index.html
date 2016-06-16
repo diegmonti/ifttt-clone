@@ -10,18 +10,17 @@
 <script src="js/libs/tether.js" type="text/javascript"></script>
 <script src="js/libs/bootstrap.js" type="text/javascript"></script>
 <script src="js/libs/angular.js" type="text/javascript"></script>
+<script src="js/libs/moment.js" type="text/javascript"></script>
 </head>
 <body>
 	<!-- navbar -->
 	<nav class="navbar navbar-light bg-faded" data-ng-controller="LoginController as nav">
 		<a class="navbar-brand" href="#/">IFTTT-CLONE</a>
 
-
-
 		<ul class="nav pull-lg-right navbar-nav">
 
 			<!--  Only for authenticated people  -->
-			<li data-ng-show="authenticated" class="nav-item"><a href="#/recipes" class="nav-link">Le mie ricette</a></li>
+			<li data-ng-show="authenticated" class="nav-item"><a href="#/myRecipes" class="nav-link">Le mie ricette</a></li>
 			<!-- For everyone -->
 			<li class="nav-item active"><a href="#/" class="nav-link">Canali</a></li>
 			<li class="nav-item"><a href="#/recipes" class="nav-link">Ricette pubbliche</a></li>
@@ -29,10 +28,8 @@
 			<!-- only for anonymous people -->
 			<li data-ng-show="!authenticated" class="nav-item"><a class="nav-link" href="#/login">Login</a></li>
 			<!-- only if auth you can see the dropdown -->
-			<li data-ng-show="authenticated" class="nav-item"><a class="nav-link" href="#" onclick="nav.logout()">Login</a></li>
+			<li data-ng-show="authenticated" class="nav-item"><a class="nav-link" href="#" data-ng-click="nav.logout()">Logout</a></li>
 		</ul>
-
-
 
 
 		<form class="form-inline" style="text-align: center">

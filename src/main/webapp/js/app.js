@@ -20,6 +20,11 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
       controller: 'ChannelController',
       controllerAs: 'controller'
     })
+    .when('/myRecipes', {
+      templateUrl: 'partials/recipes.html',
+      controller: 'PrivateRecipeController',
+      controllerAs: 'controller'
+    })
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
@@ -130,7 +135,9 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         method: 'GET',
         url: 'api/user/timezones',
       }).then(function successCallback(data){
+
         $scope.timezones = data.data;
+
       }, function errorCallback(data){
         console.error(data);
       });
@@ -139,12 +146,12 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         $http({
           method: 'POST',
           url: 'api/user',
-          data: $.param({
+          data: ( JSON.stringify({
                 username : self.credentials.username,
                 password : self.credentials.password,
                 email : self.credentials.email,
-                timezone : self.credentials.timezone
-        }),
+                timezone : self.credentials.timezone.trim()
+        })),
         headers : {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -158,9 +165,6 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
     }]);
 
 iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$location','$routeParams', function($scope, $rootScope, $http, $location, $routeParams){
-
-
-
 
   $http({
     method:'GET',
@@ -179,4 +183,46 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
     }
   );
 
+}]);
+
+iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
+  // first, i need to download all the recepies of this guy
+  $scope.recipes = [];
+  $http({
+  method: 'GET',
+  url: 'api/myrecipes'
+}).then(function successCallback(response) {
+    $scope.error = false;
+    console.log(response.data);
+    response.data.forEach(function(element){
+      // calling this for each element of the array response.data
+
+      var recipe = {
+        title : element.title,
+        created : moment(element.creationTime).calendar(),
+        lastRun : moment(element.lastRun).calendar(),
+        timesTun : element.runs
+      };
+      $scope.recipes.push(recipe);
+      // now i need to update the recipe so it also contains the name of the trigger and action channels
+
+    $http({
+      method: 'GET',
+      url: 'api/myrecipes/' + element.id
+    }).then(function successCallback(response){
+      recipe.triggerChannelImage = 'img/'+response.data.triggerChannelId + '.png';
+      recipe.actionChannelImage = 'img/'+response.data.actionChannelId + '.png';
+
+
+    }, function errorCallback(response){
+
+    });
+
+
+
+
+    })
+  }, function errorCallback(response) {
+    $scope.error = true;
+  });
 }]);
