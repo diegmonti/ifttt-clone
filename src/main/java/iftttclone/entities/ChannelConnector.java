@@ -1,7 +1,5 @@
 package iftttclone.entities;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "channel_connector")
@@ -35,8 +31,7 @@ public class ChannelConnector {
 	private User user;
 
 	@Column(name = "connection_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date connectionTime;
+	private Long connectionTime;
 
 	public Long getId() {
 		return id;
@@ -78,11 +73,11 @@ public class ChannelConnector {
 		this.user = user;
 	}
 
-	public Date getConnectionTime() {
+	public Long getConnectionTime() {
 		return connectionTime;
 	}
 
-	public void setConnectionTime(Date connectionTime) {
+	public void setConnectionTime(Long connectionTime) {
 		this.connectionTime = connectionTime;
 	}
 

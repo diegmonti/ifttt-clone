@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.PublicRecipe;
-import iftttclone.entities.View;
+import iftttclone.entities.utils.View;
 import iftttclone.services.interfaces.PublicRecipeService;
 
 @RestController

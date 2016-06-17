@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeLog;
-import iftttclone.entities.View;
+import iftttclone.entities.utils.View;
 import iftttclone.services.interfaces.RecipeService;
 
 @RestController

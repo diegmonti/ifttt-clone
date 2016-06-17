@@ -58,6 +58,9 @@ public class UserServiceImpl implements UserService {
 
 		// Encode password
 		user.setPassword(passwordEncoder.encode(password));
+		
+		// Set timezone
+		user.setTimezone(timezone.replace(' ', '_'));
 
 		userRepository.save(user);
 	}
@@ -89,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
 		if (timezone != null) {
 			if (Utils.isValidTimezone(timezone)) {
-				user.setTimezone(timezone);
+				user.setTimezone(timezone.replace(' ', '_'));
 			} else {
 				throw new InvalidRequestException("Select a valid timezone");
 			}

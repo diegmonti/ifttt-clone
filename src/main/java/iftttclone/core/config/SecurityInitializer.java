@@ -1,4 +1,4 @@
-package iftttclone.core;
+package iftttclone.core.config;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

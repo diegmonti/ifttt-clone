@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
 import iftttclone.entities.Trigger;
-import iftttclone.entities.View;
+import iftttclone.entities.utils.View;
 import iftttclone.services.interfaces.ChannelService;
 
 @RestController

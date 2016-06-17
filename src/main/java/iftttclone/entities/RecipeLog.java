@@ -1,7 +1,5 @@
 package iftttclone.entities;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,8 +25,7 @@ public class RecipeLog {
 	private Recipe recipe;
 
 	@Column(nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date timestamp;
+	private Long timestamp;
 
 	@Column(nullable = false)
 	private RecipeLogEvent event;
@@ -41,7 +36,7 @@ public class RecipeLog {
 
 	public RecipeLog(Recipe recipe, RecipeLogEvent event) {
 		this.recipe = recipe;
-		this.timestamp = new Date();
+		this.timestamp = System.currentTimeMillis();
 		this.event = event;
 	}
 
@@ -61,11 +56,11 @@ public class RecipeLog {
 		this.recipe = recipe;
 	}
 
-	public Date getTimestamp() {
+	public Long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
 

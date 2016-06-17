@@ -1,6 +1,5 @@
 package iftttclone.services;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -171,9 +170,8 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Set default values
-		Date currentTime = new Date();
-		recipe.setCreationTime(currentTime);
-		recipe.setLastRun(currentTime);
+		recipe.setCreationTime(System.currentTimeMillis());
+		recipe.setLastRun(System.currentTimeMillis());
 		recipe.setUser(userService.getUser());
 		recipe.setActive(true);
 		recipe.setRuns(0);
@@ -260,7 +258,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		recipe.setRecipeActionFields(stub.getRecipeActionFields());
 
-		recipe.setLastRun(new Date());
+		recipe.setLastRun(System.currentTimeMillis());
 		recipeRepository.save(recipe);
 
 		// Add log entry

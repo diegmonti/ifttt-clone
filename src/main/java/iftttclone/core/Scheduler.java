@@ -2,11 +2,10 @@ package iftttclone.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,7 +61,7 @@ public class Scheduler {
 					if (triggerResult != null) {
 						System.err.println("----SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
-						recipe.setLastRun(Calendar.getInstance(TimeZone.getTimeZone(recipe.getUser().getTimezone())).getTime());
+						recipe.setLastRun(System.currentTimeMillis());
 						recipe.setRuns(recipe.getRuns() + 1);
 						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.RUN));
 					} else {
@@ -91,7 +90,7 @@ public class Scheduler {
 		AbstractChannel instance = channelClass.newInstance();
 		instance.setChannelConnector(
 				channelConnectorRepository.getChannelConnectorByChannelAndUser(trigger.getChannel(), recipe.getUser()));
-		instance.setLastRun(recipe.getLastRun());
+		instance.setLastRun(new Date(recipe.getLastRun()));
 		instance.setUser(recipe.getUser());
 
 		// Load parameters
@@ -124,7 +123,7 @@ public class Scheduler {
 		AbstractChannel instance = channelClass.newInstance();
 		instance.setChannelConnector(
 				channelConnectorRepository.getChannelConnectorByChannelAndUser(action.getChannel(), recipe.getUser()));
-		instance.setLastRun(recipe.getLastRun());
+		instance.setLastRun(new Date(recipe.getLastRun()));
 		instance.setUser(recipe.getUser());
 
 		// Load parameters

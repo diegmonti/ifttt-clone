@@ -14,6 +14,8 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import iftttclone.entities.utils.View;
+
 @Entity
 @Table(name = "channel")
 public class Channel {
