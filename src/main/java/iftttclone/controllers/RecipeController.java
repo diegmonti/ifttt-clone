@@ -67,8 +67,8 @@ public class RecipeController {
 	}
 
 	@RequestMapping(value = "/{id}/logs", method = RequestMethod.GET)
-	public List<RecipeLog> getRecipeLogs(@PathVariable Long id, @RequestParam(value="page", required=false, defaultValue="1") Integer page) {
-		return recipeService.getRecipeLogs(id, 1);
+	public List<RecipeLog> getRecipeLogs(@PathVariable Long id, @RequestParam(value="page", required=false, defaultValue="0") Integer page) {
+		return recipeService.getRecipeLogs(id, page);
 	}
-	
+
 }

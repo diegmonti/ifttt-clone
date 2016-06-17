@@ -328,10 +328,10 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
-		if (page < 1) {
-			page = 1;
+		if (page < 0) {
+			throw new InvalidRequestException("Page cannot be negative");
 		}
-		Pageable pageable = new PageRequest(page - 1, 25);
+		Pageable pageable = new PageRequest(page, 25);
 		return recipeLogRepository.getRecipeLogByRecipeOrderByTimestampDesc(recipe, pageable);
 	}
 

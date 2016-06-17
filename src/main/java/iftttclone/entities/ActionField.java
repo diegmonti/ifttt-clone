@@ -23,7 +23,6 @@ public class ActionField {
 	@Column(nullable = false)
 	private String parameter;
 
-	@JsonIgnore
 	@Column(nullable = false)
 	private boolean publishable;
 
