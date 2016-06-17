@@ -25,6 +25,11 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
       controller: 'PrivateRecipeController',
       controllerAs: 'controller'
     })
+    .when('/createRecipe', {
+      templateUrl: 'partials/createRecipe.html',
+      controller: 'CreateRecipeController',
+      controllerAs: 'controller'
+    })
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
@@ -73,9 +78,6 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
             console.log(response);
           });
         }
-
-
-
     }]
 );
 
@@ -211,17 +213,102 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
         }).then(function successCallback(response){
           recipe.triggerChannelImage = 'img/'+response.data.triggerChannelId + '.png';
           recipe.actionChannelImage = 'img/'+response.data.actionChannelId + '.png';
-
-
         }, function errorCallback(response){
-
         });
-
-
-
 
         })
         }, function errorCallback(response) {
         $scope.error = true;
     });
+}]);
+
+iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', function($scope, $rootScope, $http, $timeout){
+
+  var self = this;
+  self.currentSelected = "";
+
+  self.recipe = {
+
+  };
+  $scope.channels = [];
+
+  function downloadChannels() {
+    $scope.channels = [];
+    $http({
+      method: 'GET',
+      url: 'api/channels'
+    }).then(
+      function successCallback(result){
+          result.data.forEach(function(element) {
+          $scope.channels.push({
+            id : element.id,
+            title : element.name,
+            description : element.description,
+            link : 'img/'+element.id + '.png'
+          });
+        });
+      },
+      function errorCallback(result){
+        console.log(result);
+      }
+    );
+  };
+
+  function dowloadTriggers(){
+    $http({
+      method : 'GET',
+      url : 'api/channels/'+self.recipe.triggerId
+    }).then(
+      function successCallback(result){
+
+        $scope.triggers = [];
+
+        for(var element in result.data.triggers)
+          $scope.triggers.push({
+            title: element,
+            description : result.data.triggers[element].description
+          });
+
+        console.log($scope.triggers);
+
+
+      },
+      function errorCallback(result){
+
+      }
+    );
+  }
+
+  self.selectTriggerClicked = function(){
+    console.log("selectTriggerClicked");
+    self.currentSelected = "trigger";
+
+    downloadChannels();
+  };
+  self.selectActionClicked = function(){
+    self.currentSelected = "action";
+
+    downloadChannels();
+  };
+
+  self.channelSelected = function (id){
+    $scope.channels = [];
+    var image = $('<img>');
+    $(image).attr("src","img/"+id+".png");
+    $(image).attr("width", "110px");
+
+    if(self.currentSelected === "trigger"){
+      self.recipe.triggerId = id;
+      $("#triggerDiv").html(image);
+      dowloadTriggers();
+    }
+    else if(self.currentSelected === "action"){
+      self.recipe.triggerId = id;
+      $("#actionDiv").html(image);
+    }
+  }
+
+
+
+
 }]);

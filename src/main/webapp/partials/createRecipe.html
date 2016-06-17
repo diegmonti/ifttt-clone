@@ -1,0 +1,47 @@
+
+<!-- title -->
+<div class="row">
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" />
+</div>
+
+<div class="row">
+  <span>IF</span>
+  <span id="triggerDiv">
+     <button data-ng-click="controller.selectTriggerClicked()" class="btn btn-link"> This </button>
+  </span>
+  <span> THEN </span>
+  <span id="actionDiv">
+    <a data-ng-click="controller.selectActionClicked()" class="btn btn-link"> That </a>
+  </span>
+</div>
+
+<div id="channlesDiv">
+  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in channels" data-ng-click="controller.channelSelected(channel.id)">
+    <img class="card-img-top" src={{channel.link}} alt={{channel.title}} width="110px">
+    <div class="card-block">
+      <h4 class="card-title">{{channel.title}}</h4>
+    </div>
+  </div>
+</div>
+
+
+<div id="triggerChoicesDiv" class="container">
+  <!-- Put here the choices -->
+  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="">
+    <div class="card-block">
+      <h4 class="card-title">{{trigger.title}}</h4>
+      <p class="card-text">{{trigger.description}}</p>
+    </div>
+  </div>
+</div>
+
+<div id="triggerFieldsDiv">
+</div>
+
+<div id="actionsChoicesDiv">
+  <!-- Put here the choices for the action -->
+</div>
+
+<div id="actionsFieldsDiv">
+
+</div>
