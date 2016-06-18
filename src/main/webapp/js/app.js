@@ -222,12 +222,12 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
     });
 }]);
 
-iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', function($scope, $rootScope, $http, $timeout){
+iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', '$compile', function($scope, $rootScope, $http, $timeout, $compile){
 
   var self = this;
   self.currentSelected = "";
 
-  self.recipe = {};
+  $scope.recipe = {};
   $scope.channels = [];
 
   function downloadChannels() {
@@ -255,7 +255,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function dowloadTriggers(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+self.recipe.triggerId
+      url : 'api/channels/'+  $scope.recipe.triggerId
     }).then(
       function successCallback(result){
 
@@ -276,37 +276,47 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $scope.triggers = [];
     $http({
       method : 'GET',
-      url : 'api/channels/'+self.recipe.triggerId
+      url : 'api/channels/'+  $scope.recipe.triggerId
     }).then(
       function successCallback(result){
-        $scope.triggerFields = [];
-        var index;
-        for(index in result.data.triggers[self.recipe.trigger].triggerFields){
-          var element = result.data.triggers[self.recipe.trigger].triggerFields[index];
-          var div = $('<div>').attr({class : 'form-group row'});
-          var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
-          var input = $('<input>').attr({class : 'form-control', type : 'text', placeholder : element.description});
-          div.append(label).append(input);
+          var index;
+          for(index in result.data.triggers[ $scope.recipe.trigger].triggerFields){
+            var element = result.data.triggers[$scope.recipe.trigger].triggerFields[index];
+            var div = $('<div>').attr({class : 'form-group row'});
+            var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
+            var input;
+            (function (model){
+                input = $('<input>').attr({
+                class : 'form-control',
+                type : 'text',
+                placeholder : element.description,
+                'data-ng-model' : model
+              });
+              console.log(model);
+            })('recipe.triggerFields.' + index);
+            $compile(input)($scope);
+
+            div.append(label).append(input);
+            $('#triggerFieldsDiv').append(div);
+          }
+          div = $('<div>').attr({class : 'form-group row'});
+
+          var button = $('<button>').attr({
+            class : 'btn btn-primary col-lg-4 col-lg-offset-3',
+          }).text("Accetta");
+          div.append(button);
           $('#triggerFieldsDiv').append(div);
-        }
-        div = $('<div>').attr({class : 'form-group row'});
-        var button = $('<button>').attr({
-          class : 'btn btn-primary col-lg-4 col-lg-offset-3',
-          'data-ng-click' : "controller.acceptTriggerFields()"
-        }).text("Accetta");
-        div.append(button);
-        $('#triggerFieldsDiv').append(div);
-        button.on('click', self.acceptTriggerFields);
+          button.on('click', self.acceptTriggerFields);
 
       },
       function errorCallback(result){});
   }
 
   function downloadActions(){
-    console.log('asking to ' + 'api/channels/'+self.recipe.actionId);
+    console.log('asking to ' + 'api/channels/'+  $scope.recipe.actionId);
     $http({
       method : 'GET',
-      url : 'api/channels/'+self.recipe.actionId
+      url : 'api/channels/'+  $scope.recipe.actionId
     }).then(
       function successCallback(result){
 
@@ -326,16 +336,25 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function downloadActionFields(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+self.recipe.actionId
+      url : 'api/channels/'+  $scope.recipe.actionId
     }).then(
       function successCallback(result){
 
         var index;
-        for(index in result.data.actions[self.recipe.action].actionFields){
-          var element = result.data.actions[self.recipe.action].actionFields[index];
+        for(index in result.data.actions[  $scope.recipe.action].actionFields){
+          var element = result.data.actions[  $scope.recipe.action].actionFields[index];
           var div = $('<div>').attr({class : 'form-group row'});
           var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
-          var input = $('<input>').attr({class : 'form-control', type : 'text', placeholder : element.description});
+          var input;
+          (function(model){
+              input = $('<input>').attr({
+                class : 'form-control',
+                type : 'text',
+                placeholder : element.description,
+                'data-ng-model' : model
+              });
+          })('recipe.actionFields.' + index);
+          $compile(input)($scope);
           div.append(label).append(input);
           $('#actionFieldsDiv').append(div);
         }
@@ -368,19 +387,19 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $(image).attr("width", "110px");
 
     if(self.currentSelected === "trigger"){
-      self.recipe.triggerId = id;
+        $scope.recipe.triggerId = id;
       $("#triggerDiv").html(image);
       dowloadTriggers();
     }
     else if(self.currentSelected === "action"){
-      self.recipe.actionId = id;
+        $scope.recipe.actionId = id;
       $("#actionDiv").html(image);
       downloadActions();
     }
   }
 
   self.triggerSelected = function(id){
-    self.recipe.trigger = id;
+      $scope.recipe.trigger = id;
     downloadTriggerFields();
   }
 
@@ -396,12 +415,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   }
 
   self.actionSelected = function(id){
-    self.recipe.action = id;
+      $scope.recipe.action = id;
     $scope.actions = [];
     downloadActionFields();
   }
 
   self.acceptActionsFields = function(){
     $('#actionFieldsDiv').hide();
+    console.log(  $scope.recipe);
   }
 }]);
