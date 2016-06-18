@@ -62,9 +62,6 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		Date now = java.util.Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone())).getTime();	// now for the user
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
 		for (Event event : events.getItems()) {
-			/*String title = event.getSummary();
-			String description = event.getDescription();
-			String loaction = event.getLocation();*/
 			if(!this.filterEventOr(titleKW, descriptionKW, locationKW, 
 					event.getSummary(), event.getDescription(), event.getLocation())){	// change Or for And to get other trigger
 				continue;
@@ -90,7 +87,6 @@ public class GoogleCalendarChannel extends AbstractChannel {
 			result.add(resEntry);
 		}
 
-		//return ingredients;
 		return result;
 	}
 
@@ -109,12 +105,6 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		try {
 			Calendar gCalendar = this.getCalendarService();
 			
-			/*events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
-					.setTimeMin(new DateTime(this.getLastRun())).setOrderBy("updated").execute();*/
-			/*events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
-					.setTimeMin(new DateTime(this.getLastRun())).execute();	// order is meaningless*/
-			/*events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
-					.execute();	// getting all events since I can create an event in the past*/
 			events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
 					.setOrderBy("updated").execute();
 		} catch (GeneralSecurityException | IOException e) {	// error 500
@@ -125,7 +115,6 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
 		ListIterator<Event> li = events.getItems().listIterator(events.getItems().size());
-		//for (Event event : events.getItems()) {
 		while(li.hasPrevious()){	// backwards for early termination
 			Event event = li.previous();
 			

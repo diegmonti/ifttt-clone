@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.TestPropertySource;
@@ -31,7 +30,6 @@ import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 
 @Component
-//@TestPropertySource(value = { "classpath:test.properties" })
 @TestPropertySource(value = { "classpath:application.properties" })
 public class TestRecipesCreator {
 	@Autowired
@@ -69,7 +67,8 @@ public class TestRecipesCreator {
 		}
 			
 		//this.weatherTests(user);
-		this.gCalendarTests(user);
+		//this.gCalendarTests(user);
+		//this.gMailTests(user);
 		
 		System.err.println("-CHANNEL_TESTS: end");
 	}
@@ -237,8 +236,6 @@ public class TestRecipesCreator {
 		this.weatherTestsDone = true;
 	}
 	
-	/*@Value( "${gCalendar.token}" )
-	private String tok;*/
 	
 	/*Create events with start=end in the range of execution (first preferably), all (trigger) should run once
 	* Just create after yesterday at this time and then run
@@ -254,17 +251,12 @@ public class TestRecipesCreator {
 		if(this.gCalendarTestsDone){
 			return;
 		}
-		/*System.err.println("*****TOKEN:" + env.getProperty("gCalendar.token"));
-		System.err.println("*****TOKEN2:" + tok);
-		System.err.println("*****JDBC_USER:" + env.getProperty("jdbc.username"));*/
 		
 		System.err.println("--GOOGLE_CALENDAR_TESTS: begin");
 		
 		System.err.println("--GOOGLE_CALENDAR_TESTS: creating connection");
 		String token = env.getProperty("gCalendar.token");
 		String refreshToken = env.getProperty("gCalendar.refreshToken");
-		//String token = "";	// change for real token
-		//String refreshToken = "";	// change for real token
 		ChannelConnector cc = new ChannelConnector();
 		cc.setToken(token);
 		cc.setRefreshToken(refreshToken);

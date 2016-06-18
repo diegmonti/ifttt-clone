@@ -25,7 +25,6 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.TriggerFieldTag;
 import iftttclone.channels.annotations.TriggerTag;
-//import iftttclone.entities.ChannelConnector;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.UserRepository;
@@ -48,39 +47,17 @@ public class GmailChannel extends AbstractChannel {
 			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", isPublishable = false) String sender,
 			@TriggerFieldTag(name = "Subject", description = "The subject of the email", isPublishable = true) String subject) {
 
-		//String username = this.getUser().getUsername();
-		//ChannelConnector cc = this.getChannelConnector();
 		try {
-
-			/*JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-			HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();*/
-
-			/*ChannelConnector cc = channelConnectorRepository.getChannelConnectorByChannelAndUser(
-					channelRepository.getChannelByClasspath(GmailChannel.class.getName()),
-					userRepository.getUserByUsername(username));*/
-
-			//Credential credentials = new GoogleCredential().setAccessToken(cc.getToken());
-			/*Credential credentials = new GoogleCredential().setAccessToken(this.getChannelConnector().getToken());
-			Gmail gmail = new Gmail.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE")
-					.build();*/
 			Gmail gmail = this.getGmailService();
 
 			if (gmail == null)	// is this possible?
 				System.out.println("gmail is null");
 			ListMessagesResponse listResponse = gmail.users().messages().list("me").execute();
-			List<Message> messages = listResponse.getMessages();
-
-			for (Message m : messages) {
-				System.out.println("\n" + m.getSnippet() + "\n");
-			}
-			// TODO: remove print and add
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		// TODO: do something
 
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
 		Map<String, String> resEntry = new HashMap<String, String>();

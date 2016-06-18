@@ -149,11 +149,7 @@ public class Scheduler {
 	}
 
 	private String parseField(String input, Map<String, String> map) {
-		/*for (String key : map.keySet()) {
-			input = input.replace("{{" + key + "}}", map.get(key));
-		}
-		return input;*/
-		String output = input;	// TODO check if needed
+		String output = input;
 		for (String key : map.keySet()) {
 			output = output.replace("{{" + key + "}}", map.get(key));
 		}
