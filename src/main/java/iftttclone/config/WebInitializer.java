@@ -1,4 +1,4 @@
-package iftttclone.core.config;
+package iftttclone.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

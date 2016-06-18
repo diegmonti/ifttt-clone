@@ -1,4 +1,4 @@
-package iftttclone.core;
+package iftttclone.utils;
 
 import java.util.Arrays;
 import java.util.List;

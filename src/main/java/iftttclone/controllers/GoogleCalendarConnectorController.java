@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import iftttclone.core.Utils;
 import iftttclone.services.interfaces.GoogleCalendarConnectorService;
+import iftttclone.utils.Utils;
 
 @RestController
 @RequestMapping(value = "/channels/google_calendar")

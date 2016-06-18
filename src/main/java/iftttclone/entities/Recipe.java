@@ -23,19 +23,19 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import iftttclone.entities.utils.TimezoneSerializer;
-import iftttclone.entities.utils.View;
+import iftttclone.utils.JsonViews;
+import iftttclone.utils.TimezoneSerializer;
 
 @Entity
 @Table(name = "recipe")
 public class Recipe {
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String title;
 
@@ -74,23 +74,23 @@ public class Recipe {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private boolean active;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(name = "creation_time", nullable = false)
 	private Long creationTime;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(name = "last_run", nullable = false)
 	private Long lastRun;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@Column(nullable = false)
 	private Integer runs;

@@ -1,4 +1,4 @@
-package iftttclone.core.config;
+package iftttclone.config;
 
 import java.util.Properties;
 
@@ -23,9 +23,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @EnableScheduling
-@ComponentScan(basePackages = {"iftttclone.core", "iftttclone.services"})
+@ComponentScan(basePackages = { "iftttclone.config", "iftttclone.core", "iftttclone.services" })
 @EnableJpaRepositories("iftttclone.repositories")
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource({ "classpath:application.properties" })
 public class RootConfig {
 	@Autowired
 	private Environment env;

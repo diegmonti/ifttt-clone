@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.PublicRecipe;
-import iftttclone.entities.utils.View;
 import iftttclone.services.interfaces.PublicRecipeService;
+import iftttclone.utils.JsonViews;
 
 @RestController
 @RequestMapping("/publicrecipes")
@@ -24,7 +24,7 @@ public class PublicRecipeController {
 	@Autowired
 	private PublicRecipeService publicRecipeService;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Set<PublicRecipe> getPublicRecipes(@RequestParam(value = "search", required = false) String search,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
@@ -68,14 +68,14 @@ public class PublicRecipeController {
 		publicRecipeService.removeFromFavorite(id);
 	}
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "/favorite", method = RequestMethod.GET)
 	public Set<PublicRecipe> getFavoritePublicRecipes(
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
 		return publicRecipeService.getFavoritePublicRecipes(page);
 	}
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "/published", method = RequestMethod.GET)
 	public Set<PublicRecipe> getPublishedPublicRecipes(
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {

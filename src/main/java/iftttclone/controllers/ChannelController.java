@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
 import iftttclone.entities.Trigger;
-import iftttclone.entities.utils.View;
 import iftttclone.services.interfaces.ChannelService;
+import iftttclone.utils.JsonViews;
 
 @RestController
 @RequestMapping("/channels")
@@ -22,7 +22,7 @@ public class ChannelController {
 	@Autowired
 	ChannelService channelService;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Collection<Channel> getChannels() {
 		return channelService.getChannels();

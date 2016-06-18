@@ -14,12 +14,12 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import iftttclone.entities.utils.View;
+import iftttclone.utils.JsonViews;
 
 @Entity
 @Table(name = "channel")
 public class Channel {
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Id
 	private String id;
 
@@ -27,19 +27,19 @@ public class Channel {
 	@Column(nullable = false, unique = true)
 	private String classpath;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String name;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String description;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Transient
 	private boolean connected;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(name = "with_connection", nullable = false)
 	private boolean withConnection;
 

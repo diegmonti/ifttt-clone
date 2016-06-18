@@ -15,7 +15,6 @@ import iftttclone.entities.Channel;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
-import iftttclone.entities.RecipeLogEvent;
 import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
@@ -29,6 +28,7 @@ import iftttclone.repositories.RecipeRepository;
 import iftttclone.repositories.TriggerRepository;
 import iftttclone.services.interfaces.RecipeService;
 import iftttclone.services.interfaces.UserService;
+import iftttclone.utils.RecipeLogEvent;
 
 @Component
 @Transactional

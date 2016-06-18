@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import iftttclone.utils.RecipeLogEvent;
+
 @Entity
 @Table(name = "recipe_log")
 public class RecipeLog {
@@ -31,12 +33,12 @@ public class RecipeLog {
 	private RecipeLogEvent event;
 
 	public RecipeLog() {
-		// Default constructor
+		this.timestamp = System.currentTimeMillis();
 	}
 
 	public RecipeLog(Recipe recipe, RecipeLogEvent event) {
+		this();
 		this.recipe = recipe;
-		this.timestamp = System.currentTimeMillis();
 		this.event = event;
 	}
 

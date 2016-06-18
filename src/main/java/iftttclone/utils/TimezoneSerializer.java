@@ -1,4 +1,4 @@
-package iftttclone.entities.utils;
+package iftttclone.utils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

@@ -8,7 +8,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import iftttclone.core.config.RootConfig;
+import iftttclone.config.RootConfig;
 
 @Order
 @RunWith(SpringRunner.class)

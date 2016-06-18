@@ -9,11 +9,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import iftttclone.core.Utils;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.UserService;
+import iftttclone.utils.Utils;
 
 @Component
 @Transactional

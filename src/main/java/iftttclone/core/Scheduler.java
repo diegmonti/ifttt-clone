@@ -17,12 +17,12 @@ import iftttclone.entities.Action;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
-import iftttclone.entities.RecipeLogEvent;
 import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.RecipeLogRepository;
 import iftttclone.repositories.RecipeRepository;
+import iftttclone.utils.RecipeLogEvent;
 
 /**
  * The method run is automatically called every fixedRate milliseconds. The
@@ -54,12 +54,12 @@ public class Scheduler {
 
 				// Check if the recipe is active
 				if (recipe.isActive()) {
-					System.err.println("----SCHEDULER: processing recipe " + recipe.getTitle());
+					System.err.println("----SCHEDULER: Processing recipe " + recipe.getTitle());
 					triggerResult = runTrigger(recipe);
 
 					// Run the action?
 					if (triggerResult != null) {
-						System.err.println("----SCHEDULER: running action for recipe " + recipe.getTitle());
+						System.err.println("----SCHEDULER: Running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
 						recipe.setLastRun(System.currentTimeMillis());
 						recipe.setRuns(recipe.getRuns() + 1);

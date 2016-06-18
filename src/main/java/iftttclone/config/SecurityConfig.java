@@ -1,4 +1,4 @@
-package iftttclone.core.config;
+package iftttclone.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +15,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import iftttclone.services.UserDetailsServiceImpl;
+import iftttclone.utils.CsrfHeaderFilter;
 
 @Configuration
 @EnableWebSecurity
