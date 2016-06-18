@@ -1,7 +1,11 @@
+<div class="alert alert-danger" data-ng-show="error">
+    {{errorMessage}}
+</div>
+
 
 <!-- title -->
 <div class="row">
-    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" />
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title"/>
 </div>
 
 <div class="row">
@@ -49,6 +53,9 @@
   </div>
 </div>
 
-<div id="actionFieldsDiv">
+<div id="actionFieldsDiv" >
 
+</div>
+
+<div id='confirmDiv' class="row">
 </div>

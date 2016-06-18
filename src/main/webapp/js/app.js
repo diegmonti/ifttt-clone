@@ -156,7 +156,7 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         },
         headers : {
           'Content-Type': 'application/json'
-            }
+        }
       }).then(function () {
             $rootScope.authenticated = false;
             $location.path("/");
@@ -255,7 +255,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function dowloadTriggers(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.triggerId
+      url : 'api/channels/'+  $scope.recipe.triggerChannelId
     }).then(
       function successCallback(result){
 
@@ -276,12 +276,12 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $scope.triggers = [];
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.triggerId
+      url : 'api/channels/'+  $scope.recipe.triggerChannelId
     }).then(
       function successCallback(result){
           var index;
-          for(index in result.data.triggers[ $scope.recipe.trigger].triggerFields){
-            var element = result.data.triggers[$scope.recipe.trigger].triggerFields[index];
+          for(index in result.data.triggers[ $scope.recipe.triggerMethod].triggerFields){
+            var element = result.data.triggers[$scope.recipe.triggerMethod].triggerFields[index];
             var div = $('<div>').attr({class : 'form-group row'});
             var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
             var input;
@@ -293,7 +293,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 'data-ng-model' : model
               });
               console.log(model);
-            })('recipe.triggerFields.' + index);
+            })('recipe.recipeTriggerFields.' + index + '.value');
             $compile(input)($scope);
 
             div.append(label).append(input);
@@ -313,10 +313,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   }
 
   function downloadActions(){
-    console.log('asking to ' + 'api/channels/'+  $scope.recipe.actionId);
+    console.log('asking to ' + 'api/channels/'+  $scope.recipe.actionChannelId);
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.actionId
+      url : 'api/channels/'+  $scope.recipe.actionChannelId
     }).then(
       function successCallback(result){
 
@@ -336,13 +336,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function downloadActionFields(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.actionId
+      url : 'api/channels/'+  $scope.recipe.actionChannelId
     }).then(
       function successCallback(result){
 
         var index;
-        for(index in result.data.actions[  $scope.recipe.action].actionFields){
-          var element = result.data.actions[  $scope.recipe.action].actionFields[index];
+        for(index in result.data.actions[  $scope.recipe.actionMethod].actionFields){
+          var element = result.data.actions[  $scope.recipe.actionMethod].actionFields[index];
           var div = $('<div>').attr({class : 'form-group row'});
           var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
           var input;
@@ -353,7 +353,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 placeholder : element.description,
                 'data-ng-model' : model
               });
-          })('recipe.actionFields.' + index);
+          })('recipe.recipeActionFields.' + index + '.value');
           $compile(input)($scope);
           div.append(label).append(input);
           $('#actionFieldsDiv').append(div);
@@ -387,19 +387,19 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $(image).attr("width", "110px");
 
     if(self.currentSelected === "trigger"){
-        $scope.recipe.triggerId = id;
+        $scope.recipe.triggerChannelId = id;
       $("#triggerDiv").html(image);
       dowloadTriggers();
     }
     else if(self.currentSelected === "action"){
-        $scope.recipe.actionId = id;
+        $scope.recipe.actionChannelId = id;
       $("#actionDiv").html(image);
       downloadActions();
     }
   }
 
   self.triggerSelected = function(id){
-      $scope.recipe.trigger = id;
+      $scope.recipe.triggerMethod = id;
     downloadTriggerFields();
   }
 
@@ -415,13 +415,36 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   }
 
   self.actionSelected = function(id){
-      $scope.recipe.action = id;
+    $scope.recipe.actionMethod = id;
     $scope.actions = [];
     downloadActionFields();
   }
 
   self.acceptActionsFields = function(){
     $('#actionFieldsDiv').hide();
-    console.log(  $scope.recipe);
+    console.log(  JSON.stringify($scope.recipe));
+
+    var button = $('<button>').attr({
+      class : 'btn btn-primary col-lg-4 col-lg-offset-3'
+    }).text('Conferma');
+    button.on('click', createRecipe);
+    $('#confirmDiv').append(button);
+  }
+
+  function createRecipe(){
+    $http({
+      method : 'POST',
+      url : 'api/myrecipes',
+      data : JSON.stringify($scope.recipe),
+      headers : {
+        'Content-Type': 'application/json'
+      }
+    }).then(function successCallback(result){
+      //TODO:  success! should change location
+
+    }, function errorCallback(result){
+      $scope.error = true;
+      $scope.errorMessage = result.data.message;
+    });
   }
 }]);
