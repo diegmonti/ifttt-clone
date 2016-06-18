@@ -1,6 +1,8 @@
 package iftttclone.services;
 
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -9,11 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Utils;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.UserService;
-import iftttclone.utils.Utils;
 
 @Component
 @Transactional
@@ -103,7 +105,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<String> getTimezones() {
-		return Utils.getTimezones();
+		String timezoneId = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
+		String[] allTimezones = TimeZone.getAvailableIDs();
+		Set<String> timezones = new TreeSet<String>();
+
+		for (String timezone : allTimezones) {
+			if (timezone.matches(timezoneId))
+				timezones.add(timezone.replace('_', ' '));
+		}
+
+		return timezones;
 	}
 
 }

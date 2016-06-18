@@ -5,13 +5,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,19 +40,7 @@ public class User {
 	private String timezone;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<ChannelConnector> connectedChannels;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<Recipe> recipes;
-
-	@JsonIgnore
-	@OneToMany(mappedBy = "user")
-	private Set<PublicRecipe> publicRecipes;
-
-	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "public_recipe_id"))
 	private Set<PublicRecipe> favoritePublicRecipes;
 
@@ -94,30 +82,6 @@ public class User {
 
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
-	}
-
-	public Set<ChannelConnector> getConnectedChannels() {
-		return connectedChannels;
-	}
-
-	public void setConnectedChannels(Set<ChannelConnector> connectedChannels) {
-		this.connectedChannels = connectedChannels;
-	}
-
-	public Set<Recipe> getRecipes() {
-		return recipes;
-	}
-
-	public void setRecipes(Set<Recipe> recipes) {
-		this.recipes = recipes;
-	}
-
-	public Set<PublicRecipe> getPublicRecipes() {
-		return publicRecipes;
-	}
-
-	public void setPublicRecipes(Set<PublicRecipe> publicRecipes) {
-		this.publicRecipes = publicRecipes;
 	}
 
 	public Set<PublicRecipe> getFavoritePublicRecipes() {

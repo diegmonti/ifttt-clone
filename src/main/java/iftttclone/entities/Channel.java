@@ -15,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import iftttclone.utils.JsonViews;
-import iftttclone.utils.TimezoneSerializer;
+import iftttclone.json.JsonViews;
+import iftttclone.json.TimestampSerializer;
 
 @Entity
 @Table(name = "channel")
@@ -42,13 +42,21 @@ public class Channel {
 	private boolean withConnection;
 
 	@JsonView(JsonViews.Summary.class)
-	@JsonSerialize(using = TimezoneSerializer.class)
+	@JsonSerialize(using = TimestampSerializer.class)
 	@Transient
 	private Long connectionTime;
+
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private boolean hasTriggers;
 
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
 	private Map<String, Trigger> triggers;
+
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private boolean hasActions;
 
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
@@ -102,12 +110,28 @@ public class Channel {
 		this.connectionTime = connectionTime;
 	}
 
+	public boolean isHasTriggers() {
+		return hasTriggers;
+	}
+
+	public void setHasTriggers(boolean hasTriggers) {
+		this.hasTriggers = hasTriggers;
+	}
+
 	public Map<String, Trigger> getTriggers() {
 		return triggers;
 	}
 
 	public void setTriggers(Map<String, Trigger> triggers) {
 		this.triggers = triggers;
+	}
+
+	public boolean isHasActions() {
+		return hasActions;
+	}
+
+	public void setHasActions(boolean hasActions) {
+		this.hasActions = hasActions;
 	}
 
 	public Map<String, Action> getActions() {

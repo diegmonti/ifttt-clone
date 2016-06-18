@@ -15,16 +15,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import iftttclone.utils.JsonViews;
-import iftttclone.utils.TimezoneSerializer;
+import iftttclone.json.ActionDeserializer;
+import iftttclone.json.ActionSerializer;
+import iftttclone.json.JsonViews;
+import iftttclone.json.TimestampSerializer;
+import iftttclone.json.TriggerDeserializer;
+import iftttclone.json.TriggerSerializer;
 
 @Entity
 @Table(name = "recipe")
@@ -39,31 +43,21 @@ public class Recipe {
 	@Column(nullable = false)
 	private String title;
 
-	@JsonIgnore
+	@JsonSerialize(using = TriggerSerializer.class)
+	@JsonDeserialize(using = TriggerDeserializer.class)
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
 	private Trigger trigger;
-
-	@Transient
-	private String triggerChannelId;
-
-	@Transient
-	private String triggerMethod;
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
 
-	@JsonIgnore
+	@JsonSerialize(using = ActionSerializer.class)
+	@JsonDeserialize(using = ActionDeserializer.class)
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
 	private Action action;
-
-	@Transient
-	private String actionChannelId;
-
-	@Transient
-	private String actionMethod;
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
@@ -80,13 +74,13 @@ public class Recipe {
 
 	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
-	@JsonSerialize(using = TimezoneSerializer.class)
+	@JsonSerialize(using = TimestampSerializer.class)
 	@Column(name = "creation_time", nullable = false)
 	private Long creationTime;
 
 	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
-	@JsonSerialize(using = TimezoneSerializer.class)
+	@JsonSerialize(using = TimestampSerializer.class)
 	@Column(name = "last_run", nullable = false)
 	private Long lastRun;
 
@@ -123,22 +117,6 @@ public class Recipe {
 		this.trigger = trigger;
 	}
 
-	public String getTriggerChannelId() {
-		return triggerChannelId;
-	}
-
-	public void setTriggerChannelId(String triggerChannelId) {
-		this.triggerChannelId = triggerChannelId;
-	}
-
-	public String getTriggerMethod() {
-		return triggerMethod;
-	}
-
-	public void setTriggerMethod(String triggerMethod) {
-		this.triggerMethod = triggerMethod;
-	}
-
 	public Map<String, RecipeTriggerField> getRecipeTriggerFields() {
 		return recipeTriggerFields;
 	}
@@ -153,22 +131,6 @@ public class Recipe {
 
 	public void setAction(Action action) {
 		this.action = action;
-	}
-
-	public String getActionChannelId() {
-		return actionChannelId;
-	}
-
-	public void setActionChannelId(String actionChannelId) {
-		this.actionChannelId = actionChannelId;
-	}
-
-	public String getActionMethod() {
-		return actionMethod;
-	}
-
-	public void setActionMethod(String actionMethod) {
-		this.actionMethod = actionMethod;
 	}
 
 	public Map<String, RecipeActionField> getRecipeActionFields() {

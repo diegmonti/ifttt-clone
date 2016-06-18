@@ -15,7 +15,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import iftttclone.services.UserDetailsServiceImpl;
-import iftttclone.utils.CsrfHeaderFilter;
 
 @Configuration
 @EnableWebSecurity

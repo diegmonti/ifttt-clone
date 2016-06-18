@@ -1,10 +1,8 @@
-package iftttclone.utils;
+package iftttclone.core;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,19 +33,6 @@ public class Utils {
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(email);
 		return m.matches();
-	}
-
-	public static Set<String> getTimezones() {
-		String timezoneId = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
-		String[] allTimezones = TimeZone.getAvailableIDs();
-		Set<String> timezones = new TreeSet<String>();
-
-		for (String timezone : allTimezones) {
-			if (timezone.matches(timezoneId))
-				timezones.add(timezone.replace('_', ' '));
-		}
-
-		return timezones;
 	}
 
 	public static boolean isValidTimezone(String timezone) {

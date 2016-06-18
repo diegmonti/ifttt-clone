@@ -1,5 +1,6 @@
 package iftttclone.controllers;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.PublicRecipe;
+import iftttclone.json.JsonViews;
 import iftttclone.services.interfaces.PublicRecipeService;
-import iftttclone.utils.JsonViews;
 
 @RestController
 @RequestMapping("/publicrecipes")
@@ -26,12 +27,10 @@ public class PublicRecipeController {
 
 	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public Set<PublicRecipe> getPublicRecipes(@RequestParam(value = "search", required = false) String search,
+	public List<PublicRecipe> getPublicRecipes(
+			@RequestParam(value = "title", required = false, defaultValue = "") String title,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
-		if (search != null) {
-			return publicRecipeService.getPublicRecipesByName(search, page);
-		}
-		return publicRecipeService.getPublicRecipes(page);
+		return publicRecipeService.getPublicRecipesByTitle(title, page);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -70,14 +69,13 @@ public class PublicRecipeController {
 
 	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "/favorite", method = RequestMethod.GET)
-	public Set<PublicRecipe> getFavoritePublicRecipes(
-			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
-		return publicRecipeService.getFavoritePublicRecipes(page);
+	public Set<PublicRecipe> getFavoritePublicRecipes() {
+		return publicRecipeService.getFavoritePublicRecipes();
 	}
 
 	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "/published", method = RequestMethod.GET)
-	public Set<PublicRecipe> getPublishedPublicRecipes(
+	public List<PublicRecipe> getPublishedPublicRecipes(
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
 		return publicRecipeService.getPublishedPublicRecipes(page);
 	}

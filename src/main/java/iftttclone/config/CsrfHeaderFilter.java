@@ -1,4 +1,4 @@
-package iftttclone.utils;
+package iftttclone.config;
 
 import java.io.IOException;
 

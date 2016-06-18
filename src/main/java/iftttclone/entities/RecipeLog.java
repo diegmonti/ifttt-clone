@@ -11,8 +11,6 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import iftttclone.utils.RecipeLogEvent;
-
 @Entity
 @Table(name = "recipe_log")
 public class RecipeLog {

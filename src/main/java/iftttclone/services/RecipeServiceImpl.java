@@ -1,5 +1,6 @@
 package iftttclone.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -15,36 +16,29 @@ import iftttclone.entities.Channel;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
+import iftttclone.entities.RecipeLogEvent;
 import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
-import iftttclone.repositories.ActionRepository;
 import iftttclone.repositories.ChannelConnectorRepository;
-import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeLogRepository;
 import iftttclone.repositories.RecipeRepository;
-import iftttclone.repositories.TriggerRepository;
 import iftttclone.services.interfaces.RecipeService;
 import iftttclone.services.interfaces.UserService;
-import iftttclone.utils.RecipeLogEvent;
 
 @Component
 @Transactional
 public class RecipeServiceImpl implements RecipeService {
+	private static final Integer PAGE_SIZE = 25;
+
 	@Autowired
 	private RecipeRepository recipeRepository;
 	@Autowired
 	private RecipeLogRepository recipeLogRepository;
 	@Autowired
-	private ChannelRepository channelRepository;
-	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
-	@Autowired
-	private TriggerRepository triggerRepository;
-	@Autowired
-	private ActionRepository actionRepository;
 	@Autowired
 	private UserService userService;
 
@@ -61,32 +55,23 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
-		recipe.setTriggerChannelId(recipe.getTrigger().getChannel().getId());
-		recipe.setTriggerMethod(recipe.getTrigger().getMethod());
-		recipe.setActionChannelId(recipe.getAction().getChannel().getId());
-		recipe.setActionMethod(recipe.getAction().getMethod());
 		return recipe;
 	}
 
 	@Override
 	public Recipe addRecipe(Recipe recipe) {
 		// Fields are not null
-		if (recipe.getTitle() == null || recipe.getTriggerChannelId() == null || recipe.getTriggerMethod() == null
-				|| recipe.getRecipeTriggerFields() == null || recipe.getActionChannelId() == null
-				|| recipe.getActionMethod() == null || recipe.getRecipeActionFields() == null) {
-			throw new InvalidRequestException("A required field is missing");
+		if (recipe.getTitle() == null || recipe.getTrigger() == null || recipe.getRecipeTriggerFields() == null
+				|| recipe.getAction() == null || recipe.getRecipeActionFields() == null) {
+			throw new InvalidRequestException("A required field is missing or inconsistent");
 		}
 
 		// Title is not empty
 		if (recipe.getTitle().equals("")) {
 			throw new InvalidRequestException("The title cannot be empty");
 		}
-
-		// Check trigger channel
-		Channel triggerChannel = channelRepository.findOne(recipe.getTriggerChannelId());
-		if (triggerChannel == null) {
-			throw new InvalidRequestException("The trigger channel is not valid");
-		}
+		
+		Channel triggerChannel = recipe.getTrigger().getChannel();
 
 		// Check trigger channel connection
 		if (triggerChannel.isWithConnection()) {
@@ -95,16 +80,11 @@ public class RecipeServiceImpl implements RecipeService {
 				throw new InvalidRequestException("The trigger channel must be connected");
 			}
 		}
-
-		// Check trigger
-		Trigger trigger = triggerRepository.getTriggerByMethodAndChannel(recipe.getTriggerMethod(), triggerChannel);
-		if (trigger == null) {
-			throw new InvalidRequestException("The trigger method is not valid");
-		}
-		recipe.setTrigger(trigger);
+		
+		Collection<TriggerField> triggerFields = recipe.getTrigger().getTriggerFields().values();
 
 		// Check trigger fields presence
-		for (TriggerField triggerField : trigger.getTriggerFields().values()) {
+		for (TriggerField triggerField : triggerFields) {
 			if (!recipe.getRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				throw new InvalidRequestException(
 						"The trigger field " + triggerField.getParameter() + " is not present");
@@ -115,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Check trigger fields number
-		if (trigger.getTriggerFields().values().size() != recipe.getRecipeTriggerFields().values().size()) {
+		if (triggerFields.size() != recipe.getRecipeTriggerFields().values().size()) {
 			throw new InvalidRequestException("Too many trigger fields");
 		}
 
@@ -126,11 +106,7 @@ public class RecipeServiceImpl implements RecipeService {
 			}
 		}
 
-		// Check action channel
-		Channel actionChannel = channelRepository.findOne(recipe.getActionChannelId());
-		if (actionChannel == null) {
-			throw new InvalidRequestException("The action channel is not valid");
-		}
+		Channel actionChannel = recipe.getAction().getChannel();
 
 		// Check action channel connection
 		if (actionChannel.isWithConnection()) {
@@ -140,15 +116,10 @@ public class RecipeServiceImpl implements RecipeService {
 			}
 		}
 
-		// Check action
-		Action action = actionRepository.getActionByMethodAndChannel(recipe.getActionMethod(), actionChannel);
-		if (action == null) {
-			throw new InvalidRequestException("The trigger method is not valid");
-		}
-		recipe.setAction(action);
+		Collection<ActionField> actionsFields = recipe.getAction().getActionFields().values();
 
 		// Check action fields presence
-		for (ActionField actionField : action.getActionFields().values()) {
+		for (ActionField actionField : actionsFields) {
 			if (!recipe.getRecipeActionFields().containsKey(actionField.getParameter())) {
 				throw new InvalidRequestException("The action field " + actionField.getParameter() + " is not present");
 			}
@@ -158,7 +129,7 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Check action fields number
-		if (action.getActionFields().values().size() != recipe.getRecipeActionFields().values().size()) {
+		if (actionsFields.size() != recipe.getRecipeActionFields().values().size()) {
 			throw new InvalidRequestException("Too many action fields");
 		}
 
@@ -329,7 +300,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (page < 0) {
 			throw new InvalidRequestException("Page cannot be negative");
 		}
-		Pageable pageable = new PageRequest(page, 25);
+		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		return recipeLogRepository.getRecipeLogByRecipeOrderByTimestampDesc(recipe, pageable);
 	}
 

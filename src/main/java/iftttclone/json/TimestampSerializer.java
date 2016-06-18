@@ -1,4 +1,4 @@
-package iftttclone.utils;
+package iftttclone.json;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.services.interfaces.UserService;
 
-public class TimezoneSerializer extends JsonSerializer<Long> {
+public class TimestampSerializer extends JsonSerializer<Long> {
 	@Autowired
 	private UserService userService;
 

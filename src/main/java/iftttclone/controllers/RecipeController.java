@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeLog;
+import iftttclone.json.JsonViews;
 import iftttclone.services.interfaces.RecipeService;
-import iftttclone.utils.JsonViews;
 
 @RestController
 @RequestMapping("/myrecipes")

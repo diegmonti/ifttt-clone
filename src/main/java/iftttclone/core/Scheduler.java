@@ -17,12 +17,12 @@ import iftttclone.entities.Action;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
+import iftttclone.entities.RecipeLogEvent;
 import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.RecipeLogRepository;
 import iftttclone.repositories.RecipeRepository;
-import iftttclone.utils.RecipeLogEvent;
 
 /**
  * The method run is automatically called every fixedRate milliseconds. The

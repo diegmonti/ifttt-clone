@@ -8,16 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
-import iftttclone.entities.Trigger;
 import iftttclone.entities.User;
 import iftttclone.exceptions.ResourceNotFoundException;
-import iftttclone.repositories.ActionRepository;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
-import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.ChannelService;
 
@@ -26,10 +22,6 @@ import iftttclone.services.interfaces.ChannelService;
 public class ChannelServiceImpl implements ChannelService {
 	@Autowired
 	private ChannelRepository channels;
-	@Autowired
-	private TriggerRepository triggers;
-	@Autowired
-	private ActionRepository actions;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -42,17 +34,17 @@ public class ChannelServiceImpl implements ChannelService {
 		// Get the current user, if exists
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		// Set connection time, if present
 		if (auth.isAuthenticated()) {
 			User user = userRepository.getUserByUsername(auth.getName());
 			for (Channel channel : collection) {
-				ChannelConnector channelConnector = channelConnectorRepository
-						.getChannelConnectorByChannelAndUser(channel, user);
-				if (channelConnector != null) {
-					if (channelConnector.getConnectionTime() != null) {
-						channel.setConnectionTime(channelConnector.getConnectionTime());
-					}
-				}
+				setConnectionTime(channel, user);
 			}
+		}
+
+		// Check if the channel has triggers or actions
+		for (Channel channel : collection) {
+			setTriggersAndActions(channel);
 		}
 
 		return collection;
@@ -69,40 +61,40 @@ public class ChannelServiceImpl implements ChannelService {
 		// Get the current user, if exists
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		// Set connection time, if present
 		if (auth.isAuthenticated()) {
 			User user = userRepository.getUserByUsername(auth.getName());
-			ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
-					user);
-			if (channelConnector != null) {
-				if (channelConnector.getConnectionTime() != null) {
-					channel.setConnectionTime(channelConnector.getConnectionTime());
-				}
-			}
+			setConnectionTime(channel, user);
 		}
+
+		// Check if the channel has triggers or actions
+		setTriggersAndActions(channel);
 
 		return channel;
 	}
 
-	@Override
-	public Collection<Trigger> getChannelTriggers(String channelId) {
-		Channel channel = channels.findOne(channelId);
-
-		if (channel == null) {
-			throw new ResourceNotFoundException();
+	private void setConnectionTime(Channel channel, User user) {
+		ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
+				user);
+		if (channelConnector != null) {
+			if (channelConnector.getConnectionTime() != null) {
+				channel.setConnectionTime(channelConnector.getConnectionTime());
+			}
 		}
-
-		return triggers.getTriggersByChannel(channel);
 	}
 
-	@Override
-	public Collection<Action> getChannelActions(String channelId) {
-		Channel channel = channels.findOne(channelId);
-
-		if (channel == null) {
-			throw new ResourceNotFoundException();
+	private void setTriggersAndActions(Channel channel) {
+		if (!channel.getTriggers().isEmpty()) {
+			channel.setHasTriggers(true);
+		} else {
+			channel.setHasTriggers(false);
 		}
 
-		return actions.getActionsByChannel(channel);
+		if (!channel.getActions().isEmpty()) {
+			channel.setHasActions(true);
+		} else {
+			channel.setHasTriggers(false);
+		}
 	}
 
 }
