@@ -1,4 +1,4 @@
-package iftttclone.core;
+package iftttclone.utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Utils {
 
 		for (String timezone : allTimezones) {
 			if (timezone.matches(timezoneId))
-				timezones.add(timezone);
+				timezones.add(timezone.replace('_', ' '));
 		}
 
 		return timezones;
@@ -53,7 +53,7 @@ public class Utils {
 	public static boolean isValidTimezone(String timezone) {
 		List<String> allTimezones = Arrays.asList(TimeZone.getAvailableIDs());
 
-		if (allTimezones.contains(timezone)) {
+		if (allTimezones.contains(timezone.replace(' ', '_'))) {
 			return true;
 		}
 

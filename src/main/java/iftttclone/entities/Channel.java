@@ -13,11 +13,15 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import iftttclone.utils.JsonViews;
+import iftttclone.utils.TimezoneSerializer;
 
 @Entity
 @Table(name = "channel")
 public class Channel {
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Id
 	private String id;
 
@@ -25,21 +29,22 @@ public class Channel {
 	@Column(nullable = false, unique = true)
 	private String classpath;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String name;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String description;
 
-	@JsonView(View.Summary.class)
-	@Transient
-	private boolean connected;
-
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(name = "with_connection", nullable = false)
 	private boolean withConnection;
+
+	@JsonView(JsonViews.Summary.class)
+	@JsonSerialize(using = TimezoneSerializer.class)
+	@Transient
+	private Long connectionTime;
 
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
@@ -81,20 +86,20 @@ public class Channel {
 		this.description = description;
 	}
 
-	public boolean isConnected() {
-		return connected;
-	}
-
-	public void setConnected(boolean connected) {
-		this.connected = connected;
-	}
-
 	public boolean isWithConnection() {
 		return withConnection;
 	}
 
 	public void setWithConnection(boolean withConnection) {
 		this.withConnection = withConnection;
+	}
+
+	public Long getConnectionTime() {
+		return connectionTime;
+	}
+
+	public void setConnectionTime(Long connectionTime) {
+		this.connectionTime = connectionTime;
 	}
 
 	public Map<String, Trigger> getTriggers() {

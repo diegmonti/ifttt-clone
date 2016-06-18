@@ -1,6 +1,5 @@
 package iftttclone.entities;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,25 +15,27 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import iftttclone.utils.JsonViews;
+import iftttclone.utils.TimezoneSerializer;
 
 @Entity
 @Table(name = "recipe")
 public class Recipe {
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String title;
 
@@ -73,23 +74,23 @@ public class Recipe {
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private boolean active;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
+	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(name = "creation_time", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date creationTime;
+	private Long creationTime;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
+	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(name = "last_run", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastRun;
+	private Long lastRun;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@JsonProperty(access = Access.READ_ONLY)
 	@Column(nullable = false)
 	private Integer runs;
@@ -194,19 +195,19 @@ public class Recipe {
 		this.active = active;
 	}
 
-	public Date getCreationTime() {
+	public Long getCreationTime() {
 		return creationTime;
 	}
 
-	public void setCreationTime(Date creationTime) {
+	public void setCreationTime(Long creationTime) {
 		this.creationTime = creationTime;
 	}
 
-	public Date getLastRun() {
+	public Long getLastRun() {
 		return lastRun;
 	}
 
-	public void setLastRun(Date lastRun) {
+	public void setLastRun(Long lastRun) {
 		this.lastRun = lastRun;
 	}
 

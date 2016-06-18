@@ -1,6 +1,5 @@
 package iftttclone.services;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,6 @@ import iftttclone.entities.Channel;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
-import iftttclone.entities.RecipeLogEvent;
 import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
@@ -30,6 +28,7 @@ import iftttclone.repositories.RecipeRepository;
 import iftttclone.repositories.TriggerRepository;
 import iftttclone.services.interfaces.RecipeService;
 import iftttclone.services.interfaces.UserService;
+import iftttclone.utils.RecipeLogEvent;
 
 @Component
 @Transactional
@@ -171,9 +170,8 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Set default values
-		Date currentTime = new Date();
-		recipe.setCreationTime(currentTime);
-		recipe.setLastRun(currentTime);
+		recipe.setCreationTime(System.currentTimeMillis());
+		recipe.setLastRun(System.currentTimeMillis());
 		recipe.setUser(userService.getUser());
 		recipe.setActive(true);
 		recipe.setRuns(0);
@@ -260,7 +258,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		recipe.setRecipeActionFields(stub.getRecipeActionFields());
 
-		recipe.setLastRun(new Date());
+		recipe.setLastRun(System.currentTimeMillis());
 		recipeRepository.save(recipe);
 
 		// Add log entry
@@ -328,10 +326,10 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe == null) {
 			throw new SecurityException();
 		}
-		if (page < 1) {
-			page = 1;
+		if (page < 0) {
+			throw new InvalidRequestException("Page cannot be negative");
 		}
-		Pageable pageable = new PageRequest(page - 1, 25);
+		Pageable pageable = new PageRequest(page, 25);
 		return recipeLogRepository.getRecipeLogByRecipeOrderByTimestampDesc(recipe, pageable);
 	}
 

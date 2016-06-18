@@ -12,12 +12,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import iftttclone.channels.annotations.ActionFieldTag;
 import iftttclone.channels.annotations.ActionTag;
 import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.IngredientsTag;
-import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
@@ -54,16 +53,16 @@ public class DatabasePopulator {
 	private ActionRepository actions;
 	@Autowired
 	private ActionFieldRepository actionFields;
-	
 
 	@EventListener
 	@Transactional
 	public void populateDatabase(ContextRefreshedEvent event) {
-		// this avoids double calling (one for ContextLoaderListener and another for DispatcherServlet)
-		if(event.getApplicationContext().getParent() != null){
+		// This avoids double calling (one for ContextLoaderListener and another
+		// for DispatcherServlet)
+		if (event.getApplicationContext().getParent() != null) {
 			return;
 		}
-		
+
 		System.err.println("--POPULATOR: Start database population");
 
 		Reflections reflections = new Reflections("iftttclone.channels");
@@ -122,7 +121,7 @@ public class DatabasePopulator {
 
 		// For each parameter
 		for (Parameter parameter : method.getParameters()) {
-			if (parameter.isAnnotationPresent(TriggerFieldTag.class)) {
+			if (parameter.isAnnotationPresent(FieldTag.class)) {
 				TriggerField triggerField = triggerFields.getTriggerFieldByParameterAndTrigger(parameter.getName(),
 						trigger);
 				if (triggerField == null)
@@ -130,10 +129,10 @@ public class DatabasePopulator {
 
 				triggerField.setTrigger(trigger);
 				triggerField.setParameter(parameter.getName());
-				TriggerFieldTag triggerFieldTag = parameter.getAnnotation(TriggerFieldTag.class);
-				triggerField.setName(triggerFieldTag.name());
-				triggerField.setDescription(triggerFieldTag.description());
-				triggerField.setPublishable(triggerFieldTag.isPublishable());
+				FieldTag fieldTag = parameter.getAnnotation(FieldTag.class);
+				triggerField.setName(fieldTag.name());
+				triggerField.setDescription(fieldTag.description());
+				triggerField.setPublishable(fieldTag.publishable());
 
 				triggerFields.save(triggerField);
 			}
@@ -168,17 +167,17 @@ public class DatabasePopulator {
 
 		// For each parameter
 		for (Parameter parameter : method.getParameters()) {
-			if (parameter.isAnnotationPresent(ActionFieldTag.class)) {
+			if (parameter.isAnnotationPresent(FieldTag.class)) {
 				ActionField actionField = actionFields.getActionFieldByParameterAndAction(parameter.getName(), action);
 				if (actionField == null)
 					actionField = new ActionField();
 
 				actionField.setAction(action);
 				actionField.setParameter(parameter.getName());
-				ActionFieldTag actionFieldTag = parameter.getAnnotation(ActionFieldTag.class);
-				actionField.setName(actionFieldTag.name());
-				actionField.setDescription(actionFieldTag.description());
-				actionField.setPublishable(actionFieldTag.isPublishable());
+				FieldTag fieldTag = parameter.getAnnotation(FieldTag.class);
+				actionField.setName(fieldTag.name());
+				actionField.setDescription(fieldTag.description());
+				actionField.setPublishable(fieldTag.publishable());
 
 				actionFields.save(actionField);
 			}

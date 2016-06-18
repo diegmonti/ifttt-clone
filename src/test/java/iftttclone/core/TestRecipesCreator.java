@@ -38,12 +38,12 @@ public class TestRecipesCreator {
 	public void createTests(){
 		System.err.println("-CHANNEL_TESTS: begin");
 		
-		User user = users.getUserByUsername("testUser");
+		User user = users.getUserByUsername("user");
 		if(user == null){
 			System.err.println("-CHANNEL_TESTS: creating user");
 			user = new User();
 			user.setUsername("user");
-			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m");
+			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m"); // "password"
 			user.setEmail("user.test@gmail.com");
 			user.setTimezone("UTC");
 			users.save(user);
@@ -218,8 +218,8 @@ public class TestRecipesCreator {
 		Recipe r = new Recipe();
 		r.setActive(true);
 		r.setRuns(new Integer(0));
-		r.setCreationTime(now.getTime());
-		r.setLastRun(now.getTime());
+		r.setCreationTime(now.getTimeInMillis());
+		r.setLastRun(now.getTimeInMillis());
 		r.setUser(user);
 		r.setAction(actions.getActionByMethodAndChannel("simpleAction", channels.getChannelByClasspath("iftttclone.channels.TestChannel")));
 		return r;

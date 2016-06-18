@@ -3,11 +3,10 @@ package iftttclone.channels;
 import java.util.HashMap;
 import java.util.Map;
 
-import iftttclone.channels.annotations.ActionFieldTag;
 import iftttclone.channels.annotations.ActionTag;
 import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
-import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 
 @ChannelTag(name = "Google Calendar", description = "The channel for google calendar", withConnection = true)
@@ -19,9 +18,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public Map<String, String> newEventStarted(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", publishable = true) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", publishable = true) String descKW,
+			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", publishable = false) String locationKW) {
 
 		// TODO: do something
 
@@ -36,9 +35,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public Map<String, String> newEventAdded(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", publishable = true) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", publishable = true) String descKW,
+			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", publishable = false) String locationKW) {
 
 		// TODO: do something
 
@@ -48,10 +47,10 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
 	public void createEvent(
-			@ActionFieldTag(name = "Title", description = "The title of the event", isPublishable = true) String title,
-			@ActionFieldTag(name = "Description", description = "The description of the event", isPublishable = true) String description,
-			@ActionFieldTag(name = "Where", description = "The location of the event", isPublishable = false) String location,
-			@ActionFieldTag(name = "WhenStarts", description = "When the event starts", isPublishable = false) String starts) {
+			@FieldTag(name = "Title", description = "The title of the event", publishable = true) String title,
+			@FieldTag(name = "Description", description = "The description of the event", publishable = true) String description,
+			@FieldTag(name = "Where", description = "The location of the event", publishable = false) String location,
+			@FieldTag(name = "WhenStarts", description = "When the event starts", publishable = false) String starts) {
 
 		// TODO: do something
 

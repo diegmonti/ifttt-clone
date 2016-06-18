@@ -48,8 +48,9 @@ public class ChannelServiceImpl implements ChannelService {
 				ChannelConnector channelConnector = channelConnectorRepository
 						.getChannelConnectorByChannelAndUser(channel, user);
 				if (channelConnector != null) {
-					if (channelConnector.getConnectionTime() != null)
-						channel.setConnected(true);
+					if (channelConnector.getConnectionTime() != null) {
+						channel.setConnectionTime(channelConnector.getConnectionTime());
+					}
 				}
 			}
 		}
@@ -73,8 +74,9 @@ public class ChannelServiceImpl implements ChannelService {
 			ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
 					user);
 			if (channelConnector != null) {
-				if (channelConnector.getConnectionTime() != null)
-					channel.setConnected(true);
+				if (channelConnector.getConnectionTime() != null) {
+					channel.setConnectionTime(channelConnector.getConnectionTime());
+				}
 			}
 		}
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +121,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 
 		channelConnector.setToken(tokenResponse.getAccessToken());
 		channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
-		channelConnector.setConnectionTime(new Date());
+		channelConnector.setConnectionTime(System.currentTimeMillis());
 
 		channelConnectorRepository.save(channelConnector);
 	}
