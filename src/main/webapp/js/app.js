@@ -227,9 +227,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   var self = this;
   self.currentSelected = "";
 
-  self.recipe = {
-
-  };
+  self.recipe = {};
   $scope.channels = [];
 
   function downloadChannels() {
@@ -268,26 +266,98 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             title: element,
             description : result.data.triggers[element].description
           });
-
-        console.log($scope.triggers);
-
-
       },
       function errorCallback(result){
 
-      }
-    );
+      });
+  }
+
+  function downloadTriggerFields(){
+    $scope.triggers = [];
+    $http({
+      method : 'GET',
+      url : 'api/channels/'+self.recipe.triggerId
+    }).then(
+      function successCallback(result){
+        $scope.triggerFields = [];
+        var index;
+        for(index in result.data.triggers[self.recipe.trigger].triggerFields){
+          var element = result.data.triggers[self.recipe.trigger].triggerFields[index];
+          var div = $('<div>').attr({class : 'form-group row'});
+          var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
+          var input = $('<input>').attr({class : 'form-control', type : 'text', placeholder : element.description});
+          div.append(label).append(input);
+          $('#triggerFieldsDiv').append(div);
+        }
+        div = $('<div>').attr({class : 'form-group row'});
+        var button = $('<button>').attr({
+          class : 'btn btn-primary col-lg-4 col-lg-offset-3',
+          'data-ng-click' : "controller.acceptTriggerFields()"
+        }).text("Accetta");
+        div.append(button);
+        $('#triggerFieldsDiv').append(div);
+        button.on('click', self.acceptTriggerFields);
+
+      },
+      function errorCallback(result){});
+  }
+
+  function downloadActions(){
+    console.log('asking to ' + 'api/channels/'+self.recipe.actionId);
+    $http({
+      method : 'GET',
+      url : 'api/channels/'+self.recipe.actionId
+    }).then(
+      function successCallback(result){
+
+        $scope.actions = [];
+        console.log();
+        for(var element in result.data.actions)
+          $scope.actions.push({
+            title: element,
+            description : result.data.actions[element].description
+          });
+      },
+      function errorCallback(result){
+
+      });
+  }
+
+  function downloadActionFields(){
+    $http({
+      method : 'GET',
+      url : 'api/channels/'+self.recipe.actionId
+    }).then(
+      function successCallback(result){
+
+        var index;
+        for(index in result.data.actions[self.recipe.action].actionFields){
+          var element = result.data.actions[self.recipe.action].actionFields[index];
+          var div = $('<div>').attr({class : 'form-group row'});
+          var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
+          var input = $('<input>').attr({class : 'form-control', type : 'text', placeholder : element.description});
+          div.append(label).append(input);
+          $('#actionFieldsDiv').append(div);
+        }
+        div = $('<div>').attr({class : 'form-group row'});
+        var button = $('<button>').attr({
+          class : 'btn btn-primary col-lg-4 col-lg-offset-3',
+        }).text("Accetta");
+        div.append(button);
+        $('#actionFieldsDiv').append(div);
+        button.on('click', self.acceptActionsFields);
+
+      },
+      function errorCallback(result){});
   }
 
   self.selectTriggerClicked = function(){
-    console.log("selectTriggerClicked");
     self.currentSelected = "trigger";
-
     downloadChannels();
   };
+
   self.selectActionClicked = function(){
     self.currentSelected = "action";
-
     downloadChannels();
   };
 
@@ -303,12 +373,35 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
       dowloadTriggers();
     }
     else if(self.currentSelected === "action"){
-      self.recipe.triggerId = id;
+      self.recipe.actionId = id;
       $("#actionDiv").html(image);
+      downloadActions();
     }
   }
 
+  self.triggerSelected = function(id){
+    self.recipe.trigger = id;
+    downloadTriggerFields();
+  }
 
+  self.acceptTriggerFields = function(){
 
+    // todo: save values first
+    $('#triggerFieldsDiv').hide();
 
+    var link = $('<a>').attr({
+      class : 'btn btn-link'
+    }).text('that').on('click', self.selectActionClicked);
+    $('#actionDiv').html(link)
+  }
+
+  self.actionSelected = function(id){
+    self.recipe.action = id;
+    $scope.actions = [];
+    downloadActionFields();
+  }
+
+  self.acceptActionsFields = function(){
+    $('#actionFieldsDiv').hide();
+  }
 }]);
