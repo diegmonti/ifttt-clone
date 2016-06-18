@@ -9,3 +9,4 @@ src/main/webapp/fonts
 src/main/webapp/js/libs
 src/main/resources/client_secret.json
 target
+src/test/resources/application.properties

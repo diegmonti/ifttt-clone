@@ -42,7 +42,7 @@ public class Scheduler {
 	private ChannelConnectorRepository channelConnectorRepository;
 
 	@Transactional
-	@Scheduled(fixedRate = 30000)
+	@Scheduled(fixedRate = 30000)	// every 30 seconds
 	public void run() {
 		System.err.println("----SCHEDULER: Start processing recipes");
 		Iterator<Recipe> recipes = recipeRepository.findAll().iterator();
@@ -51,7 +51,7 @@ public class Scheduler {
 		while (recipes.hasNext()) {
 			recipe = recipes.next();
 			try {
-				Map<String, String> triggerResult;
+				List<Map<String, String>> triggerResult;
 
 				// Check if the recipe is active
 				if (recipe.isActive()) {
@@ -59,7 +59,7 @@ public class Scheduler {
 					triggerResult = runTrigger(recipe);
 
 					// Run the action?
-					if (triggerResult != null) {
+					if ((triggerResult != null) && (triggerResult.size()>0)) {
 						System.err.println("----SCHEDULER: running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
 						recipe.setLastRun(Calendar.getInstance(TimeZone.getTimeZone(recipe.getUser().getTimezone())).getTime());
@@ -81,7 +81,7 @@ public class Scheduler {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, String> runTrigger(Recipe recipe) throws ReflectiveOperationException {
+	private List<Map<String, String>> runTrigger(Recipe recipe) throws ReflectiveOperationException {
 		Trigger trigger = recipe.getTrigger();
 
 		Class<AbstractChannel> channelClass = (Class<AbstractChannel>) Class
@@ -110,11 +110,11 @@ public class Scheduler {
 		}
 
 		Method method = channelClass.getMethod(trigger.getMethod(), parameterTypes);
-		return (Map<String, String>) method.invoke(instance, parameters.toArray());
+		return (List<Map<String, String>>) method.invoke(instance, parameters.toArray());
 	}
 
 	@SuppressWarnings("unchecked")
-	private void runAction(Recipe recipe, Map<String, String> triggerResult) throws ReflectiveOperationException {
+	private void runAction(Recipe recipe, List<Map<String, String>> triggerResult) throws ReflectiveOperationException {
 		Action action = recipe.getAction();
 
 		Class<AbstractChannel> channelClass = (Class<AbstractChannel>) Class
@@ -129,27 +129,34 @@ public class Scheduler {
 
 		// Load parameters
 		Map<String, RecipeActionField> recipeActionFields = recipe.getRecipeActionFields();
-		Integer i = 0;
-		List<String> parameters = new ArrayList<String>();
-		while (recipeActionFields.containsKey("arg" + i)) {
-			parameters.add(parseField(recipeActionFields.get("arg" + i).getValue(), triggerResult));
-			i++;
-		}
-
 		// All parameters are strings
-		Class<?>[] parameterTypes = new Class<?>[i];
-		for (Integer j = 0; j < i; j++) {
+		Class<?>[] parameterTypes = new Class<?>[recipeActionFields.keySet().size()];
+		for (Integer j = 0; j < recipeActionFields.keySet().size(); j++) {	// assuming everything is fine (as it should)
 			parameterTypes[j] = String.class;
 		}
-
 		Method method = channelClass.getMethod(action.getMethod(), parameterTypes);
-		method.invoke(instance, parameters.toArray());
+		// Run action
+		for(Map<String, String> triggerResultEntry : triggerResult){
+			Integer i = 0;
+			List<String> parameters = new ArrayList<String>();
+			while (recipeActionFields.containsKey("arg" + i)) {
+				parameters.add(parseField(recipeActionFields.get("arg" + i).getValue(), triggerResultEntry));
+				i++;
+			}
+	
+			method.invoke(instance, parameters.toArray());
+		}
 	}
 
 	private String parseField(String input, Map<String, String> map) {
-		for (String key : map.keySet()) {
+		/*for (String key : map.keySet()) {
 			input = input.replace("{{" + key + "}}", map.get(key));
 		}
-		return input;
+		return input;*/
+		String output = input;	// TODO check if needed
+		for (String key : map.keySet()) {
+			output = output.replace("{{" + key + "}}", map.get(key));
+		}
+		return output;
 	}
 }

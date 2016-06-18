@@ -20,7 +20,7 @@ public class TestCore {
 	public void doTests() throws InterruptedException{
 		testRecipesCreator.createTests();
 		
-		Thread.sleep(180000);	// three seconds, wait for scheduler
+		Thread.sleep(180000);	// three minutes, wait for scheduler
 	}
 
 }

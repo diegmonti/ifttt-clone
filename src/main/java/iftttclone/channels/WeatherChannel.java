@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -40,7 +42,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "LowTempCelsius", description = "Today's low temperature registered in degrees Celsius", example = "23")
 	@IngredientTag(name = "SunriseTime", description = "When the sunrise will take place", example = "23/05/2016 05:15")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
-	public Map<String, String> tomorrowWeatherReport(
+	public List<Map<String, String>> tomorrowWeatherReport(
 			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location,
 			@TriggerFieldTag(name = "checkHour", description="The hour the trigger will fire", isPublishable = true) String hour, 
 			@TriggerFieldTag(name = "checkMinutes", description="The minutes the trigger will fire", isPublishable = true) String minutes){
@@ -78,10 +80,13 @@ public class WeatherChannel extends AbstractChannel {
 			return null;
 		}
 		
-		Map<String, String> result = new HashMap<String, String>();
-		this.addCommonIngredients(rootNode, result);
-		this.addExtraIngredients(rootNode, result);
-		result.put("SunriseTime", rootNode.findPath("astronomy").findPath("sunrise").asText());
+		Map<String, String> resEntry = new HashMap<String, String>();
+		this.addCommonIngredients(rootNode, resEntry);
+		this.addExtraIngredients(rootNode, resEntry);
+		resEntry.put("SunriseTime", rootNode.findPath("astronomy").findPath("sunrise").asText());
+		
+		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		result.add(resEntry);
 		
 		return result;
 	}
@@ -91,7 +96,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "CurrTempCelsius", description = "The current temperature registered in degrees Celsius", example = "25")
 	@IngredientTag(name = "Condition", description = "The weather condition", example = "Sunny")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
-	public Map<String, String> currentTemperature(
+	public List<Map<String, String>> currentTemperature(
 			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location,
 			@TriggerFieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", isPublishable = true) String lower, 
 			@TriggerFieldTag(name = "upperTemp", description="Fires if less than or equal to this value", isPublishable = true) String upper, 
@@ -124,8 +129,11 @@ public class WeatherChannel extends AbstractChannel {
 			return null;
 		}
 		
-		Map<String, String> result = new HashMap<String, String>();
-		this.addCommonIngredients(rootNode, result);
+		Map<String, String> resEntry = new HashMap<String, String>();
+		this.addCommonIngredients(rootNode, resEntry);
+		
+		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		result.add(resEntry);
 		
 		return result;
 	}
@@ -139,7 +147,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "HighTempCelsius", description = "Today's high temperature registered in degrees Celsius", example = "32")
 	@IngredientTag(name = "LowTempFahrenheit", description = "Today's low temperature registered in degrees Fahrenheit", example = "18")
 	@IngredientTag(name = "LowTempCelsius", description = "Today's low temperature registered in degrees Celsius", example = "23")
-	public Map<String, String> sunrise(
+	public List<Map<String, String>> sunrise(
 			@TriggerFieldTag(name = "location", description="The location the user is intrested in", isPublishable = false) String location){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
@@ -183,12 +191,16 @@ public class WeatherChannel extends AbstractChannel {
 			return null;
 		}
 		
-		Map<String, String> result = new HashMap<String, String>();
-		this.addCommonIngredients(rootNode, result);
-		this.addExtraIngredients(rootNode, result);
+		Map<String, String> resEntry = new HashMap<String, String>();
+		this.addCommonIngredients(rootNode, resEntry);
+		this.addExtraIngredients(rootNode, resEntry);
+		
+		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		result.add(resEntry);
 		
 		return result;
 	}
+	
 	
 	// Utility methods
 	private JsonNode doQuery(String query){
