@@ -2,9 +2,7 @@ package iftttclone.core;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,23 +35,10 @@ public class Utils {
 		return m.matches();
 	}
 
-	public static Set<String> getTimezones() {
-		String timezoneId = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
-		String[] allTimezones = TimeZone.getAvailableIDs();
-		Set<String> timezones = new TreeSet<String>();
-
-		for (String timezone : allTimezones) {
-			if (timezone.matches(timezoneId))
-				timezones.add(timezone);
-		}
-
-		return timezones;
-	}
-
 	public static boolean isValidTimezone(String timezone) {
 		List<String> allTimezones = Arrays.asList(TimeZone.getAvailableIDs());
 
-		if (allTimezones.contains(timezone)) {
+		if (allTimezones.contains(timezone.replace(' ', '_'))) {
 			return true;
 		}
 

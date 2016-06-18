@@ -19,11 +19,10 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 
-import iftttclone.channels.annotations.ActionFieldTag;
 import iftttclone.channels.annotations.ActionTag;
 import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
-import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
@@ -44,8 +43,8 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "ReceivedAt", description = "The timestamp of the reception of the email", example = "23/05/2016 13:09")
 	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public List<Map<String, String>> newEmailRecived(
-			@TriggerFieldTag(name = "Sender", description = "The email address of the person who sent the email", isPublishable = false) String sender,
-			@TriggerFieldTag(name = "Subject", description = "The subject of the email", isPublishable = true) String subject) {
+			@FieldTag(name = "Sender", description = "The email address of the person who sent the email", publishable = false) String sender,
+			@FieldTag(name = "Subject", description = "The subject of the email", publishable = true) String subject) {
 
 		try {
 			Gmail gmail = this.getGmailService();
@@ -66,9 +65,9 @@ public class GmailChannel extends AbstractChannel {
 
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@ActionFieldTag(name = "Receiver", description = "Email address of the receiver", isPublishable = false) String receiver,
-			@ActionFieldTag(name = "Subject", description = "Subject of the email", isPublishable = true) String subject,
-			@ActionFieldTag(name = "BodyPlain", description = "The plain text of the email", isPublishable = true) String text) {
+			@FieldTag(name = "Receiver", description = "Email address of the receiver", publishable = false) String receiver,
+			@FieldTag(name = "Subject", description = "Subject of the email", publishable = true) String subject,
+			@FieldTag(name = "BodyPlain", description = "The plain text of the email", publishable = true) String text) {
 
 		try {
 			Gmail gmail = this.getGmailService();

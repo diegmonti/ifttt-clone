@@ -1,0 +1,61 @@
+<div class="alert alert-danger" data-ng-show="error">
+    {{errorMessage}}
+</div>
+
+
+<!-- title -->
+<div class="row">
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title"/>
+</div>
+
+<div class="row">
+  <div class='col-lg-4 col-lg-offset-4'>
+    <span>if</span>
+    <span id="triggerDiv">
+       <button data-ng-click="controller.selectTriggerClicked()" class="btn btn-link"> This </button>
+    </span>
+    <span> then </span>
+    <span id="actionDiv">
+      that
+    </span>
+  </div>
+</div>
+
+<div id="channlesDiv">
+  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in channels" data-ng-click="controller.channelSelected(channel.id)">
+    <img class="card-img-top" src={{channel.link}} alt={{channel.title}} width="110px">
+    <div class="card-block">
+      <h4 class="card-title">{{channel.title}}</h4>
+    </div>
+  </div>
+</div>
+
+
+<div id="triggerChoicesDiv" class="container">
+  <!-- Put here the choices -->
+  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="controller.triggerSelected(trigger.title)">
+    <div class="card-block">
+      <h4 class="card-title">{{trigger.title}}</h4>
+      <p class="card-text">{{trigger.description}}</p>
+    </div>
+  </div>
+</div>
+
+<div id="triggerFieldsDiv"></div>
+
+<div id="actionsChoicesDiv">
+  <!-- Put here the choices for the action -->
+  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.title)">
+    <div class="card-block">
+      <h4 class="card-title">{{action.title}}</h4>
+      <p class="card-text">{{action.description}}</p>
+    </div>
+  </div>
+</div>
+
+<div id="actionFieldsDiv" >
+
+</div>
+
+<div id='confirmDiv' class="row">
+</div>

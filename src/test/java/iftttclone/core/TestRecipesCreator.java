@@ -55,12 +55,12 @@ public class TestRecipesCreator {
 	public void createTests(){
 		System.err.println("-CHANNEL_TESTS: begin");
 		
-		User user = users.getUserByUsername("testUser");
+		User user = users.getUserByUsername("user");
 		if(user == null){
 			System.err.println("-CHANNEL_TESTS: creating user");
 			user = new User();
 			user.setUsername("user");
-			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m");
+			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m"); // "password"
 			user.setEmail("user.test@gmail.com");
 			user.setTimezone("UTC");
 			users.save(user);
@@ -265,7 +265,7 @@ public class TestRecipesCreator {
 		cc.setChannel(channel);
 		Calendar yesterday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		yesterday.add(Calendar.DATE, -1);
-		cc.setConnectionTime(yesterday.getTime());
+		cc.setConnectionTime(yesterday.getTimeInMillis());
 		channelConnectors.save(cc);
 		
 		Calendar start = (Calendar) yesterday.clone();
@@ -440,8 +440,8 @@ public class TestRecipesCreator {
 		Recipe r = new Recipe();
 		r.setActive(true);
 		r.setRuns(new Integer(0));
-		r.setCreationTime(initTime.getTime());
-		r.setLastRun(initTime.getTime());
+		r.setCreationTime(initTime.getTimeInMillis());
+		r.setLastRun(initTime.getTimeInMillis());
 		r.setUser(user);
 		r.setAction(action);
 		return r;

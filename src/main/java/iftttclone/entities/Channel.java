@@ -13,11 +13,15 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import iftttclone.json.JsonViews;
+import iftttclone.json.TimestampSerializer;
 
 @Entity
 @Table(name = "channel")
 public class Channel {
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Id
 	private String id;
 
@@ -25,25 +29,34 @@ public class Channel {
 	@Column(nullable = false, unique = true)
 	private String classpath;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String name;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private String description;
 
-	@JsonView(View.Summary.class)
-	@Transient
-	private boolean connected;
-
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@Column(name = "with_connection", nullable = false)
 	private boolean withConnection;
+
+	@JsonView(JsonViews.Summary.class)
+	@JsonSerialize(using = TimestampSerializer.class)
+	@Transient
+	private Long connectionTime;
+
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private boolean hasTriggers;
 
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
 	private Map<String, Trigger> triggers;
+
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private boolean hasActions;
 
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
@@ -81,14 +94,6 @@ public class Channel {
 		this.description = description;
 	}
 
-	public boolean isConnected() {
-		return connected;
-	}
-
-	public void setConnected(boolean connected) {
-		this.connected = connected;
-	}
-
 	public boolean isWithConnection() {
 		return withConnection;
 	}
@@ -97,12 +102,36 @@ public class Channel {
 		this.withConnection = withConnection;
 	}
 
+	public Long getConnectionTime() {
+		return connectionTime;
+	}
+
+	public void setConnectionTime(Long connectionTime) {
+		this.connectionTime = connectionTime;
+	}
+
+	public boolean isHasTriggers() {
+		return hasTriggers;
+	}
+
+	public void setHasTriggers(boolean hasTriggers) {
+		this.hasTriggers = hasTriggers;
+	}
+
 	public Map<String, Trigger> getTriggers() {
 		return triggers;
 	}
 
 	public void setTriggers(Map<String, Trigger> triggers) {
 		this.triggers = triggers;
+	}
+
+	public boolean isHasActions() {
+		return hasActions;
+	}
+
+	public void setHasActions(boolean hasActions) {
+		this.hasActions = hasActions;
 	}
 
 	public Map<String, Action> getActions() {

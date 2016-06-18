@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import iftttclone.entities.Action;
 import iftttclone.entities.Channel;
-import iftttclone.entities.Trigger;
-import iftttclone.entities.View;
+import iftttclone.json.JsonViews;
 import iftttclone.services.interfaces.ChannelService;
 
 @RestController
@@ -22,7 +20,7 @@ public class ChannelController {
 	@Autowired
 	ChannelService channelService;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Collection<Channel> getChannels() {
 		return channelService.getChannels();
@@ -31,16 +29,6 @@ public class ChannelController {
 	@RequestMapping(value = "/{channelId}", method = RequestMethod.GET)
 	public Channel getChannel(@PathVariable String channelId) {
 		return channelService.getChannel(channelId);
-	}
-
-	@RequestMapping(value = "/{channelId}/triggers", method = RequestMethod.GET)
-	public Collection<Trigger> getChannelTriggers(@PathVariable String channelId) {
-		return channelService.getChannelTriggers(channelId);
-	}
-
-	@RequestMapping(value = "/{channelId}/actions", method = RequestMethod.GET)
-	public Collection<Action> getChannelActions(@PathVariable String channelId) {
-		return channelService.getChannelActions(channelId);
 	}
 
 }

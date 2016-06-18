@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeLog;
-import iftttclone.entities.View;
+import iftttclone.json.JsonViews;
 import iftttclone.services.interfaces.RecipeService;
 
 @RestController
@@ -26,7 +26,7 @@ public class RecipeController {
 	@Autowired
 	private RecipeService recipeService;
 
-	@JsonView(View.Summary.class)
+	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Set<Recipe> getRecipes() {
 		return recipeService.getRecipes();

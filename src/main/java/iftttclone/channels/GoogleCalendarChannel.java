@@ -26,11 +26,10 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
-import iftttclone.channels.annotations.ActionFieldTag;
 import iftttclone.channels.annotations.ActionTag;
 import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
-import iftttclone.channels.annotations.TriggerFieldTag;
+import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 
 @ChannelTag(name = "Google Calendar", description = "The channel for google calendar", withConnection = true)
@@ -43,9 +42,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public List<Map<String, String>> newEventStarted(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descriptionKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", publishable = true) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", publishable = true) String descriptionKW,
+			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", publishable = false) String locationKW) {
 
 		Events events;
 		try {
@@ -97,9 +96,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public List<Map<String, String>> newEventAdded(
-			@TriggerFieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", isPublishable = true) String titleKW,
-			@TriggerFieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", isPublishable = true) String descriptionKW,
-			@TriggerFieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", isPublishable = false) String locationKW) {
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", publishable = true) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", publishable = true) String descriptionKW,
+			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", publishable = false) String locationKW) {
 
 		Events events;
 		try {
@@ -150,11 +149,11 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
 	public void createEvent(
-			@ActionFieldTag(name = "Title", description = "The title of the event", isPublishable = true) String title,
-			@ActionFieldTag(name = "Description", description = "The description of the event", isPublishable = true) String description,
-			@ActionFieldTag(name = "Where", description = "The location of the event", isPublishable = false) String location,
-			@ActionFieldTag(name = "WhenStarts", description = "When the event starts", isPublishable = false) String starts,
-			@ActionFieldTag(name = "WhenEnds", description = "When the event ends", isPublishable = false) String ends) {
+			@FieldTag(name = "Title", description = "The title of the event", publishable = true) String title,
+			@FieldTag(name = "Description", description = "The description of the event", publishable = true) String description,
+			@FieldTag(name = "Where", description = "The location of the event", publishable = false) String location,
+			@FieldTag(name = "WhenStarts", description = "When the event starts", publishable = false) String starts,
+			@FieldTag(name = "WhenEnds", description = "When the event ends", publishable = false) String ends) {
 		
 		Event event = new Event();
 		event.setSummary(title);
