@@ -167,6 +167,7 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
 
 iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$location','$routeParams', function($scope, $rootScope, $http, $location, $routeParams){
 
+  var self = this;
     $http({
         method:'GET',
         url : 'api/channels/'+ $routeParams.channelID
@@ -177,13 +178,31 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
           $scope.channel.link = "img/"+response.data.id + ".png";
           $scope.channel.description = response.data.description;
           $scope.error = false;
-          // TODO: add toConnect field!
+
+          if(response.data.connectionTime === null && response.data.withConnection === true){
+            $scope.toConnect = true;
+            $scope.channel.activate = 'api/channels/'+ $routeParams.channelID + '/activate';
+          }
+          else
+            $scope.toConnect = false;
         },
         function(response){ // error callback
           $scope.error = true;
         }
     );
 
+    self.activateChannel = function(url){
+      $http({
+        method : 'POST',
+        url : url
+      }).then(function successCallback(response){
+        console.log(response);
+
+    }, function errorCallback(response) {
+      console.error(response);
+    })
+
+    }
 }]);
 
 iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
@@ -211,8 +230,8 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
           method: 'GET',
           url: 'api/myrecipes/' + element.id
         }).then(function successCallback(response){
-          recipe.triggerChannelImage = 'img/'+response.data.triggerChannelId + '.png';
-          recipe.actionChannelImage = 'img/'+response.data.actionChannelId + '.png';
+          recipe.triggerChannelImage = 'img/'+response.data.trigger.channel + '.png';
+          recipe.actionChannelImage = 'img/'+response.data.action.channel + '.png';
         }, function errorCallback(response){
         });
 
@@ -222,7 +241,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
     });
 }]);
 
-iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', '$compile', function($scope, $rootScope, $http, $timeout, $compile){
+iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', '$compile', '$location', function($scope, $rootScope, $http, $timeout, $compile, $location){
 
   var self = this;
   self.currentSelected = "";
@@ -255,7 +274,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function dowloadTriggers(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.triggerChannelId
+      url : 'api/channels/'+  $scope.recipe.trigger.channel
     }).then(
       function successCallback(result){
 
@@ -276,12 +295,12 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $scope.triggers = [];
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.triggerChannelId
+      url : 'api/channels/'+  $scope.recipe.trigger.channel
     }).then(
       function successCallback(result){
           var index;
-          for(index in result.data.triggers[ $scope.recipe.triggerMethod].triggerFields){
-            var element = result.data.triggers[$scope.recipe.triggerMethod].triggerFields[index];
+          for(index in result.data.triggers[ $scope.recipe.trigger.method].triggerFields){
+            var element = result.data.triggers[$scope.recipe.trigger.method].triggerFields[index];
             var div = $('<div>').attr({class : 'form-group row'});
             var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
             var input;
@@ -313,10 +332,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   }
 
   function downloadActions(){
-    console.log('asking to ' + 'api/channels/'+  $scope.recipe.actionChannelId);
+    console.log('asking to ' + 'api/channels/'+  $scope.recipe.action.channel);
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.actionChannelId
+      url : 'api/channels/'+  $scope.recipe.action.channel
     }).then(
       function successCallback(result){
 
@@ -336,13 +355,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   function downloadActionFields(){
     $http({
       method : 'GET',
-      url : 'api/channels/'+  $scope.recipe.actionChannelId
+      url : 'api/channels/'+  $scope.recipe.action.channel
     }).then(
       function successCallback(result){
 
         var index;
-        for(index in result.data.actions[  $scope.recipe.actionMethod].actionFields){
-          var element = result.data.actions[  $scope.recipe.actionMethod].actionFields[index];
+        for(index in result.data.actions[  $scope.recipe.action.method].actionFields){
+          var element = result.data.actions[  $scope.recipe.action.method].actionFields[index];
           var div = $('<div>').attr({class : 'form-group row'});
           var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
           var input;
@@ -387,25 +406,26 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
     $(image).attr("width", "110px");
 
     if(self.currentSelected === "trigger"){
-        $scope.recipe.triggerChannelId = id;
+    	$scope.recipe.trigger = {};
+        $scope.recipe.trigger.channel = id;
       $("#triggerDiv").html(image);
       dowloadTriggers();
     }
     else if(self.currentSelected === "action"){
-        $scope.recipe.actionChannelId = id;
+    	$scope.recipe.action = {};
+        $scope.recipe.action.channel = id;
       $("#actionDiv").html(image);
       downloadActions();
     }
   }
 
   self.triggerSelected = function(id){
-      $scope.recipe.triggerMethod = id;
+      $scope.recipe.trigger.method = id;
     downloadTriggerFields();
   }
 
   self.acceptTriggerFields = function(){
 
-    // todo: save values first
     $('#triggerFieldsDiv').hide();
 
     var link = $('<a>').attr({
@@ -415,7 +435,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
   }
 
   self.actionSelected = function(id){
-    $scope.recipe.actionMethod = id;
+    $scope.recipe.action.method = id;
     $scope.actions = [];
     downloadActionFields();
   }
@@ -440,7 +460,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         'Content-Type': 'application/json'
       }
     }).then(function successCallback(result){
-      //TODO:  success! should change location
+      $location.path('myRecipes');
 
     }, function errorCallback(result){
       $scope.error = true;

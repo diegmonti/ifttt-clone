@@ -30,5 +30,4 @@ public class GoogleCalendarConnectorController {
 				req.getParameter("state"));
 		return new ModelAndView("redirect:/");
 	}
-
 }

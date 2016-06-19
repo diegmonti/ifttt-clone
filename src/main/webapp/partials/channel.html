@@ -17,8 +17,13 @@
       <p>{{channel.description}}</p>
     </div>
 
-    <div class="row" data-ng-show="toConnect">
-      <a href="#" class="btn btn-primary">Connect</a>
+    <!-- only if the user is authenticated i can tell him is he is connected to this service or not -->
+    <div class="row" data-ng-show="authenticated">
+      <form method="post" action={{channel.activate}} data-ng-show="toConnect">
+        <input type ='submit' class="btn btn-primary" value = 'Connect'/>
+      </form>
+      <!-- <a data-ng-show="toConnect" class="btn btn-primary" data-ng-click="controller.activateChannel(channel.activate)">Connect</a> -->
+      <a data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="">Already connected</a>
     </div>
 
   </div>
