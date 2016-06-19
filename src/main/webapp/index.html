@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Home</title>
-<link rel="stylesheet" type="text/css" href="css/libs/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="css/libs/tether.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/tether.css">
 
 <script src="js/libs/jquery.js" type="text/javascript"></script>
 <script src="js/libs/tether.js" type="text/javascript"></script>
@@ -43,11 +43,6 @@
 	<div class="container">
 		<div data-ng-view></div>
 	</div>
-
-	<form method="post" action="api/channels/google_calendar/activate">
-		<input type="text" name="_csrf" value="CSRF Token">
-		<button type="submit">Connect</button>
-	</form>
 
 	<script src="js/app.js" type="text/javascript"></script>
 </body>

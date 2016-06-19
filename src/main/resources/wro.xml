@@ -4,6 +4,7 @@
 	<group name="bootstrap">
 		<js>webjar:bootstrap/4.0.0-alpha.2/js/bootstrap.min.js</js>
 		<css>webjar:bootstrap/4.0.0-alpha.2/css/bootstrap.min.css</css>
+		<css>classpath:META-INF/resources/webjars/font-awesome/4.6.3/css/font-awesome.min.css</css>
 	</group>
 	<group name="jquery">
 		<js>webjar:jquery/2.2.3/jquery.js</js>
@@ -19,9 +20,5 @@
 	</group>
 	<group name="moment">
 		<js>webjar:momentjs/2.13.0/min/moment.min.js</js>
-	</group>
-	
-	<group name="font-awesome">
-		<css>webjar:font-awsome/4.6.2/css/font-awesome.min.css</css>
 	</group>
 </groups>
