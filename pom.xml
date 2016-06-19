@@ -182,6 +182,11 @@
 					    <artifactId>momentjs</artifactId>
 					    <version>2.13.0</version>
 					</dependency>
+					<dependency>
+					    <groupId>org.webjars</groupId>
+					    <artifactId>font-awesome</artifactId>
+					    <version>4.6.2</version>
+					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
@@ -201,6 +206,13 @@
 									<groupId>org.webjars</groupId>
 									<artifactId>bootstrap</artifactId>
 									<version>3.3.6</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.webjars</groupId>
+								    <artifactId>font-awesome</artifactId>
+								    <version>4.6.2</version>
+								    <type>jar</type>
+                                	<overWrite>false</overWrite>
 								</artifactItem>
 							</artifactItems>
 							<includes>**/fonts/**/*</includes>
@@ -229,6 +241,14 @@
 									</includes>
 									<filtering>false</filtering>
 								</resource>
+								<resource>
+	                                <directory>${project.build.directory}/unpacked/META-INF/resources/webjars/font-awesome/4.6.2/fonts</directory>
+	                                <includes>
+	                                    <include>**/*</include>
+	                                </includes>
+	                                <filtering>false</filtering>
+	                            </resource>
+                        
 							</resources>
 						</configuration>
 					</execution>
