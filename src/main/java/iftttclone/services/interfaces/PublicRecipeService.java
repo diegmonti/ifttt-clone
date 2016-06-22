@@ -19,7 +19,7 @@ public interface PublicRecipeService {
 	public PublicRecipe addPublicRecipe(PublicRecipe publicRecipe);
 
 	@PreAuthorize("isAuthenticated()")
-	public PublicRecipe updatePublicRecipe(PublicRecipe stub);
+	public PublicRecipe updatePublicRecipe(Long publicRecipeId, PublicRecipe stub);
 
 	@PreAuthorize("isAuthenticated()")
 	public void deletePublicRecipe(Long publicRecipeId);

@@ -46,7 +46,7 @@ public class PublicRecipeController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public PublicRecipe updatePublicRecipe(@PathVariable Long id, @RequestBody PublicRecipe stub) {
-		return publicRecipeService.updatePublicRecipe(stub);
+		return publicRecipeService.updatePublicRecipe(id, stub);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
