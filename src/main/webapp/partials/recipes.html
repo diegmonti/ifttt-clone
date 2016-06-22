@@ -3,34 +3,47 @@
 <div class="row">
   <a class="btn btn-primary col-lg-4 col-lg-offset-4" href="#/createRecipe">Crea una nuova ricetta</a>
 </div>
-
+<hr />
 
 <div data-ng-repeat="recipe in recipes">
 <div class="row">
   <div class="col-lg-9">
     <div class="row">
-      <span>IF</span>
+      <h1 style="display:inline"> if </h1>
       <span>
-        <img class="img-responsive" src={{recipe.triggerChannelImage}} style="height:110px"/>
+        <img src={{recipe.triggerChannelImage}} style="height:110px"/>
       </span>
-
-      <span>THEN</span>
+      <h1 style="display:inline"> then </h1>
       <span>
-      	<img class="img-responsive" src={{recipe.actionChannelImage}} style="height:110px"/>
+      	<img src={{recipe.actionChannelImage}} style="height:110px"/>
       </span>
     </div>
-    <div class="row"><h2>{{recipe.title}}</h2></div>
+    <br/>
+    <div class="row"><h3>{{recipe.title}}</h3></div>
   </div>
 
   <div class="col-lg-3">
-    <div class="row"></div>
+    <div class="row">
+      <button class="btn btn-secondary" data-ng-show =recipe.active data-ng-click="controller.turnRecipeOnOff(recipe.id)">
+        <i class="fa fa-toggle-on fa-2x" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-secondary" data-ng-show ="!recipe.active" data-ng-click="controller.turnRecipeOnOff(recipe.id)">
+        <i class="fa fa-toggle-off fa-2x" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-secondary">
+        <i class="fa fa-pencil fa-2x" aria-hidden="true" data-ng-click="controller.modifyRecipe(recipe.id)"></i>
+      </button>
+      <button class="btn btn-secondary" data-ng-click="controller.deleteRecipe(recipe.id)">
+        <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+      </button>
+    </div>
     <div class="row">Created on {{recipe.created}}</div>
     <div class="row">last run on {{recipe.lastRun}}</div>
     <div class="row">run on {{recipe.timesRun}} times</div>
   </div>
 </div>
 <div class="row">
-<hr /><hr />
+<hr />
 </div>
 
 </div>
