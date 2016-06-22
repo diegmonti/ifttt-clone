@@ -25,6 +25,11 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
       controller: 'PrivateRecipeController',
       controllerAs: 'controller'
     })
+    .when('/modifyRecipe/:recipeId', {
+      templateUrl: 'partials/modifyRecipe.html',
+      controller: 'ModifyRecipeController',
+      controllerAs: 'controller'
+    })
     .when('/createRecipe', {
       templateUrl: 'partials/createRecipe.html',
       controller: 'CreateRecipeController',
@@ -70,10 +75,7 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
             method:'POST',
             url : postUrl
           }).then(function successCallback (response){
-            console.log(response);
-            console.log(response.data.url);
             $window.open(response.data.url, '_blank');
-
           }, function errorCallback(response){
             console.log(response);
           });

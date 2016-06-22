@@ -1,4 +1,4 @@
-iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', function($scope, $rootScope, $http){
+iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', '$location', function($scope, $rootScope, $http, $location){
 
 	var self = this;
 	// first, i need to download all the recepies of this guy
@@ -8,7 +8,6 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
         url: 'api/myrecipes'
     }).then(function successCallback(response) {
         $scope.error = false;
-        console.log(response.data);
         response.data.forEach(function(element){
           // calling this for each element of the array response.data
 
@@ -21,7 +20,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             active : element.active
           };
           $scope.recipes.push(recipe);
-          console.log(recipe);
+
           // now i need to update the recipe so it also contains the name of the trigger and action channels
 
         $http({
@@ -82,6 +81,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
       }, function errorCallback(response){console.log(response);});
     }
     self.modifyRecipe= function(recipeID){
-
+			console.log('modufy recipe');
+			$location.path('/modifyRecipe/'+ recipeID);
     }
 }]);
