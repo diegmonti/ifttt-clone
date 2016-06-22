@@ -1,8 +1,5 @@
 package iftttclone.core;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,16 +30,6 @@ public class Utils {
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(email);
 		return m.matches();
-	}
-
-	public static boolean isValidTimezone(String timezone) {
-		List<String> allTimezones = Arrays.asList(TimeZone.getAvailableIDs());
-
-		if (allTimezones.contains(timezone.replace(' ', '_'))) {
-			return true;
-		}
-
-		return false;
 	}
 
 }

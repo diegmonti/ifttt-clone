@@ -17,6 +17,9 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import iftttclone.json.TimezoneSerializer;
 
 @Entity
 @Table(name = "user")
@@ -36,6 +39,7 @@ public class User {
 	@Column(nullable = false)
 	private String email;
 
+	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(nullable = false)
 	private String timezone;
 

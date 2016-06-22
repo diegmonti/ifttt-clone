@@ -1,8 +1,6 @@
 package iftttclone.services;
 
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.TimezoneManager;
 import iftttclone.core.Utils;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
@@ -54,15 +53,8 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidRequestException("Enter a valid email address");
 		}
 
-		if (!Utils.isValidTimezone(timezone)) {
-			throw new InvalidRequestException("Select a valid timezone");
-		}
-
-		// Encode password
 		user.setPassword(passwordEncoder.encode(password));
-		
-		// Set timezone
-		user.setTimezone(timezone.replace(' ', '_'));
+		user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
 
 		userRepository.save(user);
 	}
@@ -93,11 +85,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (timezone != null) {
-			if (Utils.isValidTimezone(timezone)) {
-				user.setTimezone(timezone.replace(' ', '_'));
-			} else {
-				throw new InvalidRequestException("Select a valid timezone");
-			}
+			user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
 		}
 
 		userRepository.save(user);
@@ -105,16 +93,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<String> getTimezones() {
-		String timezoneId = "^(Africa|America|Asia|Atlantic|Australia|Europe|Indian|Pacific)/.*";
-		String[] allTimezones = TimeZone.getAvailableIDs();
-		Set<String> timezones = new TreeSet<String>();
-
-		for (String timezone : allTimezones) {
-			if (timezone.matches(timezoneId))
-				timezones.add(timezone.replace('_', ' '));
-		}
-
-		return timezones;
+		return TimezoneManager.getInstance().getTimezones();
 	}
 
 }
