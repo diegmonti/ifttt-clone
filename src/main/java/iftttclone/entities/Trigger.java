@@ -15,6 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import iftttclone.json.ChannelSerializer;
 
 @Entity
 @Table(name = "channel_trigger")
@@ -24,7 +27,6 @@ public class Trigger {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@JsonIgnore
 	@Column(nullable = false)
 	private String method;
 
@@ -34,7 +36,7 @@ public class Trigger {
 	@Column(nullable = false)
 	private String description;
 
-	@JsonIgnore
+	@JsonSerialize(using = ChannelSerializer.class)
 	@ManyToOne
 	@JoinColumn(name = "channel_id", nullable = false)
 	private Channel channel;

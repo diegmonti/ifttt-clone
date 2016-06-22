@@ -22,10 +22,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import iftttclone.json.ActionDeserializer;
-import iftttclone.json.ActionSerializer;
 import iftttclone.json.JsonViews;
 import iftttclone.json.TriggerDeserializer;
-import iftttclone.json.TriggerSerializer;
 import iftttclone.json.UserSerializer;
 
 @Entity
@@ -45,7 +43,6 @@ public class PublicRecipe {
 	@Column(nullable = false)
 	private String description;
 
-	@JsonSerialize(using = TriggerSerializer.class)
 	@JsonDeserialize(using = TriggerDeserializer.class)
 	@ManyToOne
 	@JoinColumn(name = "trigger_id", nullable = false)
@@ -55,7 +52,6 @@ public class PublicRecipe {
 	@MapKey(name = "parameter")
 	private Map<String, PublicRecipeTriggerField> publicRecipeTriggerFields;
 
-	@JsonSerialize(using = ActionSerializer.class)
 	@JsonDeserialize(using = ActionDeserializer.class)
 	@ManyToOne
 	@JoinColumn(name = "action_id", nullable = false)
