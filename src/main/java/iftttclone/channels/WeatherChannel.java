@@ -91,6 +91,7 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 	
+	
 	@TriggerTag(name ="currentTemperature", description = "This trigger is activated if current temperature is above or below a certain threshold, if one of the thresholds is not needed leave it blank")
 	@IngredientTag(name = "CurrTempFahrenheit", description = "The current temperature registered in degrees Fahrenheit", example = "40")
 	@IngredientTag(name = "CurrTempCelsius", description = "The current temperature registered in degrees Celsius", example = "25")
@@ -137,6 +138,7 @@ public class WeatherChannel extends AbstractChannel {
 		
 		return result;
 	}
+	
 	
 	@TriggerTag(name ="sunriseEvent", description = "This trigger activates itself at sunrise")
 	@IngredientTag(name = "CurrTempFahrenheit", description = "The current temperature registered in degrees Fahrenheit", example = "40")

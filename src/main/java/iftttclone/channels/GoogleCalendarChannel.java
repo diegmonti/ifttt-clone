@@ -1,6 +1,7 @@
 package iftttclone.channels;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
@@ -36,8 +38,8 @@ import iftttclone.channels.annotations.TriggerTag;
 public class GoogleCalendarChannel extends AbstractChannel {
 
 	@TriggerTag(name = "EventStarted", description = "This trigger fires when an event starts, it can be filtered with some keywords in an inclusive OR fashion. Fired if the keyword is present, left blank if not needed")
-	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09")
-	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09")
+	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09 UTC")
+	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09 UTC")
 	@IngredientTag(name = "Title", description = "The title of the event", example = "Important exam")
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
@@ -60,6 +62,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 		Date now = java.util.Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone())).getTime();	// now for the user
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		if(events.getItems() == null){
+			return null;
+		}
 		for (Event event : events.getItems()) {
 			if(!this.filterEventOr(titleKW, descriptionKW, locationKW, 
 					event.getSummary(), event.getDescription(), event.getLocation())){	// change Or for And to get other trigger
@@ -89,9 +94,10 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		return result;
 	}
 
+	
 	@TriggerTag(name = "EventAdded", description = "This trigger fires when an event is added, it can be filtered with some keywords in an inclusive OR fashion. Fired if the keyword is present, left blank if not needed")
-	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09")
-	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09")
+	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09 UTC")
+	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09 UTC")
 	@IngredientTag(name = "Title", description = "The title of the event", example = "Important exam")
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
@@ -113,6 +119,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		}
 
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		if(events.getItems() == null){
+			return null;
+		}
 		ListIterator<Event> li = events.getItems().listIterator(events.getItems().size());
 		while(li.hasPrevious()){	// backwards for early termination
 			Event event = li.previous();
@@ -147,6 +156,7 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		return result;
 	}
 
+	
 	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
 	public void createEvent(
 			@FieldTag(name = "Title", description = "The title of the event", publishable = true) String title,
@@ -202,7 +212,15 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-		Credential credentials = new GoogleCredential().setAccessToken(this.getChannelConnector().getToken());
+		InputStreamReader clientSecret = new InputStreamReader(getClass().getResourceAsStream("/client_secret.json"));
+		GoogleClientSecrets secrets = GoogleClientSecrets.load(jsonFactory, clientSecret);
+		Credential credentials = new GoogleCredential.Builder()
+				.setTransport(httpTransport)
+		        .setJsonFactory(jsonFactory)
+		        .setClientSecrets(secrets)
+		        .build()
+		        .setAccessToken(this.getChannelConnector().getToken())
+		        .setRefreshToken(this.getChannelConnector().getRefreshToken());
 		return new Calendar.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE")
 				.build();
 	}
