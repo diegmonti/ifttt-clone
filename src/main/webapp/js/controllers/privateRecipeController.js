@@ -80,8 +80,14 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
 
       }, function errorCallback(response){console.log(response);});
     }
-    self.modifyRecipe= function(recipeID){
-			console.log('modufy recipe');
+
+		self.modifyRecipe= function(recipeID){
 			$location.path('/modifyRecipe/'+ recipeID);
     }
+
+		self.publishRecipe = function(recipeID){
+			console.log('publishRecipe');
+			$location.path('/publishRecipe/'+ recipeID);
+		}
+
 }]);

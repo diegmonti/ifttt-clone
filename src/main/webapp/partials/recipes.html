@@ -30,12 +30,17 @@
       <button class="btn btn-secondary" data-ng-show ="!recipe.active" data-ng-click="controller.turnRecipeOnOff(recipe.id)">
         <i class="fa fa-toggle-off fa-2x" aria-hidden="true"></i>
       </button>
-      <button class="btn btn-secondary">
-        <i class="fa fa-pencil fa-2x" aria-hidden="true" data-ng-click="controller.modifyRecipe(recipe.id)"></i>
+      <button class="btn btn-secondary" data-ng-click="controller.modifyRecipe(recipe.id)">
+        <i class="fa fa-pencil fa-2x" aria-hidden="true" ></i>
       </button>
       <button class="btn btn-secondary" data-ng-click="controller.deleteRecipe(recipe.id)">
         <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
       </button>
+      <button class="btn btn-secondary" data-ng-click="controller.publishRecipe(recipe.id)">
+        <i class="fa fa-share-square-o fa-2x" aria-hidden="true"></i>
+      </button>
+
+
     </div>
     <div class="row">Created on {{recipe.created}}</div>
     <div class="row">last run on {{recipe.lastRun}}</div>
