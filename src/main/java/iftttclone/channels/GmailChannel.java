@@ -24,6 +24,7 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
+import iftttclone.core.Validator.FieldType;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.UserRepository;
@@ -43,13 +44,13 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "ReceivedAt", description = "The timestamp of the reception of the email", example = "23/05/2016 13:09")
 	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public List<Map<String, String>> newEmailRecived(
-			@FieldTag(name = "Sender", description = "The email address of the person who sent the email", publishable = false) String sender,
-			@FieldTag(name = "Subject", description = "The subject of the email", publishable = true) String subject) {
+			@FieldTag(name = "Sender", description = "The email address of the person who sent the email", type = FieldType.EMAIL, publishable = false) String sender,
+			@FieldTag(name = "Subject", description = "The subject of the email", type = FieldType.TEXT, publishable = true) String subject) {
 
 		try {
 			Gmail gmail = this.getGmailService();
 
-			if (gmail == null)	// is this possible?
+			if (gmail == null) // is this possible?
 				System.out.println("gmail is null");
 			ListMessagesResponse listResponse = gmail.users().messages().list("me").execute();
 		} catch (IOException e) {
@@ -65,26 +66,24 @@ public class GmailChannel extends AbstractChannel {
 
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@FieldTag(name = "Receiver", description = "Email address of the receiver", publishable = false) String receiver,
-			@FieldTag(name = "Subject", description = "Subject of the email", publishable = true) String subject,
-			@FieldTag(name = "BodyPlain", description = "The plain text of the email", publishable = true) String text) {
+			@FieldTag(name = "Receiver", description = "Email address of the receiver", type = FieldType.EMAIL, publishable = false) String receiver,
+			@FieldTag(name = "Subject", description = "Subject of the email", type = FieldType.TEXT, publishable = true) String subject,
+			@FieldTag(name = "BodyPlain", description = "The plain text of the email", type = FieldType.LONGTEXT, publishable = true) String text) {
 
 		try {
 			Gmail gmail = this.getGmailService();
-		} catch (GeneralSecurityException | IOException e) {	// error 500
+		} catch (GeneralSecurityException | IOException e) { // error 500
 			return;
 		}
 	}
-	
-	
+
 	// Utility methods
-	private Gmail getGmailService() throws GeneralSecurityException, IOException{
+	private Gmail getGmailService() throws GeneralSecurityException, IOException {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		Credential credentials = new GoogleCredential().setAccessToken(this.getChannelConnector().getToken());
-		return new Gmail.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE")
-				.build();
+		return new Gmail.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
 	}
-	
+
 }
