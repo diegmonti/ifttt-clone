@@ -43,8 +43,8 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public List<Map<String, String>> newEventStarted(
-			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT, publishable = true) String titleKW,
-			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT, publishable = true) String descriptionKW,
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT) String descriptionKW,
 			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", type = FieldType.NULLABLETEXT, publishable = false) String locationKW) {
 
 		Events events;
@@ -97,8 +97,8 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
 	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
 	public List<Map<String, String>> newEventAdded(
-			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT, publishable = true) String titleKW,
-			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT, publishable = true) String descriptionKW,
+			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT) String titleKW,
+			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT) String descriptionKW,
 			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", type = FieldType.NULLABLETEXT, publishable = false) String locationKW) {
 
 		Events events;
@@ -150,8 +150,8 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
 	public void createEvent(
-			@FieldTag(name = "Title", description = "The title of the event", type = FieldType.TEXT, publishable = true) String title,
-			@FieldTag(name = "Description", description = "The description of the event", type = FieldType.TEXT, publishable = true) String description,
+			@FieldTag(name = "Title", description = "The title of the event", type = FieldType.TEXT) String title,
+			@FieldTag(name = "Description", description = "The description of the event", type = FieldType.TEXT) String description,
 			@FieldTag(name = "Where", description = "The location of the event", type = FieldType.TEXT, publishable = false) String location,
 			@FieldTag(name = "WhenStarts", description = "When the event starts", type = FieldType.TIMESTAMP, publishable = false) String starts,
 			@FieldTag(name = "WhenEnds", description = "When the event ends", type = FieldType.TIMESTAMP, publishable = false) String ends) {

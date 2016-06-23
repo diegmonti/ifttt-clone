@@ -16,5 +16,5 @@ public @interface FieldTag {
 
 	FieldType type();
 
-	boolean publishable();
+	boolean publishable() default true;
 }

@@ -45,7 +45,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public List<Map<String, String>> tomorrowWeatherReport(
 			@FieldTag(name = "location", description="The location the user is intrested in", type = FieldType.LOCATION, publishable = false) String location,
-			@FieldTag(name = "checkHour", description="The hour the trigger will fire", type = FieldType.TIME, publishable = true) String hour){
+			@FieldTag(name = "checkHour", description="The hour the trigger will fire", type = FieldType.TIME) String hour){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
 		Date now = triggerTime.getTime();
@@ -98,9 +98,9 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public List<Map<String, String>> currentTemperature(
 			@FieldTag(name = "location", description="The location the user is intrested in", type = FieldType.LOCATION, publishable = false) String location,
-			@FieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", type = FieldType.NULLABLEINTEGER, publishable = true) String lower, 
-			@FieldTag(name = "upperTemp", description="Fires if less than or equal to this value", type = FieldType.NULLABLEINTEGER, publishable = true) String upper, 
-			@FieldTag(name = "degrees", description="The unit of measure", type = FieldType.TEMPERATURE, publishable = true) String unit){
+			@FieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", type = FieldType.NULLABLEINTEGER) String lower, 
+			@FieldTag(name = "upperTemp", description="Fires if less than or equal to this value", type = FieldType.NULLABLEINTEGER) String upper, 
+			@FieldTag(name = "degrees", description="The unit of measure", type = FieldType.TEMPERATURE) String unit){
 		
 		String yql = "select units.temperature, item.condition.temp, item.condition.text, item.pubDate "
 				+ "from weather.forecast where woeid = " + location;

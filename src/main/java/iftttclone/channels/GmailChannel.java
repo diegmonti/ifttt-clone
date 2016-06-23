@@ -45,7 +45,7 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "BodyPlain", description = "The plain text of the email", example = "Hi there!")
 	public List<Map<String, String>> newEmailRecived(
 			@FieldTag(name = "Sender", description = "The email address of the person who sent the email", type = FieldType.EMAIL, publishable = false) String sender,
-			@FieldTag(name = "Subject", description = "The subject of the email", type = FieldType.TEXT, publishable = true) String subject) {
+			@FieldTag(name = "Subject", description = "The subject of the email", type = FieldType.TEXT) String subject) {
 
 		try {
 			Gmail gmail = this.getGmailService();
@@ -66,9 +66,9 @@ public class GmailChannel extends AbstractChannel {
 
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@FieldTag(name = "Receiver", description = "Email address of the receiver", type = FieldType.EMAIL, publishable = false) String receiver,
-			@FieldTag(name = "Subject", description = "Subject of the email", type = FieldType.TEXT, publishable = true) String subject,
-			@FieldTag(name = "BodyPlain", description = "The plain text of the email", type = FieldType.LONGTEXT, publishable = true) String text) {
+			@FieldTag(name = "Receiver", description = "Email address of the receiver", type=FieldType.EMAIL, publishable = false) String receiver,
+			@FieldTag(name = "Subject", description = "Subject of the email", type=FieldType.TEXT) String subject,
+			@FieldTag(name = "BodyPlain", description = "The plain text of the email", type=FieldType.LONGTEXT) String text) {
 
 		try {
 			Gmail gmail = this.getGmailService();
