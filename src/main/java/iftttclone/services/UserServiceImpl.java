@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.TimezoneManager;
-import iftttclone.core.Utils;
+import iftttclone.core.Validator;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidRequestException("The password cannot be empty");
 		}
 
-		if (!Utils.isValidEmail(email)) {
+		if (!Validator.isValidEmail(email)) {
 			throw new InvalidRequestException("Enter a valid email address");
 		}
 
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (email != null) {
-			if (Utils.isValidEmail(email)) {
+			if (Validator.isValidEmail(email)) {
 				user.setEmail(email);
 			} else {
 				throw new InvalidRequestException("Enter a valid email address");

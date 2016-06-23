@@ -201,6 +201,10 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 	
+	public static boolean isValidLocation(String location) {
+		// TODO
+		return true;
+	}
 	
 	// Utility methods
 	private JsonNode doQuery(String query){

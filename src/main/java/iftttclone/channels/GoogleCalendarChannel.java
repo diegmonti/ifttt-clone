@@ -31,6 +31,7 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
+import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldType;
 
 @ChannelTag(name = "Google Calendar", description = "The channel for google calendar", withConnection = true)
@@ -160,7 +161,7 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		event.setSummary(title);
 		event.setDescription(description);
 		event.setLocation(location);
-		DateFormat fromFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.ENGLISH);
+		DateFormat fromFormat = new SimpleDateFormat(Validator.TIMESTAMP_FORMAT);
 		fromFormat.setTimeZone(TimeZone.getTimeZone(this.getUser().getTimezone()));
 		Date startDate;
 		try {

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Validator;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.Channel;
@@ -90,6 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
 						"The trigger field " + triggerField.getParameter() + " is not present");
 			}
 			RecipeTriggerField recipeTriggerField = recipe.getRecipeTriggerFields().get(triggerField.getParameter());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -97,13 +99,6 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check trigger fields number
 		if (triggerFields.size() != recipe.getRecipeTriggerFields().values().size()) {
 			throw new InvalidRequestException("Too many trigger fields");
-		}
-
-		// Check trigger fields value
-		for (RecipeTriggerField recipeTriggerField : recipe.getRecipeTriggerFields().values()) {
-			if (recipeTriggerField.getValue() == null) {
-				throw new InvalidRequestException("The trigger field cannot be empty");
-			}
 		}
 
 		Channel actionChannel = recipe.getAction().getChannel();
@@ -124,6 +119,7 @@ public class RecipeServiceImpl implements RecipeService {
 				throw new InvalidRequestException("The action field " + actionField.getParameter() + " is not present");
 			}
 			RecipeActionField recipeActionField = recipe.getRecipeActionFields().get(actionField.getParameter());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}
@@ -131,13 +127,6 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check action fields number
 		if (actionsFields.size() != recipe.getRecipeActionFields().values().size()) {
 			throw new InvalidRequestException("Too many action fields");
-		}
-
-		// Check action fields value
-		for (RecipeActionField recipeActionField : recipe.getRecipeActionFields().values()) {
-			if (recipeActionField.getValue() == null) {
-				throw new InvalidRequestException("The action field cannot be empty");
-			}
 		}
 
 		// Set default values
@@ -184,6 +173,7 @@ public class RecipeServiceImpl implements RecipeService {
 						"The trigger field " + triggerField.getParameter() + " is not present");
 			}
 			RecipeTriggerField recipeTriggerField = stub.getRecipeTriggerFields().get(triggerField.getParameter());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -191,13 +181,6 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check trigger fields number
 		if (trigger.getTriggerFields().values().size() != stub.getRecipeTriggerFields().values().size()) {
 			throw new InvalidRequestException("Too many trigger fields");
-		}
-
-		// Check trigger fields value
-		for (RecipeTriggerField recipeTriggerField : stub.getRecipeTriggerFields().values()) {
-			if (recipeTriggerField.getValue() == null) {
-				throw new InvalidRequestException("The trigger field cannot be empty");
-			}
 		}
 
 		recipe.setRecipeTriggerFields(stub.getRecipeTriggerFields());
@@ -211,6 +194,7 @@ public class RecipeServiceImpl implements RecipeService {
 				throw new InvalidRequestException("The action field " + actionField.getParameter() + " is not present");
 			}
 			RecipeActionField recipeActionField = stub.getRecipeActionFields().get(actionField.getParameter());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}
@@ -218,13 +202,6 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check action fields number
 		if (action.getActionFields().values().size() != stub.getRecipeActionFields().values().size()) {
 			throw new InvalidRequestException("Too many action fields");
-		}
-
-		// Check action fields value
-		for (RecipeActionField recipeActionField : stub.getRecipeActionFields().values()) {
-			if (recipeActionField.getValue() == null) {
-				throw new InvalidRequestException("The action field cannot be empty");
-			}
 		}
 
 		recipe.setRecipeActionFields(stub.getRecipeActionFields());
