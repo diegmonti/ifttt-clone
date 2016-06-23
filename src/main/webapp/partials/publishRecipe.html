@@ -16,7 +16,10 @@
       <img src={{actionChannelImage}} style="height:110px"/>
     </span>
   </div>
-
+</div>
+<br/>
+<div class="row">
+  <textarea name="name" rows="8" style="width:100%" data-ng-model="recipe.description" class="form-control"></textarea>
 </div>
 
 <br/> <hr /> <br />
@@ -44,13 +47,13 @@
     <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}} data-ng-model="field.value">
   </div>
 </div>
-
+.
 <br/> <hr /> <br />
 
 <div class="row">
   <div class="col-lg-offset-5">
-    <button class="btn btn-primary" data-ng-click="controller.updateRecipe()">
-      Modifica
+    <button class="btn btn-primary" data-ng-click="controller.publishRecipe()">
+      Pubblica
     </button>
   </div>
 </div>
