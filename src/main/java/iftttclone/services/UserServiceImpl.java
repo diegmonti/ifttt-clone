@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	TimezoneManager timezoneManager;
 
 	@Override
 	public User getUser() {
@@ -54,7 +56,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		user.setPassword(passwordEncoder.encode(password));
-		user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
+		user.setTimezone(timezoneManager.getIdFromName(timezone));
 
 		userRepository.save(user);
 	}
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (timezone != null) {
-			user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
+			user.setTimezone(timezoneManager.getIdFromName(timezone));
 		}
 
 		userRepository.save(user);
@@ -93,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<String> getTimezones() {
-		return TimezoneManager.getInstance().getTimezones();
+		return timezoneManager.getTimezones();
 	}
 
 }
