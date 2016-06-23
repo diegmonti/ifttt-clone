@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import iftttclone.core.Validator;
+
 @Entity
 @Table(name = "public_recipe_trigger_field")
 public class PublicRecipeTriggerField {
@@ -22,7 +24,7 @@ public class PublicRecipeTriggerField {
 	@Column(nullable = false)
 	private String parameter;
 
-	@Column(nullable = false)
+	@Column(nullable = false, length = Validator.MAX_VARCHAR)
 	private String value;
 
 	@JsonIgnore

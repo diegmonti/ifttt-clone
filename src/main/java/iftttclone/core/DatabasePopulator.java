@@ -133,6 +133,7 @@ public class DatabasePopulator {
 				triggerField.setName(fieldTag.name());
 				triggerField.setDescription(fieldTag.description());
 				triggerField.setPublishable(fieldTag.publishable());
+				triggerField.setType(fieldTag.type());
 
 				triggerFields.save(triggerField);
 			}
@@ -178,6 +179,7 @@ public class DatabasePopulator {
 				actionField.setName(fieldTag.name());
 				actionField.setDescription(fieldTag.description());
 				actionField.setPublishable(fieldTag.publishable());
+				actionField.setType(fieldTag.type());
 
 				actionFields.save(actionField);
 			}

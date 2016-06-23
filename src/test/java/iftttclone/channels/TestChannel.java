@@ -10,6 +10,7 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
+import iftttclone.core.Validator.FieldType;
 
 @ChannelTag(name = "Test Channel", description = "A fake channel for testing", withConnection = false)
 public class TestChannel extends AbstractChannel {
@@ -19,8 +20,8 @@ public class TestChannel extends AbstractChannel {
 	@IngredientTag(name = "Key2", description = "", example = "")
 	@IngredientTag(name = "Key", description = "", example = "")
 	public List<Map<String, String>> simpleTrigger(
-			@FieldTag(name = "Value", description = "Example", publishable = true) String value,
-			@FieldTag(name = "Run", description = "Example", publishable = false) String run) {
+			@FieldTag(name = "Value", description = "Example", type = FieldType.TEXT) String value,
+			@FieldTag(name = "Run", description = "Example", type = FieldType.TEXT, publishable = false) String run) {
 		
 		System.err.println("This is the simple trigger");
 		System.err.println("The value is: " + value);
@@ -39,7 +40,7 @@ public class TestChannel extends AbstractChannel {
 
 	@ActionTag(name = "Simple action", description = "Example")
 	public void simpleAction(
-			@FieldTag(name = "Value", description = "Example", publishable = true) String value) {
+			@FieldTag(name = "Value", description = "Example", type = FieldType.TEXT) String value) {
 		
 		System.err.println("This is the simple action");
 		System.err.println("The value is: " + value);

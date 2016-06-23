@@ -9,8 +9,17 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 
+import org.springframework.stereotype.Component;
+
 import iftttclone.exceptions.InvalidRequestException;
 
+/*
+ * This class contains a static list of time zones.
+ * For each time zone it is available an identifier and a display name.
+ * The purpose of this class is to provide the list of supported time zones
+ * and to convert a display name in an identifier and vice versa.
+ */
+@Component
 public class TimezoneManager {
 
 	private static final List<TimezoneValue> TIMEZONES = new ArrayList<TimezoneValue>();
@@ -116,17 +125,11 @@ public class TimezoneManager {
 		TIMEZONES.add(new TimezoneValue("Asia/Yakutsk", "(GMT +09:00) Yakutsk"));
 	}
 
-	private static final TimezoneManager INSTANCE = new TimezoneManager();
-
-	public static final TimezoneManager getInstance() {
-		return INSTANCE;
-	}
-
 	private Map<String, TimezoneValue> idMap = new HashMap<String, TimezoneValue>();
 	private Map<String, TimezoneValue> nameMap = new HashMap<String, TimezoneValue>();
 	private Set<String> nameSet = new TreeSet<String>();
 
-	private TimezoneManager() {
+	public TimezoneManager() {
 		Set<String> timezones = new HashSet<String>();
 
 		for (String id : TimeZone.getAvailableIDs()) {
@@ -143,10 +146,16 @@ public class TimezoneManager {
 		}
 	}
 
+	/*
+	 * This method returns a set of all the display names available.
+	 */
 	public Set<String> getTimezones() {
 		return nameSet;
 	}
 
+	/*
+	 * This method returns a display name given an identifier.
+	 */
 	public String getNameFromId(String id) {
 		if (!idMap.containsKey(id)) {
 			throw new InvalidRequestException("The provided timezone is unknown");
@@ -154,6 +163,9 @@ public class TimezoneManager {
 		return idMap.get(id).name;
 	}
 
+	/*
+	 * This method returns an identifier given a display name.
+	 */
 	public String getIdFromName(String name) {
 		if (!nameMap.containsKey(name)) {
 			throw new InvalidRequestException("The provided timezone is unknown");
@@ -161,6 +173,9 @@ public class TimezoneManager {
 		return nameMap.get(name).id;
 	}
 
+	/*
+	 * This class models a time zone.
+	 */
 	private static final class TimezoneValue implements Comparable<TimezoneValue> {
 		private final String id;
 		private final String name;

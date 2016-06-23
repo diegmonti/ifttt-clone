@@ -43,6 +43,7 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
+import iftttclone.core.Validator.FieldType;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.UserRepository;
@@ -63,8 +64,8 @@ public class GmailChannel extends AbstractChannel {
 	@IngredientTag(name = "BodyText", description = "The plain text of the email", example = "Hi there!")
 	@IngredientTag(name = "Subject", description = "The subject of the email", example = "Hi there!")
 	public List<Map<String, String>> newEmailReceived(
-			@FieldTag(name = "From", description = "The email address of the person who sent the email", publishable = false) String from,
-			@FieldTag(name = "Subject", description = "The subject of the email", publishable = true) String subject) {
+			@FieldTag(name = "From", description = "The email address of the person who sent the email", type = FieldType.EMAIL, publishable = false) String from,
+			@FieldTag(name = "Subject", description = "The subject of the email", type = FieldType.TEXT) String subject) {
 
 		Gmail gmail;
 		ListMessagesResponse messages;
@@ -112,9 +113,9 @@ public class GmailChannel extends AbstractChannel {
 	
 	@ActionTag(name = "Send an email", description = "Send an email to someone")
 	public void sendEmail(
-			@FieldTag(name = "To", description = "Email address of the receiver", publishable = false) String to,
-			@FieldTag(name = "Subject", description = "Subject of the email", publishable = true) String subject,
-			@FieldTag(name = "BodyText", description = "The plain text of the email", publishable = true) String bodyText) {
+			@FieldTag(name = "To", description = "Email address of the receiver", type=FieldType.EMAIL, publishable = false) String to,
+			@FieldTag(name = "Subject", description = "Subject of the email", type=FieldType.TEXT) String subject,
+			@FieldTag(name = "BodyText", description = "The plain text of the email", type=FieldType.LONGTEXT) String bodyText) {
 
 		Gmail gmail;
 		Profile profile;
@@ -146,10 +147,9 @@ public class GmailChannel extends AbstractChannel {
 			return;
 		}
 	}
-	
-	
+
 	// Utility methods
-	private Gmail getGmailService() throws GeneralSecurityException, IOException{
+	private Gmail getGmailService() throws GeneralSecurityException, IOException {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
