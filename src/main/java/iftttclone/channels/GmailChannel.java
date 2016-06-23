@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +35,6 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.ListMessagesResponse;
 import com.google.api.services.gmail.model.Message;
 import com.google.api.services.gmail.model.MessagePart;
-import com.google.api.services.gmail.model.MessagePartBody;
 import com.google.api.services.gmail.model.MessagePartHeader;
 import com.google.api.services.gmail.model.Profile;
 
@@ -86,7 +84,6 @@ public class GmailChannel extends AbstractChannel {
 		if(messages.getMessages() == null){
 			return null;
 		}
-		//System.err.println(messages.getMessages().size());
 		for (Message message : messages.getMessages()) {
 			try {
 				message = gmail.users().messages().get("me", message.getId()).execute();
@@ -98,50 +95,11 @@ public class GmailChannel extends AbstractChannel {
 			if(message.getInternalDate() == null){
 				continue;
 			}
-			//System.err.println(message.getInternalDate());
-			/*for (MessagePartHeader mph : message.getPayload().getHeaders()) {
-				System.err.println(mph.getValue());
-			}*/
 			Date acceptedAt = new Date(message.getInternalDate());
 			
 			if(this.getLastRun().after(acceptedAt)){	// already processed, this may skip some events that were created while executing this function
 				continue;
 			}
-			
-			/*MessagePart mp = message.getPayload();
-			System.err.println(mp);
-			if((mp == null) || (mp.getHeaders() == null)){
-				continue;
-			}
-			System.err.println(mp.getHeaders());
-			System.err.println(mp.getHeaders().size());
-			String date = "";
-			for (MessagePartHeader mph : mp.getHeaders()) {
-				String name = mph.getName();
-				System.err.println(name);
-				if(name == null){
-					continue;
-				}
-				if(name.equals("Date")){
-					date = name;
-				}
-			}
-			System.err.println(date);
-			if(date.isEmpty()){
-				continue;
-			}
-			
-			DateFormat rfc2822Format = new SimpleDateFormat("dd MMMMM yyyy, HH:mm");	// this is not technically correct since it is not rfc2822 compliant
-			Date hDate;
-			try {
-				hDate = rfc2822Format.parse(date);
-			} catch (ParseException e) {
-				continue;
-			}
-			
-			if(this.getLastRun().after(hDate)){	// already processed, this may skip some events that were created while executing this function
-				continue;
-			}*/
 			
 			Map<String, String> resEntry = new HashMap<String, String>();
 			this.addIngredients(message, resEntry);
@@ -195,7 +153,6 @@ public class GmailChannel extends AbstractChannel {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
-		//Credential credentials = new GoogleCredential().setAccessToken(this.getChannelConnector().getToken());
 		InputStreamReader clientSecret = new InputStreamReader(getClass().getResourceAsStream("/client_secret.json"));
 		GoogleClientSecrets secrets = GoogleClientSecrets.load(jsonFactory, clientSecret);
 		Credential credentials = new GoogleCredential.Builder()
@@ -233,14 +190,12 @@ public class GmailChannel extends AbstractChannel {
 					}
 				}
 			}
-			//System.err.println(mp.getBody());
+			
 			for(MessagePart mpi : mp.getParts()){
 				if((mpi.getBody() != null) && (mpi.getBody().getData() != null)
 						&& (mpi.getMimeType().equals("text/plain"))){
 					bodyText = bodyText + new String(Base64.decodeBase64(mpi.getBody().getData()));
 				}
-				//System.err.println(mpi);
-				//System.err.println(mpi.getParts());
 				if(mpi.getParts() != null){
 					for(MessagePart mpij : mpi.getParts()){
 						if((mpij.getBody() != null) && (mpij.getBody().getData() != null)
@@ -248,21 +203,8 @@ public class GmailChannel extends AbstractChannel {
 							bodyText = bodyText + new String(Base64.decodeBase64(mpij.getBody().getData()));
 						}
 					}
-					/*System.err.println(mpi.getParts().get(0).getBody().getData());
-					System.err.println(new String(Base64.decodeBase64(mpi.getParts().get(0).getBody().getData())));*/
 				}
-				/*System.err.println(mpi.getMimeType());
-				System.err.println(mpi.getBody());*/
-				/*if((mpi.getBody() != null) && (mpi.getBody().getData() != null)
-						&& (mpi.getMimeType().equals("text/plain") || mpi.getMimeType().equals("text/html"))){
-					//bodyText = bodyText + mpi.getBody().getData();
-					bodyText = bodyText + new String(Base64.decodeBase64(mpi.getBody().getData()));
-				}*/
 			}
-			/*System.err.println(mp.getBody().getData());
-			if((mp.getBody() != null) && (mp.getBody().getData() != null)){
-				bodyText = mp.getBody().getData();
-			}*/
 		}
 		if(message.getInternalDate() != null){
 			acceptedAt = new Date(message.getInternalDate());
@@ -287,4 +229,5 @@ public class GmailChannel extends AbstractChannel {
 		email.setText(bodyText);
 		return email;
 	}
+	
 }

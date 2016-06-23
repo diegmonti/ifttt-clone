@@ -68,7 +68,7 @@ public class TestRecipesCreator {
 			
 		//this.weatherTests(user);
 		//this.gCalendarTests(user);
-		this.gMailTests(user);
+		//this.gMailTests(user);
 		
 		System.err.println("-CHANNEL_TESTS: end");
 	}
@@ -536,7 +536,7 @@ public class TestRecipesCreator {
 		
 		r.setRecipeTriggerFields(rtfs);
 		r.setRecipeActionFields(rafs);
-		//recipes.save(r);
+		recipes.save(r);
 		
 				
 		System.err.println("--GMAIL_TESTS: end");
