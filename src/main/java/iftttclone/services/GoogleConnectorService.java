@@ -22,7 +22,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
-import iftttclone.exceptions.SecurityException;
+import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.UserRepository;
@@ -106,11 +106,11 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				user);
 
 		if (channelConnector == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 
 		if (!channelConnector.getToken().equals(token)) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets,

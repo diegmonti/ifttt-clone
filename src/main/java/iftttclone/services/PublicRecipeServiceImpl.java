@@ -19,6 +19,7 @@ import iftttclone.entities.PublicRecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
 import iftttclone.entities.User;
+import iftttclone.exceptions.ForbiddenException;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.exceptions.ResourceNotFoundException;
 import iftttclone.repositories.PublicRecipeRepository;
@@ -138,7 +139,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId,
 				userService.getUser());
 		if (publicRecipe == null) {
-			new SecurityException();
+			new ForbiddenException();
 		}
 
 		// Fields are not null
@@ -215,7 +216,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		User user = userService.getUser();
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId, user);
 		if (publicRecipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 		publicRecipeRepository.delete(publicRecipe);
 	}

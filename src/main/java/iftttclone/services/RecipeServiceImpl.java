@@ -22,6 +22,7 @@ import iftttclone.entities.RecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
 import iftttclone.entities.User;
+import iftttclone.exceptions.ForbiddenException;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.RecipeLogRepository;
@@ -54,7 +55,7 @@ public class RecipeServiceImpl implements RecipeService {
 		User user = userService.getUser();
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 		return recipe;
 	}
@@ -149,7 +150,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public Recipe updateRecipe(Long id, Recipe stub) {
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
 		if (recipe == null) {
-			new SecurityException();
+			new ForbiddenException();
 		}
 
 		// Fields are not null
@@ -221,7 +222,7 @@ public class RecipeServiceImpl implements RecipeService {
 		User user = userService.getUser();
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 		recipeRepository.delete(recipe);
 	}
@@ -230,7 +231,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public void turnOn(Long id) {
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
 		if (recipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 
 		// Check if it is already active
@@ -251,7 +252,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public void turnOff(Long id) {
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
 		if (recipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 
 		// Check if it is already not active
@@ -272,7 +273,7 @@ public class RecipeServiceImpl implements RecipeService {
 	public List<RecipeLog> getRecipeLogs(Long id, Integer page) {
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
 		if (recipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 		if (page < 0) {
 			throw new InvalidRequestException("Page cannot be negative");
