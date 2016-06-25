@@ -1,6 +1,6 @@
 iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '$http', '$location', '$routeParams', function($scope, $rootScope, $http, $location, $routeParams){
 
-
+var self = this;
 	if($rootScope.authenticated != true){
 		$location.path('/login');
 	}
@@ -45,5 +45,23 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
   }, function errorCallback(response){
 	  console.log(response);
   });
+
+	self.importRecipe = function(){
+		console.log('into importPublicRecipe function')
+		$http({
+      method : 'POST',
+      url : 'api/myrecipes',
+      data : JSON.stringify($scope.recipe),
+      headers : {
+        'Content-Type': 'application/json'
+      }
+    }).then(function successCallback(result){
+      $location.path('myRecipes');
+
+    }, function errorCallback(result){
+      $scope.error = true;
+      $scope.errorMessage = result.data.message;
+    });
+	}
 
 } ]);
