@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Validator;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.PublicRecipe;
@@ -18,6 +19,7 @@ import iftttclone.entities.PublicRecipeTriggerField;
 import iftttclone.entities.Trigger;
 import iftttclone.entities.TriggerField;
 import iftttclone.entities.User;
+import iftttclone.exceptions.ForbiddenException;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.exceptions.ResourceNotFoundException;
 import iftttclone.repositories.PublicRecipeRepository;
@@ -91,6 +93,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (publicRecipe.getPublicRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				PublicRecipeTriggerField recipeTriggerField = publicRecipe.getPublicRecipeTriggerFields()
 						.get(triggerField.getParameter());
+				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
 				recipeTriggerField.setParameter(triggerField.getParameter());
 				recipeTriggerField.setPublicRecipe(publicRecipe);
 				validTriggerFields++;
@@ -102,13 +105,6 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			throw new InvalidRequestException("The name of a trigger field is not correct");
 		}
 
-		// Check trigger fields value
-		for (PublicRecipeTriggerField recipeTriggerField : publicRecipe.getPublicRecipeTriggerFields().values()) {
-			if (recipeTriggerField.getValue() == null) {
-				throw new InvalidRequestException("The trigger field cannot be empty");
-			}
-		}
-
 		Collection<ActionField> actionsFields = publicRecipe.getAction().getActionFields().values();
 		Integer validActionFields = 0;
 
@@ -117,6 +113,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (publicRecipe.getPublicRecipeActionFields().containsKey(actionField.getParameter())) {
 				PublicRecipeActionField recipeActionField = publicRecipe.getPublicRecipeActionFields()
 						.get(actionField.getParameter());
+				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
 				recipeActionField.setParameter(actionField.getParameter());
 				recipeActionField.setPublicRecipe(publicRecipe);
 				validActionFields++;
@@ -126,13 +123,6 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		// Check action fields number
 		if (validActionFields != publicRecipe.getPublicRecipeActionFields().values().size()) {
 			throw new InvalidRequestException("The name of an action field is not correct");
-		}
-
-		// Check action fields value
-		for (PublicRecipeActionField recipeActionField : publicRecipe.getPublicRecipeActionFields().values()) {
-			if (recipeActionField.getValue() == null) {
-				throw new InvalidRequestException("The action field cannot be empty");
-			}
 		}
 
 		// Set default values
@@ -149,7 +139,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId,
 				userService.getUser());
 		if (publicRecipe == null) {
-			new SecurityException();
+			new ForbiddenException();
 		}
 
 		// Fields are not null
@@ -179,6 +169,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (stub.getPublicRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				PublicRecipeTriggerField recipeTriggerField = stub.getPublicRecipeTriggerFields()
 						.get(triggerField.getParameter());
+				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
 				recipeTriggerField.setParameter(triggerField.getParameter());
 				recipeTriggerField.setPublicRecipe(publicRecipe);
 				validTriggerFields++;
@@ -188,13 +179,6 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		// Check trigger fields number
 		if (validTriggerFields != stub.getPublicRecipeTriggerFields().values().size()) {
 			throw new InvalidRequestException("The name of a trigger field is not correct");
-		}
-
-		// Check trigger fields value
-		for (PublicRecipeTriggerField recipeTriggerField : stub.getPublicRecipeTriggerFields().values()) {
-			if (recipeTriggerField.getValue() == null) {
-				throw new InvalidRequestException("The trigger field cannot be empty");
-			}
 		}
 
 		publicRecipe.setPublicRecipeTriggerFields(stub.getPublicRecipeTriggerFields());
@@ -208,6 +192,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (stub.getPublicRecipeActionFields().containsKey(actionField.getParameter())) {
 				PublicRecipeActionField recipeActionField = stub.getPublicRecipeActionFields()
 						.get(actionField.getParameter());
+				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
 				recipeActionField.setParameter(actionField.getParameter());
 				recipeActionField.setPublicRecipe(publicRecipe);
 				validActionFields++;
@@ -217,13 +202,6 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		// Check action fields number
 		if (validActionFields != stub.getPublicRecipeActionFields().values().size()) {
 			throw new InvalidRequestException("The name of an action field is not correct");
-		}
-
-		// Check action fields value
-		for (PublicRecipeActionField recipeActionField : stub.getPublicRecipeActionFields().values()) {
-			if (recipeActionField.getValue() == null) {
-				throw new InvalidRequestException("The action field cannot be empty");
-			}
 		}
 
 		publicRecipe.setPublicRecipeActionFields(stub.getPublicRecipeActionFields());
@@ -238,7 +216,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		User user = userService.getUser();
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId, user);
 		if (publicRecipe == null) {
-			throw new SecurityException();
+			throw new ForbiddenException();
 		}
 		publicRecipeRepository.delete(publicRecipe);
 	}

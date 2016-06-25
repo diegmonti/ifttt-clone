@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import iftttclone.core.Validator.FieldType;
+
 @Entity
 @Table(name = "channel_trigger_field")
 public class TriggerField {
@@ -25,6 +27,9 @@ public class TriggerField {
 
 	@Column(nullable = false)
 	private boolean publishable;
+
+	@Column(nullable = false)
+	private FieldType type;
 
 	@Column(nullable = false)
 	private String name;
@@ -59,6 +64,14 @@ public class TriggerField {
 
 	public void setPublishable(boolean publishable) {
 		this.publishable = publishable;
+	}
+
+	public FieldType getType() {
+		return type;
+	}
+
+	public void setType(FieldType type) {
+		this.type = type;
 	}
 
 	public String getName() {

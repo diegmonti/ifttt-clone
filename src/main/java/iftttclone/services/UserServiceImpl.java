@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.TimezoneManager;
-import iftttclone.core.Utils;
+import iftttclone.core.Validator;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
@@ -23,6 +23,8 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	TimezoneManager timezoneManager;
 
 	@Override
 	public User getUser() {
@@ -49,12 +51,12 @@ public class UserServiceImpl implements UserService {
 			throw new InvalidRequestException("The password cannot be empty");
 		}
 
-		if (!Utils.isValidEmail(email)) {
+		if (!Validator.isValidEmail(email)) {
 			throw new InvalidRequestException("Enter a valid email address");
 		}
 
 		user.setPassword(passwordEncoder.encode(password));
-		user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
+		user.setTimezone(timezoneManager.getIdFromName(timezone));
 
 		userRepository.save(user);
 	}
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (email != null) {
-			if (Utils.isValidEmail(email)) {
+			if (Validator.isValidEmail(email)) {
 				user.setEmail(email);
 			} else {
 				throw new InvalidRequestException("Enter a valid email address");
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		if (timezone != null) {
-			user.setTimezone(TimezoneManager.getInstance().getIdFromName(timezone));
+			user.setTimezone(timezoneManager.getIdFromName(timezone));
 		}
 
 		userRepository.save(user);
@@ -93,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Set<String> getTimezones() {
-		return TimezoneManager.getInstance().getTimezones();
+		return timezoneManager.getTimezones();
 	}
 
 }

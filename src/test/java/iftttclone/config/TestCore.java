@@ -1,17 +1,17 @@
-package iftttclone.core;
+package iftttclone.config;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import iftttclone.config.RootConfig;
+import iftttclone.core.TestRecipesCreator;
 
 @Order
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RootConfig.class})
 @WebAppConfiguration
 public class TestCore {
@@ -22,7 +22,7 @@ public class TestCore {
 	public void doTests() throws InterruptedException{
 		testRecipesCreator.createTests();
 		
-		Thread.sleep(180000);	// three minutes, wait for scheduler
+		Thread.sleep(105000);	// 105 seconds, wait for scheduler
 	}
 
 }

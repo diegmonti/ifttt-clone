@@ -26,6 +26,7 @@ import iftttclone.channels.annotations.ChannelTag;
 import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
+import iftttclone.core.Validator.FieldType;
 
 @ChannelTag(name="Weather Channel", description="The channel that handles wheather", withConnection = false)
 public class WeatherChannel extends AbstractChannel {
@@ -43,15 +44,14 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "SunriseTime", description = "When the sunrise will take place", example = "23/05/2016 05:15")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public List<Map<String, String>> tomorrowWeatherReport(
-			@FieldTag(name = "location", description="The location the user is intrested in", publishable = false) String location,
-			@FieldTag(name = "checkHour", description="The hour the trigger will fire", publishable = true) String hour, 
-			@FieldTag(name = "checkMinutes", description="The minutes the trigger will fire", publishable = true) String minutes){
+			@FieldTag(name = "location", description="The location the user is intrested in", type = FieldType.LOCATION, publishable = false) String location,
+			@FieldTag(name = "checkHour", description="The hour the trigger will fire", type = FieldType.TIME) String hour){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
 		Date now = triggerTime.getTime();
 		Calendar tomorrow = (Calendar) triggerTime.clone();
-		triggerTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
-		triggerTime.set(Calendar.MINUTE, Integer.parseInt(minutes));
+		triggerTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour)); // TODO: hour is now in the form "12:15"
+		triggerTime.set(Calendar.MINUTE, Integer.parseInt("0"));
 		triggerTime.set(Calendar.SECOND, 0);
 		Date ttDate = triggerTime.getTime();
 		/*System.err.println("nowDate: " + now);
@@ -91,16 +91,17 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 	
+	
 	@TriggerTag(name ="currentTemperature", description = "This trigger is activated if current temperature is above or below a certain threshold, if one of the thresholds is not needed leave it blank")
 	@IngredientTag(name = "CurrTempFahrenheit", description = "The current temperature registered in degrees Fahrenheit", example = "40")
 	@IngredientTag(name = "CurrTempCelsius", description = "The current temperature registered in degrees Celsius", example = "25")
 	@IngredientTag(name = "Condition", description = "The weather condition", example = "Sunny")
 	@IngredientTag(name = "CheckTime", description = "When these measurements were taken", example = "23/05/2016 13:09")
 	public List<Map<String, String>> currentTemperature(
-			@FieldTag(name = "location", description="The location the user is intrested in", publishable = false) String location,
-			@FieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", publishable = true) String lower, 
-			@FieldTag(name = "upperTemp", description="Fires if less than or equal to this value", publishable = true) String upper, 
-			@FieldTag(name = "degrees", description="The unit of measure", publishable = true) String unit){
+			@FieldTag(name = "location", description="The location the user is intrested in", type = FieldType.LOCATION, publishable = false) String location,
+			@FieldTag(name = "lowerTemp", description="Fires if more than or equal to this value", type = FieldType.NULLABLEINTEGER) String lower, 
+			@FieldTag(name = "upperTemp", description="Fires if less than or equal to this value", type = FieldType.NULLABLEINTEGER) String upper, 
+			@FieldTag(name = "degrees", description="The unit of measure", type = FieldType.TEMPERATURE) String unit){
 		
 		String yql = "select units.temperature, item.condition.temp, item.condition.text, item.pubDate "
 				+ "from weather.forecast where woeid = " + location;
@@ -138,6 +139,7 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 	
+	
 	@TriggerTag(name ="sunriseEvent", description = "This trigger activates itself at sunrise")
 	@IngredientTag(name = "CurrTempFahrenheit", description = "The current temperature registered in degrees Fahrenheit", example = "40")
 	@IngredientTag(name = "CurrTempCelsius", description = "The current temperature registered in degrees Celsius", example = "25")
@@ -148,7 +150,7 @@ public class WeatherChannel extends AbstractChannel {
 	@IngredientTag(name = "LowTempFahrenheit", description = "Today's low temperature registered in degrees Fahrenheit", example = "18")
 	@IngredientTag(name = "LowTempCelsius", description = "Today's low temperature registered in degrees Celsius", example = "23")
 	public List<Map<String, String>> sunrise(
-			@FieldTag(name = "location", description="The location the user is intrested in", publishable = false) String location){
+			@FieldTag(name = "location", description="The location the user is intrested in", type = FieldType.LOCATION, publishable = false) String location){
 		
 		Calendar triggerTime = Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone()));	// now for the user
 		Date now = triggerTime.getTime();
@@ -201,6 +203,10 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 	
+	public static boolean isValidLocation(String location) {
+		// TODO
+		return true;
+	}
 	
 	// Utility methods
 	private JsonNode doQuery(String query){

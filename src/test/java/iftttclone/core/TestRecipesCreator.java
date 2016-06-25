@@ -81,8 +81,9 @@ public class TestRecipesCreator {
 		
 		System.err.println("--WEATHER_TESTS: begin");
 		
-		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		Calendar yesterday = (Calendar) now.clone();
+		Calendar twoMinutesAgo = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		twoMinutesAgo.add(Calendar.MINUTE, -2);
+		Calendar yesterday = (Calendar) twoMinutesAgo.clone();
 		yesterday.add(Calendar.DAY_OF_MONTH, -1);
 		String location = "24358";
 		Channel channel = channels.getChannelByClasspath("iftttclone.channels.WeatherChannel");
@@ -90,7 +91,7 @@ public class TestRecipesCreator {
 		
 		
 		System.err.println("--WEATHER_TESTS: creating tomorrowReport");	// should run once
-		Recipe r = this.createBasicRecipe(user, now, action);
+		Recipe r = this.createBasicRecipe(user, twoMinutesAgo, action);
 		r.setTitle("tomorrowReport");
 		
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("tomorrowWeatherReport", channel));
@@ -100,10 +101,10 @@ public class TestRecipesCreator {
 		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue( Integer.toString(now.get(Calendar.HOUR_OF_DAY)) );
+		rtf.setValue( Integer.toString(twoMinutesAgo.get(Calendar.HOUR_OF_DAY)) );
 		rtfs.put("arg1", rtf);
 		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue( Integer.toString(now.get(Calendar.MINUTE)+1) );
+		rtf.setValue( Integer.toString(twoMinutesAgo.get(Calendar.MINUTE)+1) );
 		rtfs.put("arg2", rtf);
 		
 		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
@@ -121,7 +122,7 @@ public class TestRecipesCreator {
 		
 		// Both temperatures, Celsius
 		System.err.println("--WEATHER_TESTS: creating currentTemperature1");	// should always run
-		r = this.createBasicRecipe(user, now, action);
+		r = this.createBasicRecipe(user, twoMinutesAgo, action);
 		r.setTitle("currentTemperature1");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channel));
 		
@@ -151,7 +152,7 @@ public class TestRecipesCreator {
 		
 		// One temperatures, Fahrenheit
 		System.err.println("--WEATHER_TESTS: creating currentTemperature2");	// should always run
-		r = this.createBasicRecipe(user, now, action);
+		r = this.createBasicRecipe(user, twoMinutesAgo, action);
 		r.setTitle("currentTemperature2");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channel));
 		rtfs.clear();
@@ -180,7 +181,7 @@ public class TestRecipesCreator {
 		
 		// Null intersection
 		System.err.println("--WEATHER_TESTS: creating currentTemperature3");	// should never run
-		r = this.createBasicRecipe(user, now, action);
+		r = this.createBasicRecipe(user, twoMinutesAgo, action);
 		r.setTitle("currentTemperature3");
 		r.setTrigger(triggers.getTriggerByMethodAndChannel("currentTemperature", channel));
 		
@@ -432,6 +433,115 @@ public class TestRecipesCreator {
 		System.err.println("--GOOGLE_CALENDAR_TESTS: end");
 		
 		this.gCalendarTestsDone = true;
+	}
+	
+	
+	private void gMailTests(User user){
+		if(this.gMailTestsDone){
+			return;
+		}
+		
+		System.err.println("--GMAIL_TESTS: begin");
+		
+		System.err.println("--GMAIL_TESTS: creating connection");
+		String token = env.getProperty("gMail.token");
+		String refreshToken = env.getProperty("gMail.refreshToken");
+		ChannelConnector cc = new ChannelConnector();
+		cc.setToken(token);
+		cc.setRefreshToken(refreshToken);
+		cc.setUser(user);
+		Channel channel = channels.getChannelByClasspath("iftttclone.channels.GMailChannel");
+		cc.setChannel(channel);
+		Calendar twoWeeksAgo = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		twoWeeksAgo.add(Calendar.DATE, -15);
+		cc.setConnectionTime(twoWeeksAgo.getTimeInMillis());
+		channelConnectors.save(cc);
+		
+		Action action = actions.getActionByMethodAndChannel("simpleAction", channels.getChannelByClasspath("iftttclone.channels.TestChannel"));
+		
+		
+		// from me, subject with IFTTT
+		System.err.println("--GMAIL_TESTS: creating newEmailReceived");
+		Recipe r = this.createBasicRecipe(user, twoWeeksAgo, action);
+		r.setTitle("newEmailReceived");
+		
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("newEmailReceived", channel));
+		
+		Map<String, RecipeTriggerField> rtfs = new HashMap<String, RecipeTriggerField>();
+		RecipeTriggerField rtf = this.createBasicRecipeTriggerField(0, r);
+		rtf.setValue("me");
+		rtfs.put("arg0", rtf);
+		rtf = this.createBasicRecipeTriggerField(1, r);
+		rtf.setValue("IFTTT");
+		rtfs.put("arg1", rtf);
+		
+		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
+		RecipeActionField raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBodyText: {{BodyText}}"
+				+ "\nSubject: {{Subject}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(rtfs);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+		
+		// from Google, no subject
+		System.err.println("--GMAIL_TESTS: creating newEmailReceived2");
+		r = this.createBasicRecipe(user, twoWeeksAgo, action);
+		r.setTitle("newEmailReceived2");
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("newEmailReceived", channel));
+		
+		rtfs.clear();
+		rtf = this.createBasicRecipeTriggerField(0, r);
+		rtf.setValue("Google");
+		rtfs.put("arg0", rtf);
+		rtf = this.createBasicRecipeTriggerField(1, r);
+		rtf.setValue("");
+		rtfs.put("arg1", rtf);
+		
+		raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBodyText: {{BodyText}}"
+				+ "\nSubject: {{Subject}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(rtfs);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+		
+		// send me an email
+		System.err.println("--GMAIL_TESTS: creating sendEmail");	// always done
+		r = this.createBasicRecipe(user, twoWeeksAgo, actions.getActionByMethodAndChannel("sendEmail", channel));
+		r.setTitle("sendEmail");
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("simpleTrigger", channels.getChannelByClasspath("iftttclone.channels.TestChannel")));
+		
+		rtfs.clear();
+		rtf = this.createBasicRecipeTriggerField(0, r);
+		rtf.setValue("Value of simpleTrigger");
+		rtfs.put("arg0", rtf);
+		rtf = this.createBasicRecipeTriggerField(1, r);
+		rtf.setValue("yes");
+		rtfs.put("arg1", rtf);
+		
+		raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue(env.getProperty("gMail.selfAddr"));
+		rafs.put("arg0", raf);
+		raf = this.createBasicRecipeActionField(1, r);
+		raf.setValue("{{Key1}}, {{Key2}}");
+		rafs.put("arg1", raf);
+		raf = this.createBasicRecipeActionField(2, r);
+		raf.setValue("A<br>Text<br>Body");
+		rafs.put("arg2", raf);
+		
+		r.setRecipeTriggerFields(rtfs);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+				
+		System.err.println("--GMAIL_TESTS: end");
+		
+		this.gMailTestsDone = true;
 	}
 	
 	

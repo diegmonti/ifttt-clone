@@ -1,8 +1,5 @@
 package iftttclone.core;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
@@ -23,13 +20,6 @@ public class Utils {
 		url.append(contextPath);
 
 		return url.toString();
-	}
-
-	public static boolean isValidEmail(String email) {
-		String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-		Pattern p = Pattern.compile(pattern);
-		Matcher m = p.matcher(email);
-		return m.matches();
 	}
 
 }
