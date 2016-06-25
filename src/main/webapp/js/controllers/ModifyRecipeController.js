@@ -1,6 +1,6 @@
 
-iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
- function ($scope, $rootScope, $routeParams, $location, $http, $window) {
+iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$compile',
+ function ($scope, $rootScope, $routeParams, $location, $http, $window, $compile) {
    var self = this;
    $scope.recipe = {};
 
@@ -34,10 +34,52 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      $scope.recipe = response.data;
      $scope.triggerChannelImage = 'img/' + response.data.trigger.channel + '.png';
      $scope.actionChannelImage = 'img/' + response.data.action.channel + '.png';
+
      for(var arg in $scope.recipe.recipeTriggerFields){
-       $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
+    	 (function(){
+    		 var inputGroup = $('<div>').attr({
+    	         class : 'input-group'
+    	       });
+    	       var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
+    	       var input = ($('<input>').attr({
+    	         type:"text",
+    	         class:"form-control",
+    	         'aria-describedby':"basic-addon3" ,
+    	         'data-ng-model': 'recipe.recipeTriggerFields.'+ arg +'.value'
+    	       }));
+    	       inputGroup.append(span).append(input);
+
+    	       $('#triggersDiv').append(inputGroup);
+    	       
+    	       $compile(input)($scope);
+
+    	 })();
+    	 $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
      }
+
      for(arg in $scope.recipe.recipeActionFields){
+
+    	 (function(){
+    		 var inputGroup = $('<div>').attr({
+    	         class : 'input-group'
+    	       });
+    	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
+    	       var input = ($('<input>').attr({
+    	         type:"text",
+    	         class:"form-control",
+    	         'aria-describedby':"basic-addon3" ,
+    	         'data-ng-model': 'recipe.recipeActionFields.'+ arg +'.value'
+    	       }));
+    	       inputGroup.append(span).append(input);
+
+    	       $('#actionsDiv').append(inputGroup);
+    	       input.val($scope.recipe.recipeActionFields[arg].value);
+
+    	       $compile(input)($scope);
+
+    	 })();
+
+
        $scope.recipe.recipeActionFields[arg].title = $scope.recipe.action.actionFields[arg].name;
      }
    }, function errorCallback(){})
