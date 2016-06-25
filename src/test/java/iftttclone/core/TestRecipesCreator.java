@@ -29,6 +29,7 @@ import iftttclone.repositories.RecipeRepository;
 import iftttclone.repositories.TriggerRepository;
 import iftttclone.repositories.UserRepository;
 
+@SuppressWarnings("unused")
 @Component
 @TestPropertySource(value = { "classpath:application.properties" })
 public class TestRecipesCreator {
@@ -50,7 +51,6 @@ public class TestRecipesCreator {
 	private boolean gCalendarTestsDone;
 	private boolean gMailTestsDone;
 	
-	
 	@Transactional
 	public void createTests(){
 		System.err.println("-CHANNEL_TESTS: begin");
@@ -62,7 +62,7 @@ public class TestRecipesCreator {
 			user.setUsername("user");
 			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m"); // "password"
 			user.setEmail("user.test@gmail.com");
-			user.setTimezone("UTC");
+			user.setTimezone("Europe/Berlin");
 			users.save(user);
 		}
 			
@@ -81,11 +81,11 @@ public class TestRecipesCreator {
 		
 		System.err.println("--WEATHER_TESTS: begin");
 		
-		Calendar twoMinutesAgo = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar twoMinutesAgo = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
 		twoMinutesAgo.add(Calendar.MINUTE, -2);
 		Calendar yesterday = (Calendar) twoMinutesAgo.clone();
 		yesterday.add(Calendar.DAY_OF_MONTH, -1);
-		String location = "24358";
+		String location = "Torino";
 		Channel channel = channels.getChannelByClasspath("iftttclone.channels.WeatherChannel");
 		Action action = actions.getActionByMethodAndChannel("simpleAction", channels.getChannelByClasspath("iftttclone.channels.TestChannel"));
 		
@@ -101,18 +101,16 @@ public class TestRecipesCreator {
 		rtf.setValue(location);
 		rtfs.put("arg0", rtf);
 		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue( Integer.toString(twoMinutesAgo.get(Calendar.HOUR_OF_DAY)) );
+		DateFormat timeFormat = new SimpleDateFormat("hh:mm");
+		rtf.setValue(timeFormat.format(twoMinutesAgo.getTime()));
 		rtfs.put("arg1", rtf);
-		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue( Integer.toString(twoMinutesAgo.get(Calendar.MINUTE)+1) );
-		rtfs.put("arg2", rtf);
 		
 		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
 		RecipeActionField raf = this.createBasicRecipeActionField(0, r);
 		raf.setValue("CurrTempFahrenheit: {{CurrTempFahrenheit}}\nCurrTempCelsius: {{CurrTempCelsius}}"
 				+ "\nCondition: {{Condition}}\nHighTempFahrenheit: {{HighTempFahrenheit}}"
 				+ "\nHighTempCelsius: {{HighTempCelsius}}\nLowTempFahrenheit: {{LowTempFahrenheit}}"
-				+ "\nLowTempCelsius: {{LowTempCelsius}}\nSunriseTime: {{SunriseTime}}\nCheckTime: {{CheckTime}}");
+				+ "\nLowTempCelsius: {{LowTempCelsius}}\nSunriseAt: {{SunriseAt}}\nCheckTime: {{CheckTime}}");
 		rafs.put("arg0", raf);
 		
 		r.setRecipeTriggerFields(rtfs);
