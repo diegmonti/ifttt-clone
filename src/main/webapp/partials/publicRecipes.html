@@ -1,0 +1,16 @@
+
+
+<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in publicRecipes" data-ng-click="controller.importRecipe(recipe.id)">
+    <div class="card-block">
+      <div class="card-title" style="align:center">
+        <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+          if <img src={{recipe.triggerChannel}} width="80px" /> then <img src={{recipe.actionChannel}} width="80px" />
+        </p>
+      </div>
+      <div class="card-text row">
+        <div class="col-lg-10 col-lg-offset-1">
+          {{recipe.title}}
+        </div>
+      </div>
+    </div>
+</div>

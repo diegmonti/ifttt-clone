@@ -1,0 +1,55 @@
+
+<div class="row">
+    <input  class="form-control form-control-lg col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
+</div>
+
+<br/> <hr /> <br />
+
+<div class="row">
+  <div class="col-lg-6 col-lg-offset-3">
+    <h1 style="display:inline"> if </h1>
+    <span>
+      <img src={{triggerChannelImage}} style="height:110px"/>
+    </span>
+    <h1 style="display:inline"> then </h1>
+    <span>
+      <img src={{actionChannelImage}} style="height:110px"/>
+    </span>
+  </div>
+</div>
+
+<br/> <hr /> <br />
+
+<div class="row">
+  <ol class="breadcrumb">
+    <li class="active">Trigger: {{recipe.trigger.method}}</li>
+  </ol>
+
+  <div class="input-group" data-ng-repeat="field in recipe.recipeTriggerFields">
+    <span class="input-group-addon">{{field.title}}</span>
+    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}}  data-ng-model="field.value">
+  </div>
+</div>
+
+<br/> <hr /> <br />
+
+<div class="row">
+  <ol class="breadcrumb">
+    <li class="active">Action: {{recipe.action.method}}</li>
+  </ol>
+
+  <div class="input-group" data-ng-repeat="field in recipe.recipeActionFields">
+    <span class="input-group-addon">{{field.title}}</span>
+    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}} data-ng-model="field.value">
+  </div>
+</div>
+
+<br/> <hr /> <br />
+
+<div class="row">
+  <div class="col-lg-offset-5">
+    <button class="btn btn-primary" data-ng-click="controller.importRecipe()">
+      Importa
+    </button>
+  </div>
+</div>

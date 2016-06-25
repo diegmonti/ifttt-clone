@@ -16,7 +16,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             title : element.title,
             created : moment(element.creationTime).calendar(),
             lastRun : moment(element.lastRun).calendar(),
-            timesTun : element.runs,
+            timesRun : element.runs,
             active : element.active
           };
           $scope.recipes.push(recipe);
@@ -68,7 +68,6 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
         url : 'api/myrecipes/' + recipeID
       }).then(function successCallback(){
         // if the function works, i need to remove it from the array
-        console.log('successCallback');
         for(var i = 0; i < $scope.recipes.length; i++){
           if($scope.recipes[i].id === recipeID){
             console.log('removing element ' + i + 'from array');
