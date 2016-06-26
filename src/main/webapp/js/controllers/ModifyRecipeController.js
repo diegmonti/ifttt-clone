@@ -40,17 +40,15 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      $scope.actionChannelImage = 'img/' + response.data.action.channel + '.png';
 
      for(var arg in $scope.recipe.recipeTriggerFields){
-    	 (function(){
-    		 var inputGroup = $('<div>').attr({
-    	         class : 'input-group'
-    	       });
-    	       var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
-             var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
-    	       inputGroup.append(span).append(input);
-    	       $('#triggersDiv').append(inputGroup);
-    	       $compile(input)($scope);
 
-    	 })();
+  		 var inputGroup = $('<div>').attr({
+  	         class : 'input-group'
+  	       });
+       var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
+       var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
+       inputGroup.append(span).append(input);
+       $('#triggersDiv').append(inputGroup);
+       $compile(input)($scope);
     	 $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
      }
 
