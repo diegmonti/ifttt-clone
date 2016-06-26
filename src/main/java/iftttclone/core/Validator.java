@@ -23,7 +23,7 @@ public class Validator {
 	 * an action field. Their value is serialized in the database as a string.
 	 */
 	public static enum FieldType {
-		TEXT, NULLABLETEXT, LONGTEXT, EMAIL, INTEGER, NULLABLEINTEGER, TIMESTAMP, TIME, TEMPERATURE, LOCATION
+		TEXT, NULLABLETEXT, LONGTEXT, EMAIL, INTEGER, TIMESTAMP, TIME, TEMPERATURE, LOCATION
 	}
 
 	/*
@@ -58,11 +58,6 @@ public class Validator {
 			break;
 		case INTEGER:
 			validateInteger(value, field);
-			break;
-		case NULLABLEINTEGER:
-			if (!value.equals("")) {
-				validateInteger(value, field);
-			}
 			break;
 		case TIMESTAMP:
 			validateTimestamp(value, field);

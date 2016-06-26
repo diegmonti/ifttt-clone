@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -35,59 +34,64 @@ import iftttclone.channels.annotations.FieldTag;
 import iftttclone.channels.annotations.TriggerTag;
 import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldType;
+import iftttclone.exceptions.SchedulerException;
 
-@ChannelTag(name = "Google Calendar", description = "The channel for google calendar", withConnection = true)
+@ChannelTag(name = "Google Calendar", description = "Google Calendar is a time-management web application created by Google.", withConnection = true)
 public class GoogleCalendarChannel extends AbstractChannel {
 
-	@TriggerTag(name = "EventStarted", description = "This trigger fires when an event starts, it can be filtered with some keywords in an inclusive OR fashion. Fired if the keyword is present, left blank if not needed")
-	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09 UTC")
-	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09 UTC")
-	@IngredientTag(name = "Title", description = "The title of the event", example = "Important exam")
-	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
-	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
+	@TriggerTag(name = "Event starts", description = "This trigger fires within 15 minutes of the starting time of an event. It is optionally possible to filter the events by setting a keyword or phrase.")
+	@IngredientTag(name = "Starts", description = "Date and time the event starts.", example = "23/05/2016 13:00")
+	@IngredientTag(name = "Ends", description = "Date and time the event ends.", example = "23/05/2016 15:00")
+	@IngredientTag(name = "Title", description = "The title of the event.", example = "Important exam")
+	@IngredientTag(name = "Description", description = "The description of the event.", example = "A course that I hate")
+	@IngredientTag(name = "Where", description = "The location of the event.", example = "Room 10I")
 	public List<Map<String, String>> newEventStarted(
-			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT) String titleKW,
-			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT) String descriptionKW,
-			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", type = FieldType.NULLABLETEXT, publishable = false) String locationKW) {
+			@FieldTag(name = "Keyword or phrase", description = "A keyword to search in the event's title, description or location.", type = FieldType.NULLABLETEXT) String keyword) {
 
 		Events events;
 		try {
 			Calendar gCalendar = this.getCalendarService();
-			
+
 			events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
 					.setTimeMin(new DateTime(this.getLastRun())).setOrderBy("startTime").execute();
-		} catch (GeneralSecurityException | IOException e) {	// error 500
-			System.err.println("******ERROR******");
-			e.printStackTrace();
+		} catch (GeneralSecurityException | IOException e) {
+			throw new SchedulerException();
+		}
+
+		Date now = new Date();
+		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
+		if (events.getItems() == null) {
 			return null;
 		}
 
-		Date now = java.util.Calendar.getInstance(TimeZone.getTimeZone(this.getUser().getTimezone())).getTime();	// now for the user
-		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
-		if(events.getItems() == null){
-			return null;
-		}
 		for (Event event : events.getItems()) {
-			if(!this.filterEventOr(titleKW, descriptionKW, locationKW, 
-					event.getSummary(), event.getDescription(), event.getLocation())){	// change Or for And to get other trigger
+			// This event does not contain the keyword
+			if (!this.filterEvent(keyword, event)) {
 				continue;
 			}
-			
+
 			DateTime start = event.getStart().getDateTime();
-			if (start == null) {	// this is not supposed to happen but it is in the example code so I leave it
+			// This is not supposed to happen
+			if (start == null) {
 				start = event.getStart().getDate();
 			}
-			if(start == null){
+			if (start == null) {
 				continue;
 			}
+
 			Date startDate = new Date(start.getValue());
-			if(startDate.after(now)){	// early termination, further events have not started since they are ordered
+			// Early termination, further events have not started since they are
+			// ordered
+			if (startDate.after(now)) {
 				break;
 			}
-			if(this.getLastRun().after(startDate)){	// already processed, this may skip some events that were created while executing this function
+
+			// Already processed, this may skip some events that were created
+			// while executing this function
+			if (this.getLastRun().after(startDate)) {
 				continue;
 			}
-			
+
 			Map<String, String> resEntry = new HashMap<String, String>();
 			this.addIngredients(event, resEntry);
 			result.add(resEntry);
@@ -96,60 +100,65 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		return result;
 	}
 
-	
-	@TriggerTag(name = "EventAdded", description = "This trigger fires when an event is added, it can be filtered with some keywords in an inclusive OR fashion. Fired if the keyword is present, left blank if not needed")
-	@IngredientTag(name = "WhenStarts", description = "When the event starts", example = "23/05/2016 13:09 UTC")
-	@IngredientTag(name = "WhenEnds", description = "When the event ends", example = "23/05/2016 15:09 UTC")
-	@IngredientTag(name = "Title", description = "The title of the event", example = "Important exam")
-	@IngredientTag(name = "Description", description = "The description of the event", example = "That course I hate")
-	@IngredientTag(name = "Where", description = "The location of the event", example = "10I")
+	@TriggerTag(name = "New event added", description = "This trigger fires when an new event is added. It is optionally possible to filter the events by setting a keyword or phrase.")
+	@IngredientTag(name = "Starts", description = "Date and time the event starts.", example = "23/05/2016 13:00")
+	@IngredientTag(name = "Ends", description = "Date and time the event ends.", example = "23/05/2016 15:00")
+	@IngredientTag(name = "Title", description = "The title of the event.", example = "Important exam")
+	@IngredientTag(name = "Description", description = "The description of the event.", example = "A course that I hate")
+	@IngredientTag(name = "Where", description = "The location of the event.", example = "Room 10I")
 	public List<Map<String, String>> newEventAdded(
-			@FieldTag(name = "titleKeyword", description = "A keyword to search in the title of the event", type = FieldType.NULLABLETEXT) String titleKW,
-			@FieldTag(name = "DescriptionKeyword", description = "A keyword to search in the description of the event", type = FieldType.NULLABLETEXT) String descriptionKW,
-			@FieldTag(name = "locationKeyword", description = "A keyword to search in the location of the event", type = FieldType.NULLABLETEXT, publishable = false) String locationKW) {
+			@FieldTag(name = "Keyword or phrase", description = "A keyword to search in the event's title, description or location.", type = FieldType.NULLABLETEXT) String keyword) {
 
 		Events events;
+
 		try {
 			Calendar gCalendar = this.getCalendarService();
-			
+
 			events = gCalendar.events().list("primary").setSingleEvents(true).setTimeZone(this.getUser().getTimezone())
 					.setOrderBy("updated").execute();
-		} catch (GeneralSecurityException | IOException e) {	// error 500
-			System.err.println("******ERROR******");
-			e.printStackTrace();
-			return null;
+		} catch (GeneralSecurityException | IOException e) {
+			throw new SchedulerException();
 		}
 
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
-		if(events.getItems() == null){
+		if (events.getItems() == null) {
 			return null;
 		}
+
 		ListIterator<Event> li = events.getItems().listIterator(events.getItems().size());
-		while(li.hasPrevious()){	// backwards for early termination
+
+		// Backwards for early termination
+		while (li.hasPrevious()) {
 			Event event = li.previous();
-			
-			if(!this.filterEventOr(titleKW, descriptionKW, locationKW, 
-					event.getSummary(), event.getDescription(), event.getLocation())){	// change Or for And to get other trigger
+
+			if (!this.filterEvent(keyword, event)) {
 				continue;
 			}
-			
+
 			DateTime creation = event.getCreated();
-			if (creation == null) {	// this should not happen
+			// This should not happen
+			if (creation == null) {
 				continue;
 			}
+
 			Date creationDate = new Date(creation.getValue());
-			if(this.getLastRun().after(creationDate)){	// already processed, this may skip some events that were created while executing this function
+			// Already processed, this may skip some events that were created
+			// while executing this function
+			if (this.getLastRun().after(creationDate)) {
 				continue;
 			}
-			
+
 			DateTime update = event.getUpdated();
-			if (update != null) {	// this should always happen
+
+			// This should always happen
+			if (update != null) {
 				Date updateDate = new Date(update.getValue());
-				if(updateDate.before(this.getLastRun())){	// early termination, further events have not beign modified
+				// Early termination, further events have not being modified
+				if (updateDate.before(this.getLastRun())) {
 					break;
 				}
 			}
-			
+
 			Map<String, String> resEntry = new HashMap<String, String>();
 			this.addIngredients(event, resEntry);
 			result.add(resEntry);
@@ -158,151 +167,147 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		return result;
 	}
 
-	
-	@ActionTag(name = "CreateEvent", description = "Creates a new Event")
+	@ActionTag(name = "Create event", description = "This action will add a new event to Google Calendar.")
 	public void createEvent(
-			@FieldTag(name = "Title", description = "The title of the event", type = FieldType.TEXT) String title,
-			@FieldTag(name = "Description", description = "The description of the event", type = FieldType.TEXT) String description,
-			@FieldTag(name = "Where", description = "The location of the event", type = FieldType.TEXT, publishable = false) String location,
-			@FieldTag(name = "WhenStarts", description = "When the event starts", type = FieldType.TIMESTAMP, publishable = false) String starts,
-			@FieldTag(name = "WhenEnds", description = "When the event ends", type = FieldType.TIMESTAMP, publishable = false) String ends) {
-		
+			@FieldTag(name = "Title", description = "The title of the event.", type = FieldType.TEXT) String title,
+			@FieldTag(name = "Description", description = "The description of the event.", type = FieldType.NULLABLETEXT) String description,
+			@FieldTag(name = "Location", description = "The location of the event.", type = FieldType.NULLABLETEXT) String location,
+			@FieldTag(name = "Starts at", description = "The date and time when the event starts.", type = FieldType.TIMESTAMP, publishable = false) String starts,
+			@FieldTag(name = "Ends at", description = "The date and time when the event ends.", type = FieldType.TIMESTAMP, publishable = false) String ends) {
+
+		TimeZone timezone = TimeZone.getTimeZone(this.getUser().getTimezone());
+
 		Event event = new Event();
 		event.setSummary(title);
-		event.setDescription(description);
-		event.setLocation(location);
+		if (!description.isEmpty()) {
+			event.setDescription(description);
+		}
+		if (!location.isEmpty()) {
+			event.setLocation(location);
+		}
+
 		DateFormat fromFormat = new SimpleDateFormat(Validator.TIMESTAMP_FORMAT);
-		fromFormat.setTimeZone(TimeZone.getTimeZone(this.getUser().getTimezone()));
+		fromFormat.setTimeZone(timezone);
+
 		Date startDate;
 		try {
 			startDate = fromFormat.parse(starts);
-		} catch (ParseException e1) {	// error 500, should not happen
-			return;
+		} catch (ParseException e) {
+			throw new SchedulerException();
 		}
-		if(startDate == null){	// error 500, should not happen
-			return;
+		if (startDate == null) {
+			throw new SchedulerException();
 		}
-		DateTime startDateTime = new DateTime(startDate, TimeZone.getTimeZone(this.getUser().getTimezone()));
-		EventDateTime startEDT = new EventDateTime().setDateTime(startDateTime).setTimeZone(this.getUser().getTimezone());
+
+		DateTime startDateTime = new DateTime(startDate, timezone);
+		EventDateTime startEDT = new EventDateTime().setDateTime(startDateTime)
+				.setTimeZone(this.getUser().getTimezone());
 		event.setStart(startEDT);
+
 		Date endDate;
 		try {
 			endDate = fromFormat.parse(ends);
-		} catch (ParseException e1) {	// error 500, should not happen
-			return;
+		} catch (ParseException e) {
+			throw new SchedulerException();
 		}
-		if(endDate == null){	// error 500, should not happen
-			return;
+		if (endDate == null) {
+			throw new SchedulerException();
 		}
-		DateTime endDateTime = new DateTime(endDate, TimeZone.getTimeZone(this.getUser().getTimezone()));
+
+		DateTime endDateTime = new DateTime(endDate, timezone);
 		EventDateTime endEDT = new EventDateTime().setDateTime(endDateTime).setTimeZone(this.getUser().getTimezone());
 		event.setEnd(endEDT);
-		
+
 		try {
 			Calendar gCalendar = this.getCalendarService();
 			gCalendar.events().insert("primary", event).execute();
-		} catch (GeneralSecurityException | IOException e) {	// error 500
-			System.err.println("******ERROR******");
-			e.printStackTrace();
-			return;
+		} catch (GeneralSecurityException | IOException e) {
+			throw new SchedulerException();
 		}
 	}
-	
-	
-	// Utility methods
-	private Calendar getCalendarService() throws GeneralSecurityException, IOException{
+
+	/*
+	 * This method returns an instance of the Calendar service.
+	 */
+	private Calendar getCalendarService() throws GeneralSecurityException, IOException {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		InputStreamReader clientSecret = new InputStreamReader(getClass().getResourceAsStream("/client_secret.json"));
 		GoogleClientSecrets secrets = GoogleClientSecrets.load(jsonFactory, clientSecret);
-		Credential credentials = new GoogleCredential.Builder()
-				.setTransport(httpTransport)
-		        .setJsonFactory(jsonFactory)
-		        .setClientSecrets(secrets)
-		        .build()
-		        .setAccessToken(this.getChannelConnector().getToken())
-		        .setRefreshToken(this.getChannelConnector().getRefreshToken());
-		return new Calendar.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE")
-				.build();
+		Credential credentials = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory)
+				.setClientSecrets(secrets).build().setAccessToken(this.getChannelConnector().getToken())
+				.setRefreshToken(this.getChannelConnector().getRefreshToken());
+		return new Calendar.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
 	}
-	
-	private boolean filterEventOr(String titleKW, String descriptionKW, String locationKW, 
-			String title, String description, String location){
-		if((titleKW.isEmpty()) && (descriptionKW.isEmpty()) && (locationKW.isEmpty())){
+
+	/*
+	 * This method returns true if the keyword matches the event or if the
+	 * keyword is empty.
+	 */
+	private boolean filterEvent(String keyword, Event event) {
+		if (keyword.isEmpty()) {
 			return true;
 		}
-		if((title != null) && (!titleKW.isEmpty()) && (title.contains(titleKW))){
+
+		String title = event.getSummary();
+		String description = event.getDescription();
+		String location = event.getLocation();
+
+		if (title.contains(keyword) || description.contains(keyword) || location.contains(keyword)) {
 			return true;
 		}
-		if((description != null) && (!descriptionKW.isEmpty()) && (description.contains(descriptionKW))){
-			return true;
-		}
-		if((location != null) && (!locationKW.isEmpty()) && (location.contains(locationKW))){
-			return true;
-		}
+
 		return false;
 	}
-	
-	private boolean filterEventAnd(String titleKW, String descriptionKW, String locationKW, 
-			String title, String description, String location){
-		if((titleKW.isEmpty()) && (descriptionKW.isEmpty()) && (locationKW.isEmpty())){
-			return true;
-		}
-		if((title != null) && (!titleKW.isEmpty()) && (!title.contains(titleKW))){
-			return false;
-		}
-		if((description != null) && (!descriptionKW.isEmpty()) && (!description.contains(descriptionKW))){
-			return false;
-		}
-		if((location != null) && (!locationKW.isEmpty()) && (!location.contains(locationKW))){
-			return false;
-		}
-		return true;
-	}
-	
-	private void addIngredients(Event event, Map<String, String> ingredients){
-		DateFormat toFormat = new SimpleDateFormat("dd MMM yyyy HH:mm z", Locale.ENGLISH);
-		
+
+	private void addIngredients(Event event, Map<String, String> ingredients) {
+		DateFormat toFormat = new SimpleDateFormat(Validator.TIMESTAMP_FORMAT);
+		toFormat.setTimeZone(TimeZone.getTimeZone(this.getUser().getTimezone()));
+
 		DateTime start = event.getStart().getDateTime();
-		if (start == null) {	// this is not supposed to happen but it is in the example code so I leave it
+		// This is not supposed to happen
+		if (start == null) {
 			start = event.getStart().getDate();
 		}
+
 		Date startDate;
-		if(start != null){
+		if (start != null) {
 			startDate = new Date(start.getValue());
 		} else {
-			startDate = java.util.Calendar.getInstance().getTime();
+			startDate = new Date();
 		}
-		
+
 		DateTime end = event.getEnd().getDateTime();
-		if (end == null) {	// this is not supposed to happen but it is in the example code so I leave it
+		// This is not supposed to happen
+		if (end == null) {
 			end = event.getStart().getDate();
 		}
+
 		Date endDate;
-		if(end != null){
+		if (end != null) {
 			endDate = new Date(end.getValue());
 		} else {
-			endDate = java.util.Calendar.getInstance().getTime();
+			endDate = new Date();
 		}
-		
+
 		String title = event.getSummary();
-		if(title == null){
+		if (title == null) {
 			title = "";
 		}
-		
+
 		String description = event.getDescription();
-		if(description == null){
+		if (description == null) {
 			description = "";
 		}
-		
+
 		String location = event.getLocation();
-		if(location == null){
+		if (location == null) {
 			location = "";
 		}
-		
-		ingredients.put("WhenStarts", toFormat.format(startDate));
-		ingredients.put("WhenEnds", toFormat.format(endDate));
+
+		ingredients.put("Starts", toFormat.format(startDate));
+		ingredients.put("Ends", toFormat.format(endDate));
 		ingredients.put("Title", title);
 		ingredients.put("Description", description);
 		ingredients.put("Where", location);
