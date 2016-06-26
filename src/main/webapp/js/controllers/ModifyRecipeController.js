@@ -1,6 +1,6 @@
 
-iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$compile',
- function ($scope, $rootScope, $routeParams, $location, $http, $window, $compile) {
+iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$compile', 'fieldInputFactory',
+ function ($scope, $rootScope, $routeParams, $location, $http, $window, $compile, fieldInputFactory) {
    var self = this;
    $scope.recipe = {};
 
@@ -27,44 +27,8 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
    // now i need to populate the recipe object
 
-   function createInputType(type, field){
-     var input;
-     if(type === 'TEMPERATURE'){
-       input = $('<select>')
-        .append($('<option>').val('C').text('C'))
-        .append($('<option>').val('F').text('F'));
-     }
-     else if (type === 'EMAIL') {
-       console.log();
-
-       input = $('<input>').attr('type', 'email');
-     }
-     else if(type === 'LONGTEXT'){
-       input = $('<textarea>');
-     }
-     else if(type === 'NULLABLEINTEGER' || type === 'INTEGER'){
-       input = $('<input>').attr('type', 'number');
-       // now i need to transform the value in the corrispondent number
-       field.value = Number(field.value);
-     }
-     else if (type === 'TIME') {
-       input = $('<input>').attr({
-        'type' : 'time',
-        'placeholder' : 'hh:mm',
-        'data-ng-min' : '00:00:00',
-        'data-ng-max' : '23:59:00'
-       });
-     }
-     else if (type === 'TIMESTAMP') {
-       input = $('<input>').attr({
-        'type' : 'text',
-        'placeholder' : 'dd/MM/yyyy HH:mm'
-       });
-     }
-     else {
-       input = $('<input>').attr('type', 'text');
-     }
-     return input;
+   function createInputType(type, field, model){
+     return fieldInputFactory.createInput(type, field, model);
    }
 
    $http({
@@ -81,16 +45,9 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
     	         class : 'input-group'
     	       });
     	       var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
-             var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg]);
-    	       input.attr({
-    	         class:"form-control",
-    	         'aria-describedby':"basic-addon3" ,
-    	         'data-ng-model': 'recipe.recipeTriggerFields.'+ arg +'.value'
-    	       });
+             var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
     	       inputGroup.append(span).append(input);
-
     	       $('#triggersDiv').append(inputGroup);
-
     	       $compile(input)($scope);
 
     	 })();
@@ -98,32 +55,14 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      }
 
      for(arg in $scope.recipe.recipeActionFields){
-
-    	 (function(){
-    		 var inputGroup = $('<div>').attr({
-    	         class : 'input-group'
-    	       });
-    	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
-
-
-             var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg]);
-
-             input.attr({
-    	         class:"form-control",
-    	         'aria-describedby':"basic-addon3" ,
-    	         'data-ng-model': 'recipe.recipeActionFields.'+ arg +'.value'
-    	       });
-    	       inputGroup.append(span).append(input);
-
-    	       $('#actionsDiv').append(inputGroup);
-    	       input.val($scope.recipe.recipeActionFields[arg].value);
-
-    	       $compile(input)($scope);
-
-    	 })();
-
-
-       $scope.recipe.recipeActionFields[arg].title = $scope.recipe.action.actionFields[arg].name;
+  		 var inputGroup = $('<div>').attr({
+  	         class : 'input-group'
+  	       });
+  	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
+            var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
+            inputGroup.append(span).append(input);
+    	      $('#actionsDiv').append(inputGroup);
+    	      $compile(input)($scope);
      }
    }, function errorCallback(){})
  }]);

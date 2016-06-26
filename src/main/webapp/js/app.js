@@ -1,4 +1,4 @@
-var iftttclone = angular.module('schedulerApp', ['ngRoute']);
+var iftttclone = angular.module('iftttcloneApp', ['ngRoute']);
 
 iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
     $routeProvider.when('/', {
@@ -53,6 +53,59 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);
+
+iftttclone.factory('fieldInputFactory',  function(){
+  var factory = {};
+  factory.createInput = function(type, field, model){
+    var input;
+    if(type === 'TEMPERATURE'){
+      input = $('<select>')
+       .append($('<option>').val('C').text('C'))
+       .append($('<option>').val('F').text('F'));
+    }
+    else if (type === 'EMAIL') {
+      console.log();
+
+      input = $('<input>').attr('type', 'email');
+    }
+    else if(type === 'LONGTEXT'){
+      input = $('<textarea>').attr({
+        rows:"5"
+      });
+    }
+    else if(type === 'NULLABLEINTEGER' || type === 'INTEGER'){
+      input = $('<input>').attr('type', 'number');
+      // now i need to transform the value in the corrispondent number
+      field.value = Number(field.value);
+    }
+    else if (type === 'TIME') {
+      input = $('<input>').attr({
+       'type' : 'time',
+       'placeholder' : 'hh:mm',
+       'data-ng-min' : '00:00:00',
+       'data-ng-max' : '23:59:00'
+      });
+    }
+    else if (type === 'TIMESTAMP') {
+      input = $('<input>').attr({
+       'type' : 'text',
+       'placeholder' : 'dd/MM/yyyy HH:mm'
+      });
+    }
+    else {
+      input = $('<input>').attr('type', 'text');
+    }
+
+    input.attr({
+      class:"form-control",
+      'aria-describedby':"basic-addon3" ,
+      'data-ng-model': model
+    });
+
+    return input;
+  }
+  return factory;
+});
 
 iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
     function ($scope, $rootScope, $routeParams, $location, $http, $window) {
