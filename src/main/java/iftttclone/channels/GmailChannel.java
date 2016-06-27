@@ -179,16 +179,18 @@ public class GmailChannel extends AbstractChannel {
 				}
 			}
 
-			for (MessagePart mpi : mp.getParts()) {
-				if ((mpi.getBody() != null) && (mpi.getBody().getData() != null)
-						&& (mpi.getMimeType().equals("text/plain"))) {
-					bodyText = bodyText + new String(Base64.decodeBase64(mpi.getBody().getData()));
-				}
-				if (mpi.getParts() != null) {
-					for (MessagePart mpij : mpi.getParts()) {
-						if ((mpij.getBody() != null) && (mpij.getBody().getData() != null)
-								&& (mpij.getMimeType().equals("text/plain"))) {
-							bodyText = bodyText + new String(Base64.decodeBase64(mpij.getBody().getData()));
+			if (mp.getParts() != null) {
+				for (MessagePart mpi : mp.getParts()) {
+					if ((mpi.getBody() != null) && (mpi.getBody().getData() != null)
+							&& (mpi.getMimeType().equals("text/plain"))) {
+						bodyText = bodyText + new String(Base64.decodeBase64(mpi.getBody().getData()));
+					}
+					if (mpi.getParts() != null) {
+						for (MessagePart mpij : mpi.getParts()) {
+							if ((mpij.getBody() != null) && (mpij.getBody().getData() != null)
+									&& (mpij.getMimeType().equals("text/plain"))) {
+								bodyText = bodyText + new String(Base64.decodeBase64(mpij.getBody().getData()));
+							}
 						}
 					}
 				}

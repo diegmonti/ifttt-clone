@@ -47,35 +47,36 @@ public class TestRecipesCreator {
 	private ChannelConnectorRepository channelConnectors;
 	@Autowired
 	private Environment env;
+	
 	private boolean weatherTestsDone;
 	private boolean gCalendarTestsDone;
 	private boolean gMailTestsDone;
 	
 	@Transactional
-	public void createTests(){
+	public void createTests() {
 		System.err.println("-CHANNEL_TESTS: begin");
 		
 		User user = users.getUserByUsername("user");
-		if(user == null){
+		if (user == null) {
 			System.err.println("-CHANNEL_TESTS: creating user");
 			user = new User();
 			user.setUsername("user");
 			user.setPassword("$2a$10$nnLzeVdmP9OSKJTUqAtpBueKWZXJACcYiFZ0PCc30P.szKVp6iB4m"); // "password"
-			user.setEmail("user.test@gmail.com");
+			user.setEmail("user@example.com");
 			user.setTimezone("Europe/Berlin");
 			users.save(user);
 		}
 			
-		//this.weatherTests(user);
-		//this.gCalendarTests(user);
-		//this.gMailTests(user);
+		this.weatherTests(user);
+		this.gCalendarTests(user);
+		this.gMailTests(user);
 		
 		System.err.println("-CHANNEL_TESTS: end");
 	}
 	
 	
-	private void weatherTests(User user){
-		if(this.weatherTestsDone){
+	private void weatherTests(User user) {
+		if (this.weatherTestsDone) {
 			return;
 		}
 		
@@ -234,20 +235,20 @@ public class TestRecipesCreator {
 		
 		this.weatherTestsDone = true;
 	}
-	
-	
-	/*Create events with start=end in the range of execution (first preferably), all (trigger) should run once
-	* Just create after yesterday at this time and then run
-	* Value							place			caught by
-	* A title						title			newEventStarted2, newEventStarted
-	* A title, Some place			title,location	newEventStarted2, newEventStarted, newEventAdded2
-	* place							location		newEventStarted2
-	* test							any				newEventStarted2
-	* The description of A title	title			newEventStarted2, newEventStarted, newEventAdded
-	* The description of A title	location		newEventStarted2, newEventAdded
+
+	/*
+	 * Create events with start=end in the range of execution (first preferably), all (trigger) should run once
+	 * Just create after yesterday at this time and then run
+	 * Value						place			caught by
+	 * A title						title			newEventStarted2, newEventStarted
+	 * A title, Some place			title,location	newEventStarted2, newEventStarted, newEventAdded2
+	 * place						location		newEventStarted2
+	 * test							any				newEventStarted2
+	 * The description of A title	title			newEventStarted2, newEventStarted, newEventAdded
+	 * The description of A title	location		newEventStarted2, newEventAdded
 	 */
-	private void gCalendarTests(User user){
-		if(this.gCalendarTestsDone){
+	private void gCalendarTests(User user) {
+		if (this.gCalendarTestsDone) {
 			return;
 		}
 		
@@ -262,7 +263,7 @@ public class TestRecipesCreator {
 		cc.setUser(user);
 		Channel channel = channels.getChannelByClasspath("iftttclone.channels.GoogleCalendarChannel");
 		cc.setChannel(channel);
-		Calendar yesterday = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar yesterday = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
 		yesterday.add(Calendar.DATE, -1);
 		cc.setConnectionTime(yesterday.getTimeInMillis());
 		channelConnectors.save(cc);
@@ -274,7 +275,7 @@ public class TestRecipesCreator {
 		String title = "A title";
 		String description = "The description of " + title;
 		String location = "Some place";
-		DateFormat actionFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.ENGLISH);
+		DateFormat actionFormat = new SimpleDateFormat(Validator.TIMESTAMP_FORMAT);
 		
 		Action action = actions.getActionByMethodAndChannel("simpleAction", channels.getChannelByClasspath("iftttclone.channels.TestChannel"));
 		
@@ -290,16 +291,10 @@ public class TestRecipesCreator {
 		RecipeTriggerField rtf = this.createBasicRecipeTriggerField(0, r);
 		rtf.setValue(title);
 		rtfs.put("arg0", rtf);
-		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue("");
-		rtfs.put("arg1", rtf);
-		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue(location);
-		rtfs.put("arg2", rtf);
 		
 		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
 		RecipeActionField raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("WhenStarts: {{WhenStarts}}\nWhenEnds: {{WhenEnds}}"
+		raf.setValue("Starts: {{Starts}}\nEnds: {{Ends}}"
 				+ "\nTitle: {{Title}}\nDescription: {{Description}}"
 				+ "\nWhere: {{Where}}");
 		rafs.put("arg0", raf);
@@ -319,15 +314,9 @@ public class TestRecipesCreator {
 		rtf = this.createBasicRecipeTriggerField(0, r);
 		rtf.setValue("");
 		rtfs.put("arg0", rtf);
-		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue("");
-		rtfs.put("arg1", rtf);
-		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue("");
-		rtfs.put("arg2", rtf);
 		
 		raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("WhenStarts: {{WhenStarts}}\nWhenEnds: {{WhenEnds}}"
+		raf.setValue("Starts: {{Starts}}\nEnds: {{Ends}}"
 				+ "\nTitle: {{Title}}\nDescription: {{Description}}"
 				+ "\nWhere: {{Where}}");
 		rafs.put("arg0", raf);
@@ -337,7 +326,7 @@ public class TestRecipesCreator {
 		recipes.save(r);
 		
 		
-		// matches description in any field
+		// matches description
 		System.err.println("--GOOGLE_CALENDAR_TESTS: creating newEventAdded");
 		r = this.createBasicRecipe(user, yesterday, action);
 		r.setTitle("newEventAdded");
@@ -347,15 +336,9 @@ public class TestRecipesCreator {
 		rtf = this.createBasicRecipeTriggerField(0, r);
 		rtf.setValue(description);
 		rtfs.put("arg0", rtf);
-		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue(description);
-		rtfs.put("arg1", rtf);
-		rtf = this.createBasicRecipeTriggerField(2, r);
-		rtf.setValue(description);
-		rtfs.put("arg2", rtf);
 		
 		raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("WhenStarts: {{WhenStarts}}\nWhenEnds: {{WhenEnds}}"
+		raf.setValue("Starts: {{Starts}}\nEnds: {{Ends}}"
 				+ "\nTitle: {{Title}}\nDescription: {{Description}}"
 				+ "\nWhere: {{Where}}");
 		rafs.put("arg0", raf);
@@ -365,7 +348,7 @@ public class TestRecipesCreator {
 		recipes.save(r);
 		
 		
-		// matches only location
+		// matches location
 		System.err.println("--GOOGLE_CALENDAR_TESTS: creating newEventAdded2");
 		r = this.createBasicRecipe(user, yesterday, action);
 		r.setTitle("newEventAdded2");
@@ -373,17 +356,11 @@ public class TestRecipesCreator {
 		
 		rtfs.clear();
 		rtf = this.createBasicRecipeTriggerField(0, r);
-		rtf.setValue("");
-		rtfs.put("arg0", rtf);
-		rtf = this.createBasicRecipeTriggerField(1, r);
-		rtf.setValue("");
-		rtfs.put("arg1", rtf);
-		rtf = this.createBasicRecipeTriggerField(2, r);
 		rtf.setValue(location);
-		rtfs.put("arg2", rtf);
+		rtfs.put("arg0", rtf);
 		
 		raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("WhenStarts: {{WhenStarts}}\nWhenEnds: {{WhenEnds}}"
+		raf.setValue("Starts: {{Starts}}\nEnds: {{Ends}}"
 				+ "\nTitle: {{Title}}\nDescription: {{Description}}"
 				+ "\nWhere: {{Where}}");
 		rafs.put("arg0", raf);
@@ -434,8 +411,8 @@ public class TestRecipesCreator {
 	}
 	
 	
-	private void gMailTests(User user){
-		if(this.gMailTestsDone){
+	private void gMailTests(User user) {
+		if (this.gMailTestsDone) {
 			return;
 		}
 		
@@ -450,7 +427,7 @@ public class TestRecipesCreator {
 		cc.setUser(user);
 		Channel channel = channels.getChannelByClasspath("iftttclone.channels.GMailChannel");
 		cc.setChannel(channel);
-		Calendar twoWeeksAgo = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar twoWeeksAgo = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
 		twoWeeksAgo.add(Calendar.DATE, -15);
 		cc.setConnectionTime(twoWeeksAgo.getTimeInMillis());
 		channelConnectors.save(cc);
@@ -475,7 +452,7 @@ public class TestRecipesCreator {
 		
 		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
 		RecipeActionField raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBodyText: {{BodyText}}"
+		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBody: {{Body}}"
 				+ "\nSubject: {{Subject}}");
 		rafs.put("arg0", raf);
 		
@@ -499,7 +476,7 @@ public class TestRecipesCreator {
 		rtfs.put("arg1", rtf);
 		
 		raf = this.createBasicRecipeActionField(0, r);
-		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBodyText: {{BodyText}}"
+		raf.setValue("From: {{From}}\nAcceptedAt: {{AcceptedAt}}\nBody: {{Body}}"
 				+ "\nSubject: {{Subject}}");
 		rafs.put("arg0", raf);
 		

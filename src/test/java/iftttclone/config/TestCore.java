@@ -19,7 +19,7 @@ public class TestCore {
 	private TestRecipesCreator testRecipesCreator;
 	
 	@Test
-	public void doTests() throws InterruptedException{
+	public void doTests() throws InterruptedException {
 		testRecipesCreator.createTests();
 		
 		Thread.sleep(105000);	// 105 seconds, wait for scheduler
