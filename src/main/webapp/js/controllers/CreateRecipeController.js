@@ -63,8 +63,12 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
             var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
             $scope.recipe.recipeTriggerFields = {};
             $scope.recipe.recipeTriggerFields[index] = {value : ''};
-
             var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeTriggerFields[index], 'recipe.recipeTriggerFields.'+ index +'.value');
+            $(input).change(function(){
+              if($(input).hasClass('ng-invalid'))
+                $(input).addClass('alert-danger');
+              else $(input).removeClass('alert-danger');
+            });
             $compile(input)($scope);
 
             div.append(label).append(input);
@@ -121,6 +125,11 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           $scope.recipe.recipeActionFields[index] = {value : ''};
 
           var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeActionFields[index], 'recipe.recipeActionFields.'+ index +'.value');
+          $(input).change(function(){
+            if($(input).hasClass('ng-invalid'))
+              $(input).addClass('alert-danger');
+            else $(input).removeClass('alert-danger');
+          });
           $compile(input)($scope);
           div.append(label).append(input);
           $('#actionFieldsDiv').append(div);

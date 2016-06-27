@@ -64,8 +64,6 @@ iftttclone.factory('fieldInputFactory',  function(){
        .append($('<option>').val('F').text('F'));
     }
     else if (type === 'EMAIL') {
-      console.log();
-
       input = $('<input>').attr('type', 'email');
     }
     else if(type === 'LONGTEXT'){

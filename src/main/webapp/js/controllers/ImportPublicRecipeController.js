@@ -49,6 +49,11 @@ var self = this;
 					});
 			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[property].name));
 			var input = fieldInputFactory.createInput($scope.recipe.trigger.triggerFields[property].type, $scope.recipe.recipeTriggerFields[property], 'recipe.recipeTriggerFields.'+ property +'.value');
+			$(input).change(function(){
+				if($(input).hasClass('ng-invalid'))
+					$(input).addClass('alert-danger');
+				else $(input).removeClass('alert-danger');
+			});
 			inputGroup.append(span).append(input);
 			$('#triggersDiv').append(inputGroup);
 			$compile(input)($scope);
@@ -59,6 +64,11 @@ var self = this;
 					});
 			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[property].name));
 			var input = fieldInputFactory.createInput($scope.recipe.action.actionFields[property].type, $scope.recipe.recipeActionFields[property], 'recipe.recipeActionFields.'+ property +'.value');
+			$(input).change(function(){
+				if($(input).hasClass('ng-invalid'))
+					$(input).addClass('alert-danger');
+				else $(input).removeClass('alert-danger');
+			});
 			inputGroup.append(span).append(input);
 			$('#actionsDiv').append(inputGroup);
 			$compile(input)($scope);

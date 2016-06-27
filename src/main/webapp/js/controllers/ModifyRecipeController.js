@@ -3,6 +3,9 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
  function ($scope, $rootScope, $routeParams, $location, $http, $window, $compile, fieldInputFactory) {
    var self = this;
    $scope.recipe = {};
+   $scope.error = false;
+   $scope.errorMessage = '';
+
 
    self.updateRecipe = function(){
 
@@ -15,13 +18,18 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
        delete(sentRecipe.recipeActionFields[property].title);
      }
 
+
      $http({
-       method : 'PUT',
-       url : 'api/myrecipes/' + $routeParams.recipeId,
-       data : JSON.stringify(sentRecipe)
-     }).then(function successCallback(){
-       $location.path('/myRecipes');
-     }, function errorCallback(){});
+         method : 'PUT',
+         url : 'api/myrecipes/' + $routeParams.recipeId,
+         data : JSON.stringify(sentRecipe)
+       }).then(function successCallback(){
+          $location.path('/myRecipes');
+       }, function errorCallback(response){
+         $scope.error = true;
+         $scope.errorMessage  = response.data.message;
+       });
+
 
    };
 
@@ -40,12 +48,16 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      $scope.actionChannelImage = 'img/' + response.data.action.channel + '.png';
 
      for(var arg in $scope.recipe.recipeTriggerFields){
-
   		 var inputGroup = $('<div>').attr({
   	         class : 'input-group'
   	       });
        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
        var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
+       $(input).change(function(){
+         if($(input).hasClass('ng-invalid'))
+           $(input).addClass('alert-danger');
+         else $(input).removeClass('alert-danger');
+       });
        inputGroup.append(span).append(input);
        $('#triggersDiv').append(inputGroup);
        $compile(input)($scope);
@@ -58,6 +70,11 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
   	       });
   	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
             var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
+            $(input).change(function(){
+              if($(input).hasClass('ng-invalid'))
+                $(input).addClass('alert-danger');
+              else $(input).removeClass('alert-danger');
+            });
             inputGroup.append(span).append(input);
     	      $('#actionsDiv').append(inputGroup);
     	      $compile(input)($scope);
