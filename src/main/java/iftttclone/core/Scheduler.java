@@ -73,6 +73,7 @@ public class Scheduler {
 
 			} catch (ReflectiveOperationException e) {
 				System.err.println("----SCHEDULER: Scheduler exception");
+				// e.printStackTrace();
 				recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.ERROR));
 			}
 		}

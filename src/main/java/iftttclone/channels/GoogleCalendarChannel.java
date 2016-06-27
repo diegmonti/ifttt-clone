@@ -254,6 +254,18 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		String description = event.getDescription();
 		String location = event.getLocation();
 
+		if (title == null) {
+			title = "";
+		}
+
+		if (description == null) {
+			description = "";
+		}
+
+		if (location == null) {
+			location = "";
+		}
+
 		if (title.contains(keyword) || description.contains(keyword) || location.contains(keyword)) {
 			return true;
 		}
