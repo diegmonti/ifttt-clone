@@ -136,11 +136,11 @@ public class WeatherChannel extends AbstractChannel {
 		int currTemp = rootNode.findPath("item").findPath("condition").findPath("temp").asInt();
 		currTemp = getTemp(currTemp, tempUnit, unit);
 
-		if (!upper.isEmpty() && (currTemp > Integer.parseInt(upper))) {
+		if (!upper.isEmpty() && (currTemp <= Integer.parseInt(upper))) {
 			return null;
 		}
 
-		if (!lower.isEmpty() && (currTemp < Integer.parseInt(lower))) {
+		if (!lower.isEmpty() && (currTemp >= Integer.parseInt(lower))) {
 			return null;
 		}
 
