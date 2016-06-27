@@ -26,15 +26,10 @@
 
 <div class="row">
   <ol class="breadcrumb">
-    <li class="active">Trigger: {{recipe.trigger.method}}</li>
+    <li class="active">Trigger: {{recipe.trigger.name}}</li>
   </ol>
 
-<!--
-  <div class="input-group" data-ng-repeat="field in recipe.recipeTriggerFields">
-    <span class="input-group-addon">{{field.title}}</span>
-    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}}  data-ng-model="field.value">
-  </div>
-  -->
+
 </div>
 
 <div id="triggersDiv">
@@ -45,13 +40,9 @@
 
 <div class="row">
   <ol class="breadcrumb">
-    <li class="active">Action: {{recipe.action.method}}</li>
+    <li class="active">Action: {{recipe.action.name}}</li>
   </ol>
-  <!--
-  <div class="input-group" data-ng-repeat="field in recipe.recipeActionFields">
-    <span class="input-group-addon">{{field.title}}</span>
-    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}} data-ng-model="field.value">
-  </div> -->
+
 </div>
 
 <div id="actionsDiv">

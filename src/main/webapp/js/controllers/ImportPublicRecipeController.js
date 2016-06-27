@@ -1,6 +1,7 @@
 iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '$http', '$location', '$routeParams', '$compile', 'fieldInputFactory', function($scope, $rootScope, $http, $location, $routeParams, $compile, fieldInputFactory){
 
 var self = this;
+var fieldsErrorsNumber = 0;
 	if($rootScope.authenticated != true){
 		$location.path('/login');
 	}
@@ -50,9 +51,18 @@ var self = this;
 			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[property].name));
 			var input = fieldInputFactory.createInput($scope.recipe.trigger.triggerFields[property].type, $scope.recipe.recipeTriggerFields[property], 'recipe.recipeTriggerFields.'+ property +'.value');
 			$(input).change(function(){
-				if($(input).hasClass('ng-invalid'))
-					$(input).addClass('alert-danger');
-				else $(input).removeClass('alert-danger');
+				if($(input).hasClass('ng-invalid')){
+					if($(input).hasClass('alert-danger') == false){
+						$(input).addClass('alert-danger');
+						fieldsErrorsNumber++;
+					}
+				}
+				else {
+					if($(input).hasClass('alert-danger')){
+						$(input).removeClass('alert-danger');
+						fieldsErrorsNumber--;
+					}
+				}
 			});
 			inputGroup.append(span).append(input);
 			$('#triggersDiv').append(inputGroup);
@@ -65,9 +75,18 @@ var self = this;
 			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[property].name));
 			var input = fieldInputFactory.createInput($scope.recipe.action.actionFields[property].type, $scope.recipe.recipeActionFields[property], 'recipe.recipeActionFields.'+ property +'.value');
 			$(input).change(function(){
-				if($(input).hasClass('ng-invalid'))
-					$(input).addClass('alert-danger');
-				else $(input).removeClass('alert-danger');
+				if($(input).hasClass('ng-invalid')){
+					if($(input).hasClass('alert-danger') == false){
+						$(input).addClass('alert-danger');
+						fieldsErrorsNumber++;
+					}
+				}
+				else {
+					if($(input).hasClass('alert-danger')){
+						$(input).removeClass('alert-danger');
+						fieldsErrorsNumber--;
+					}
+				}
 			});
 			inputGroup.append(span).append(input);
 			$('#actionsDiv').append(inputGroup);
@@ -80,7 +99,10 @@ var self = this;
   });
 
 	self.importRecipe = function(){
-
+		if(fieldsErrorsNumber > 0) {
+			console.error('there are still ' + fieldsErrorsNumber + ' errors');
+			return;
+		}
 		$http({
       method : 'POST',
       url : 'api/myrecipes',

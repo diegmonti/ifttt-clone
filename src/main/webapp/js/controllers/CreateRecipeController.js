@@ -3,7 +3,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
   var self = this;
   self.currentSelected = "";
-
+  var fieldsErrorsNumber = 0;
   $scope.recipe = {};
   $scope.channels = [];
 
@@ -40,8 +40,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
         for(var element in result.data.triggers)
           $scope.triggers.push({
-            title: element,
-            description : result.data.triggers[element].description
+            title: result.data.triggers[element].name,
+            description : result.data.triggers[element].description,
+            method : element
           });
       },
       function errorCallback(result){
@@ -59,23 +60,37 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           var index;
           for(index in result.data.triggers[$scope.recipe.trigger.method].triggerFields) {
             var element = result.data.triggers[$scope.recipe.trigger.method].triggerFields[index];
-            var div = $('<div>').attr({class : 'form-group row'});
-            var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
-            $scope.recipe.recipeTriggerFields = {};
-            $scope.recipe.recipeTriggerFields[index] = {value : ''};
-            var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeTriggerFields[index], 'recipe.recipeTriggerFields.'+ index +'.value');
-            $(input).change(function(){
-              if($(input).hasClass('ng-invalid'))
-                $(input).addClass('alert-danger');
-              else $(input).removeClass('alert-danger');
-            });
-            $compile(input)($scope);
 
-            div.append(label).append(input);
-            $('#triggerFieldsDiv').append(div);
+            (function(index){
+              var div = $('<div>').attr({class : 'input-group row'});
+              var label = $('<span>').attr({class : 'input-group-addon'}).text(element.name);
+              $scope.recipe.recipeTriggerFields = {};
+              $scope.recipe.recipeTriggerFields[index] = {value : ''};
+              var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeTriggerFields[index], 'recipe.recipeTriggerFields.'+ index +'.value');
+
+              $(input).change(function(){
+                if($(input).hasClass('ng-invalid')){
+                  if($(input).hasClass('alert-danger') == false){
+                    $(input).addClass('alert-danger');
+                    fieldsErrorsNumber++;
+                  }
+                }
+                else {
+                  if($(input).hasClass('alert-danger')){
+                    $(input).removeClass('alert-danger');
+                    fieldsErrorsNumber--;
+                  }
+                }
+              });
+              $compile(input)($scope);
+
+              div.append(label).append(input);
+              $('#triggerFieldsDiv').append(div);
+            })(index)
+
+
           }
-          div = $('<div>').attr({class : 'form-group row'});
-
+          var div = $('<div>').attr({class : 'form-group row'});
           var button = $('<button>').attr({
             class : 'btn btn-primary col-lg-4 col-lg-offset-3',
           }).text("Accetta");
@@ -88,7 +103,6 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   }
 
   function downloadActions(){
-    console.log('asking to ' + 'api/channels/'+  $scope.recipe.action.channel);
     $http({
       method : 'GET',
       url : 'api/channels/'+  $scope.recipe.action.channel
@@ -99,8 +113,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
         console.log();
         for(var element in result.data.actions)
           $scope.actions.push({
-            title: element,
-            description : result.data.actions[element].description
+            title: result.data.actions[element].name,
+            description : result.data.actions[element].description,
+            method : element
           });
       },
       function errorCallback(result){
@@ -118,23 +133,36 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
         var index;
         for(index in result.data.actions[  $scope.recipe.action.method].actionFields){
           var element = result.data.actions[  $scope.recipe.action.method].actionFields[index];
-          var div = $('<div>').attr({class : 'form-group row'});
-          var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
 
-          $scope.recipe.recipeActionFields = {};
-          $scope.recipe.recipeActionFields[index] = {value : ''};
+          (function(index){
+            var div = $('<div>').attr({class : 'form-group row'});
+            var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
 
-          var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeActionFields[index], 'recipe.recipeActionFields.'+ index +'.value');
-          $(input).change(function(){
-            if($(input).hasClass('ng-invalid'))
-              $(input).addClass('alert-danger');
-            else $(input).removeClass('alert-danger');
-          });
-          $compile(input)($scope);
-          div.append(label).append(input);
-          $('#actionFieldsDiv').append(div);
+            $scope.recipe.recipeActionFields = {};
+            $scope.recipe.recipeActionFields[index] = {value : ''};
+
+            var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeActionFields[index], 'recipe.recipeActionFields.'+ index +'.value');
+            $(input).change(function(){
+              if($(input).hasClass('ng-invalid')){
+                if($(input).hasClass('alert-danger') == false){
+                  $(input).addClass('alert-danger');
+                  fieldsErrorsNumber++;
+                }
+              }
+              else {
+                if($(input).hasClass('alert-danger')){
+                  $(input).removeClass('alert-danger');
+                  fieldsErrorsNumber--;
+                }
+              }
+            });
+            $compile(input)($scope);
+            div.append(label).append(input);
+            $('#actionFieldsDiv').append(div);
+          })(index);
+
         }
-        div = $('<div>').attr({class : 'form-group row'});
+        var div = $('<div>').attr({class : 'form-group row'});
         var button = $('<button>').attr({
           class : 'btn btn-primary col-lg-4 col-lg-offset-3',
         }).text("Accetta");
@@ -182,7 +210,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   }
 
   self.acceptTriggerFields = function(){
-
+    if(fieldsErrorsNumber != 0) return;
     $('#triggerFieldsDiv').hide();
 
     var link = $('<a>').attr({
@@ -198,8 +226,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   }
 
   self.acceptActionsFields = function(){
+    if(fieldsErrorsNumber != 0) return;
     $('#actionFieldsDiv').hide();
-    console.log(  JSON.stringify($scope.recipe));
+
 
     var button = $('<button>').attr({
       class : 'btn btn-primary col-lg-4 col-lg-offset-3'
@@ -222,6 +251,28 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     }, function errorCallback(result){
       $scope.error = true;
       $scope.errorMessage = result.data.message;
+
+      (function(){
+        var ol = $('<ol>').attr('class', 'breadcrumb');
+        ol.append(
+          $('<li>').attr('class', 'active').text('Trigger: ' + $scope.recipe.trigger.name)
+        );
+        $('#triggerFieldsHeaderDiv').append(ol);
+      })();
+
+
+      $('#triggerFieldsDiv').show();
+
+      var ol = $('<ol>').attr('class', 'breadcrumb');
+      ol.append(
+        $('<li>').attr('class', 'active').text('Action: ' + $scope.recipe.action.name)
+      );
+      $('#actionFieldsHeaderDiv').append(ol);
+      $('#actionFieldsDiv').show();
+
+      $('#triggerFieldsDiv').remove('button');
+      $('#actionFieldsDiv').remove('button');
+
     });
   }
 }]);

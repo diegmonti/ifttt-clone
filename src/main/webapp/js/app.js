@@ -4,51 +4,52 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
     $routeProvider.when('/', {
         templateUrl: 'partials/channels.html',
         controller: 'ChannelsController',
-        controllerAs : 'controller'
+        controllerAs : 'controller',
+        
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
-        controllerAs: 'controller'
+        controllerAs: 'controller',
     })
     .when('/signIn', {
       templateUrl: 'partials/signIn.html',
       controller: 'SignInController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/channel/:channelID', {
       templateUrl: 'partials/channel.html',
       controller: 'ChannelController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/myRecipes', {
       templateUrl: 'partials/recipes.html',
       controller: 'PrivateRecipeController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/modifyRecipe/:recipeId', {
       templateUrl: 'partials/modifyRecipe.html',
       controller: 'ModifyRecipeController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/createRecipe', {
       templateUrl: 'partials/createRecipe.html',
       controller: 'CreateRecipeController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/publishRecipe/:recipeID', {
       templateUrl: 'partials/publishRecipe.html',
       controller: 'PublishRecipeController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/importPublicRecipe/:publicRecipeId', {
       templateUrl: 'partials/importPublicRecipe.html',
       controller: 'ImportPublicRecipeController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .when('/publicRecipes', {
       templateUrl: 'partials/publicRecipes.html',
       controller: 'PublicRecipesController',
-      controllerAs: 'controller'
+      controllerAs: 'controller',
     })
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
@@ -78,10 +79,9 @@ iftttclone.factory('fieldInputFactory',  function(){
     }
     else if (type === 'TIME') {
       input = $('<input>').attr({
-       'type' : 'time',
+       'type' : 'text',
        'placeholder' : 'hh:mm',
-       'data-ng-min' : '00:00:00',
-       'data-ng-max' : '23:59:00'
+       'pattern' : '([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])'
       });
     }
     else if (type === 'TIMESTAMP') {

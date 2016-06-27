@@ -2,6 +2,7 @@
 iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', '$compile', 'fieldInputFactory',
  function ($scope, $rootScope, $routeParams, $location, $http, $window, $compile, fieldInputFactory) {
    var self = this;
+   var fieldsErrorsNumber = 0;
    $scope.recipe = {};
    $scope.error = false;
    $scope.errorMessage = '';
@@ -9,26 +10,31 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
    self.updateRecipe = function(){
 
-     var sentRecipe =  JSON.parse(JSON.stringify($scope.recipe));
+     if(fieldsErrorsNumber === 0){
+       var sentRecipe =  JSON.parse(JSON.stringify($scope.recipe));
 
-     for(var property in sentRecipe.recipeTriggerFields){
-       delete(sentRecipe.recipeTriggerFields[property].title);
+       for(var property in sentRecipe.recipeTriggerFields){
+         delete(sentRecipe.recipeTriggerFields[property].title);
+       }
+       for(var property in sentRecipe.recipeActionFields){
+         delete(sentRecipe.recipeActionFields[property].title);
+       }
+
+
+       $http({
+           method : 'PUT',
+           url : 'api/myrecipes/' + $routeParams.recipeId,
+           data : JSON.stringify(sentRecipe)
+         }).then(function successCallback(){
+            $location.path('/myRecipes');
+         }, function errorCallback(response){
+           $scope.error = true;
+           $scope.errorMessage  = response.data.message;
+         });
      }
-     for(var property in sentRecipe.recipeActionFields){
-       delete(sentRecipe.recipeActionFields[property].title);
+     else {
+       console.error('there are still ' + fieldsErrorsNumber + 'errors');
      }
-
-
-     $http({
-         method : 'PUT',
-         url : 'api/myrecipes/' + $routeParams.recipeId,
-         data : JSON.stringify(sentRecipe)
-       }).then(function successCallback(){
-          $location.path('/myRecipes');
-       }, function errorCallback(response){
-         $scope.error = true;
-         $scope.errorMessage  = response.data.message;
-       });
 
 
    };
@@ -54,9 +60,18 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
        var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
        $(input).change(function(){
-         if($(input).hasClass('ng-invalid'))
-           $(input).addClass('alert-danger');
-         else $(input).removeClass('alert-danger');
+         if($(input).hasClass('ng-invalid')){
+           if($(input).hasClass('alert-danger') == false){
+             $(input).addClass('alert-danger');
+             fieldsErrorsNumber++;
+           }
+         }
+         else {
+           if($(input).hasClass('alert-danger')){
+             $(input).removeClass('alert-danger');
+             fieldsErrorsNumber--;
+           }
+         }
        });
        inputGroup.append(span).append(input);
        $('#triggersDiv').append(inputGroup);
@@ -71,9 +86,18 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
   	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
             var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
             $(input).change(function(){
-              if($(input).hasClass('ng-invalid'))
-                $(input).addClass('alert-danger');
-              else $(input).removeClass('alert-danger');
+              if($(input).hasClass('ng-invalid')){
+                if($(input).hasClass('alert-danger') == false){
+                  $(input).addClass('alert-danger');
+                  fieldsErrorsNumber++;
+                }
+              }
+              else {
+                if($(input).hasClass('alert-danger')){
+                  $(input).removeClass('alert-danger');
+                  fieldsErrorsNumber--;
+                }
+              }
             });
             inputGroup.append(span).append(input);
     	      $('#actionsDiv').append(inputGroup);

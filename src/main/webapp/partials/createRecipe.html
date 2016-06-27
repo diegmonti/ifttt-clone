@@ -30,10 +30,9 @@
   </div>
 </div>
 
-
 <div id="triggerChoicesDiv" class="container">
   <!-- Put here the choices -->
-  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="controller.triggerSelected(trigger.title)">
+  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="controller.triggerSelected(trigger.method)">
     <div class="card-block">
       <h4 class="card-title">{{trigger.title}}</h4>
       <p class="card-text">{{trigger.description}}</p>
@@ -41,11 +40,12 @@
   </div>
 </div>
 
+<div id="triggerFieldsHeaderDiv"></div>
 <div id="triggerFieldsDiv"></div>
 
 <div id="actionsChoicesDiv">
   <!-- Put here the choices for the action -->
-  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.title)">
+  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.method)">
     <div class="card-block">
       <h4 class="card-title">{{action.title}}</h4>
       <p class="card-text">{{action.description}}</p>
@@ -53,9 +53,8 @@
   </div>
 </div>
 
-<div id="actionFieldsDiv" >
-
-</div>
+<div id="actionFieldsHeaderDiv"></div>
+<div id="actionFieldsDiv"></div>
 
 <div id='confirmDiv' class="row">
 </div>
