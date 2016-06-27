@@ -46,7 +46,6 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           });
       },
       function errorCallback(result){
-
       });
   }
 
@@ -90,7 +89,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
 
           }
-          var div = $('<div>').attr({class : 'form-group row', id : 'acceptTriggerButton'});
+          var div = $('<div>').attr({class : 'row', id : 'acceptTriggerButton'});
           var button = $('<button>').attr({
             class : 'btn btn-primary col-lg-4 col-lg-offset-3',
           }).text("Accetta");
@@ -135,8 +134,8 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           var element = result.data.actions[  $scope.recipe.action.method].actionFields[index];
 
           (function(index){
-            var div = $('<div>').attr({class : 'form-group row'});
-            var label = $('<label>').attr({class : 'form-control-label'}).text(element.name);
+            var div = $('<div>').attr({class : 'input-group row'});
+            var label = $('<span>').attr({class : 'input-group-addon'}).text(element.name);
 
             $scope.recipe.recipeActionFields = {};
             $scope.recipe.recipeActionFields[index] = {value : ''};
@@ -162,7 +161,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           })(index);
 
         }
-        var div = $('<div>').attr({class : 'form-group row', id : 'acceptActionButton'});
+        var div = $('<div>').attr({class : 'row', id : 'acceptActionButton'});
         var button = $('<button>').attr({
           class : 'btn btn-primary col-lg-4 col-lg-offset-3',
         }).text("Accetta");
@@ -204,8 +203,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     }
   }
 
-  self.triggerSelected = function(id){
+  self.triggerSelected = function(id, name){
       $scope.recipe.trigger.method = id;
+      $scope.recipe.trigger.name = name;
     downloadTriggerFields();
   }
 
@@ -219,8 +219,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     $('#actionDiv').html(link)
   }
 
-  self.actionSelected = function(id){
+  self.actionSelected = function(id, name){
     $scope.recipe.action.method = id;
+    $scope.recipe.action.name = name;
     $scope.actions = [];
     downloadActionFields();
   }
@@ -252,14 +253,14 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       $scope.error = true;
       $scope.errorMessage = result.data.message;
 
+      console.log($scope.recipe);
       (function(){
         var ol = $('<ol>').attr('class', 'breadcrumb');
         ol.append(
           $('<li>').attr('class', 'active').text('Trigger: ' + $scope.recipe.trigger.name)
         );
-        $('#triggerFieldsHeaderDiv').append(ol);
+        $('#triggerFieldsHeaderDiv').empty().append(ol);
       })();
-
 
       $('#triggerFieldsDiv').show();
 
@@ -267,7 +268,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       ol.append(
         $('<li>').attr('class', 'active').text('Action: ' + $scope.recipe.action.name)
       );
-      $('#actionFieldsHeaderDiv').append(ol);
+      $('#actionFieldsHeaderDiv').empty().append(ol);
       $('#actionFieldsDiv').show();
 
 

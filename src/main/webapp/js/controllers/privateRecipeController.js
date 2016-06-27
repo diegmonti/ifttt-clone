@@ -17,21 +17,13 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             created : moment(element.creationTime).calendar(),
             lastRun : moment(element.lastRun).calendar(),
             timesRun : element.runs,
-            active : element.active
+            active : element.active,
+						triggerChannelImage : 'img/'+ element.trigger.channel + '.png',
+						actionChannelImage : 'img/'+ element.action.channel + '.png'
           };
           $scope.recipes.push(recipe);
 
           // now i need to update the recipe so it also contains the name of the trigger and action channels
-
-        $http({
-          method: 'GET',
-          url: 'api/myrecipes/' + element.id
-        }).then(function successCallback(response){
-          recipe.triggerChannelImage = 'img/'+response.data.trigger.channel + '.png';
-          recipe.actionChannelImage = 'img/'+response.data.action.channel + '.png';
-        }, function errorCallback(response){
-        });
-
         })
         }, function errorCallback(response) {
         $scope.error = true;

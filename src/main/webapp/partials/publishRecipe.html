@@ -19,7 +19,7 @@
 </div>
 <br/>
 <div class="row">
-  <textarea name="name" rows="8" style="width:100%" data-ng-model="recipe.description" class="form-control"></textarea>
+  <textarea name="name" rows="8" style="width:100%" data-ng-model="recipe.description" class="form-control" placeholder="Insert here the description"></textarea>
 </div>
 
 <br/> <hr /> <br />
@@ -29,10 +29,7 @@
     <li class="active">Trigger: {{recipe.trigger.name}}</li>
   </ol>
 
-  <div class="input-group" data-ng-repeat="field in recipe.recipeTriggerFields">
-    <span class="input-group-addon">{{field.title}}</span>
-    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}}  data-ng-model="field.value">
-  </div>
+  <div id='triggerFieldsDiv'></div>
 </div>
 
 <br/> <hr /> <br />
@@ -42,12 +39,10 @@
     <li class="active">Action: {{recipe.action.name}}</li>
   </ol>
 
-  <div class="input-group" data-ng-repeat="field in recipe.recipeActionFields">
-    <span class="input-group-addon">{{field.title}}</span>
-    <input type="text" class="form-control" aria-describedby="basic-addon3" value={{field.value}} data-ng-model="field.value">
-  </div>
+  <div id='actionFieldsDiv'></div>
+
 </div>
-.
+
 <br/> <hr /> <br />
 
 <div class="row">

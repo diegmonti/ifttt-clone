@@ -5,18 +5,12 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
     method : 'GET',
     url : 'api/publicrecipes'
   }).then(function successCallback(response){
+
     $scope.publicRecipes = response.data;
-
-
     for(var i in $scope.publicRecipes){
-      (function downloadRecipeInfo(position){
-        $http({
-            url : 'api/publicrecipes/' + $scope.publicRecipes[position].id,
-            method : 'GET'
-          }).then(function successCallback(res){
-            $scope.publicRecipes[position].triggerChannel = 'img/' + res.data.trigger.channel + '.png';
-            $scope.publicRecipes[position].actionChannel = 'img/' + res.data.action.channel + '.png';
-          });
+      (function (position){
+        $scope.publicRecipes[position].triggerChannel = 'img/' +  $scope.publicRecipes[position].trigger.channel + '.png';
+        $scope.publicRecipes[position].actionChannel = 'img/' +  $scope.publicRecipes[position].action.channel + '.png';
       })(i);
     }
 
