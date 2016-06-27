@@ -90,7 +90,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
 
           }
-          var div = $('<div>').attr({class : 'form-group row'});
+          var div = $('<div>').attr({class : 'form-group row', id : 'acceptTriggerButton'});
           var button = $('<button>').attr({
             class : 'btn btn-primary col-lg-4 col-lg-offset-3',
           }).text("Accetta");
@@ -162,7 +162,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           })(index);
 
         }
-        var div = $('<div>').attr({class : 'form-group row'});
+        var div = $('<div>').attr({class : 'form-group row', id : 'acceptActionButton'});
         var button = $('<button>').attr({
           class : 'btn btn-primary col-lg-4 col-lg-offset-3',
         }).text("Accetta");
@@ -270,8 +270,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       $('#actionFieldsHeaderDiv').append(ol);
       $('#actionFieldsDiv').show();
 
-      $('#triggerFieldsDiv').remove('button');
-      $('#actionFieldsDiv').remove('button');
+
+      $('#acceptTriggerButton').empty();
+      $('#acceptActionButton').empty();
 
     });
   }
