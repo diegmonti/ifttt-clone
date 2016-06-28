@@ -1,7 +1,23 @@
 # IFTTT-CLONE
 
 ## About
-...
+This project is a clone of the [IFTTT](https://ifttt.com) service realized using [Spring](https://spring.io) and [AngulasJS](https://angularjs.org) as final assignment for the course Applicazioni Internet of the Politecnico di Torino.
+
+### Terminology
+The user can create **recipes** that connect a **trigger** with an **action**: for example, a possible recipe is "if the temperature in Turin is above 30 °C, send me an email".
+
+A **channel** is a set of triggers and actions that interact with a particular external service. For example, the Gmail channel interacts with Gmail and it is composed of a trigger (if I receive an email) and an action (send an email).
+
+The trigger and the action have a set of **fields**: the values of the fields are specified by the user and they are linked to a particular recipe. The fields of the trigger in the example recipe are the name of the location and the value of the temperature, while the fields of the action are the email address, the subject and the text of the email.
+
+A trigger may export a set of **ingredients**: the value of the ingredients can be inserted in the fields of the action. For example, the trigger "if the temperature is above" exports as ingredient the value of the temperature. If in a field of the action the user writes `{{CurrTempCelsius}}`, it will be substituted with the actual value.
+
+### Architecture
+The channels are classes inside the package *iftttclone.channels* that extend the abstract class *AbstractChannel*: each trigger or action correspond to a specific method and the fields are their parameters. A trigger returns a list of maps if the corresponding action needs to be invoked (eventually multiple times): the map represent the association among the name of an ingredient and the actual value. If there is no need to invoke the action, the trigger returns *null*.
+
+The channels are annotated in order to describe how their methods can be used in a recipe. Each channel, trigger and action is associated with a name and a description. Each trigger is optionally associated with a set of ingredients: for each ingredient a name, a description and an example must be provided. Each field has a name, a description and a type. The type is used by the *iftttclone.core.Validator* class to check its syntactical correctness when a recipe is created or modified. A field is always serialized in the database as a string.
+
+When the application is loaded the *iftttclone.core.DatabasePopulator* class reads the available annotations and stores them in the database. Every 15 minutes the *iftttclone.core.Scheduler* class processes the active recipes: for each recipe it invokes the trigger and if it is necessary also the action(s) parsing the fields in order to add the value of the ingredients. The *AbstractChannel* class is populated with information about the current user and the last time the recipe was run.
 
 ## Configuration
 Some custom configuration files are required in order to run the application. These files need to be created according to the examples provided.
@@ -48,4 +64,4 @@ It is possible to run the tests related to the channels with the command `mvn te
 This will create a set of recipes using a fake test channel and a regular channel: the result of their execution will be printed to the standard output.
 
 ## Compilation
-In order to compile the project it sufficient to run the command `mvn package`. This will create the resulting .war file.
+In order to compile the project it is sufficient to run the command `mvn package`. This will create the resulting .war file.
