@@ -16,7 +16,6 @@ import iftttclone.core.Validator;
 @Entity
 @Table(name = "recipe_trigger_field")
 public class RecipeTriggerField {
-	@JsonIgnore
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
