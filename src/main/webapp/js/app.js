@@ -61,8 +61,8 @@ iftttclone.factory('fieldInputFactory',  function(){
     var input;
     if(type === 'TEMPERATURE'){
       input = $('<select>')
-       .append($('<option>').val('C').text('C'))
-       .append($('<option>').val('F').text('F'));
+       .append($('<option>').val('C').text('Celsius'))
+       .append($('<option>').val('F').text('Fahrenheit'));
     }
     else if (type === 'EMAIL') {
       input = $('<input>').attr('type', 'email');

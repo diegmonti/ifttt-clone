@@ -41,7 +41,7 @@ public class Scheduler {
 	private ChannelConnectorRepository channelConnectorRepository;
 
 	@Transactional
-	@Scheduled(fixedRate = 30000)	// every 30 seconds
+	@Scheduled(fixedDelayString = "${scheduler.fixedDelay}")
 	public void run() {
 		System.err.println("----SCHEDULER: Start processing recipes");
 		Iterator<Recipe> recipes = recipeRepository.findAll().iterator();
