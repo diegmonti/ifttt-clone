@@ -4,6 +4,7 @@
 .project
 .settings
 bin
+doc
 src/main/webapp/css
 src/main/webapp/fonts
 src/main/webapp/js/libs

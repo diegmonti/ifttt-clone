@@ -22,7 +22,6 @@
       <form method="post" action={{channel.activate}} data-ng-show="toConnect">
         <input type ='submit' class="btn btn-primary" value = 'Connect'/>
       </form>
-      <!-- <a data-ng-show="toConnect" class="btn btn-primary" data-ng-click="controller.activateChannel(channel.activate)">Connect</a> -->
       <a data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="">Already connected</a>
     </div>
 
@@ -30,5 +29,20 @@
 
 </div>
 
-<hr />
+<br /> <hr /> <br />
+
+<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in recipes" data-ng-click="controller.importRecipe(recipe.id)">
+    <div class="card-block">
+      <div class="card-title" style="align:center">
+        <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+          if <img src={{recipe.triggerChannel}} width="80px" /> then <img src={{recipe.actionChannel}} width="80px" />
+        </p>
+      </div>
+      <div class="card-text row">
+        <div class="col-lg-10 col-lg-offset-1">
+          {{recipe.title}}
+        </div>
+      </div>
+    </div>
+</div>
 <!-- Here it goes the list of public recipes which use that channel-->

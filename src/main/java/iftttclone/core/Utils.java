@@ -4,6 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
 
+	/**
+	 * This method, given a request, returns the full URL of the request.
+	 */
 	public static String getURL(HttpServletRequest req) {
 		String scheme = req.getScheme();
 		String serverName = req.getServerName();

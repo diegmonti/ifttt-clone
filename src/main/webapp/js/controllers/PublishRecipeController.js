@@ -20,8 +20,6 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
         delete(sentRecipe.recipeActionFields);
         delete(sentRecipe.recipeTriggerFields);
 
-
-        console.log(JSON.stringify(sentRecipe));
         $http({
           method : 'POST',
           url : 'api/publicrecipes/',
@@ -32,6 +30,15 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
 
       };
 
+    	self.insertIngredient = function(){
+        // in $scope.inputSelected i have the input where i should place the new element
+        // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+        var $txt = $($scope.inputSelected);
+        var caretPos = $txt[0].selectionStart;
+        var textAreaTxt = $txt.val();
+        var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
+        $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+      }
       // now i need to populate the recipe object
 
       $http({
@@ -75,6 +82,7 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
           else
             delete($scope.recipe.recipeTriggerFields[arg]);
         }
+
         for(arg in $scope.recipe.recipeActionFields){
           if($scope.recipe.action.actionFields[arg].publishable === true) {
 
@@ -84,6 +92,9 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
          	       });
               var span =  ($('<span>').attr({class : 'input-group-addon'}).text(recipe.action.actionFields[arg].name));
               var input = fieldInputFactory.createInput(recipe.action.actionFields[arg].type, recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
+              var button = ($('<div>').attr({class : 'input-group-addon', 'data-toggle' : 'modal', 'data-target' : '#ingredientsModal'}));
+      				button.append($('<i>').attr({'class' : 'fa fa-flask'}));
+      				button.on('click', function(){ $scope.inputSelected = input});
               $(input).change(function(){
                 if($(input).hasClass('ng-invalid')){
                   if($(input).hasClass('alert-danger') == false){
@@ -98,7 +109,7 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                   }
                 }
               });
-              inputGroup.append(span).append(input);
+              inputGroup.append(span).append(input).append(button);
               $('#actionFieldsDiv').append(inputGroup);
               $compile(input)($scope);
             })($scope.recipe, arg);

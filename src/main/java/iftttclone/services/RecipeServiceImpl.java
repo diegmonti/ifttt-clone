@@ -72,7 +72,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (recipe.getTitle().equals("")) {
 			throw new InvalidRequestException("The title cannot be empty");
 		}
-		
+
 		Channel triggerChannel = recipe.getTrigger().getChannel();
 
 		// Check trigger channel connection
@@ -82,17 +82,18 @@ public class RecipeServiceImpl implements RecipeService {
 				throw new InvalidRequestException("The trigger channel must be connected");
 			}
 		}
-		
+
 		Collection<TriggerField> triggerFields = recipe.getTrigger().getTriggerFields().values();
 
 		// Check trigger fields presence
 		for (TriggerField triggerField : triggerFields) {
 			if (!recipe.getRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				throw new InvalidRequestException(
-						"The trigger field " + triggerField.getParameter() + " is not present");
+						"The trigger field " + triggerField.getName().toLowerCase() + " is not present");
 			}
 			RecipeTriggerField recipeTriggerField = recipe.getRecipeTriggerFields().get(triggerField.getParameter());
-			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
+					triggerField.getName().toLowerCase());
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -117,10 +118,12 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check action fields presence
 		for (ActionField actionField : actionsFields) {
 			if (!recipe.getRecipeActionFields().containsKey(actionField.getParameter())) {
-				throw new InvalidRequestException("The action field " + actionField.getParameter() + " is not present");
+				throw new InvalidRequestException(
+						"The action field " + actionField.getName().toLowerCase() + " is not present");
 			}
 			RecipeActionField recipeActionField = recipe.getRecipeActionFields().get(actionField.getParameter());
-			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(),
+					actionField.getName().toLowerCase());
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}
@@ -171,10 +174,11 @@ public class RecipeServiceImpl implements RecipeService {
 		for (TriggerField triggerField : trigger.getTriggerFields().values()) {
 			if (!stub.getRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				throw new InvalidRequestException(
-						"The trigger field " + triggerField.getParameter() + " is not present");
+						"The trigger field " + triggerField.getName().toLowerCase() + " is not present");
 			}
 			RecipeTriggerField recipeTriggerField = stub.getRecipeTriggerFields().get(triggerField.getParameter());
-			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
+					triggerField.getName().toLowerCase());
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -192,10 +196,12 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check action fields presence
 		for (ActionField actionField : action.getActionFields().values()) {
 			if (!stub.getRecipeActionFields().containsKey(actionField.getParameter())) {
-				throw new InvalidRequestException("The action field " + actionField.getParameter() + " is not present");
+				throw new InvalidRequestException(
+						"The action field " + actionField.getName().toLowerCase() + " is not present");
 			}
 			RecipeActionField recipeActionField = stub.getRecipeActionFields().get(actionField.getParameter());
-			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(),
+					actionField.getName().toLowerCase());
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}

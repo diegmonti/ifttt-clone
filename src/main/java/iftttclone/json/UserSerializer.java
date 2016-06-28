@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.entities.User;
 
+/**
+ * Only the user name is returned.
+ */
 public class UserSerializer extends JsonSerializer<User> {
 
 	@Override

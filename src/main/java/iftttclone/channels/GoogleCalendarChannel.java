@@ -226,7 +226,7 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		}
 	}
 
-	/*
+	/**
 	 * This method returns an instance of the Calendar service.
 	 */
 	private Calendar getCalendarService() throws GeneralSecurityException, IOException {
@@ -241,7 +241,7 @@ public class GoogleCalendarChannel extends AbstractChannel {
 		return new Calendar.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
 	}
 
-	/*
+	/**
 	 * This method returns true if the keyword matches the event or if the
 	 * keyword is empty.
 	 */

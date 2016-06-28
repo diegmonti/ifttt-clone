@@ -8,14 +8,13 @@ var fieldsErrorsNumber = 0;
 
   $scope.recipe = {};
 
-
   $http({
     method: 'GET',
     url : 'api/publicrecipes/'+$routeParams.publicRecipeId
   }).then(function successCallback(response){
     // response.data contains the public recipe
     $scope.recipe = response.data;
-    console.log($scope.recipe);
+
     delete($scope.recipe.description); // it is not what i need in the private recipe
 
     // now i need to create the private recipeTriggerFields and recipeActionField
@@ -39,58 +38,71 @@ var fieldsErrorsNumber = 0;
     delete($scope.recipe.publicRecipeActionFields);
     delete($scope.recipe.publicRecipeTriggerFields);
 
-    console.log($scope.recipe);
+
 		$scope.triggerChannelImage = 'img/'+ $scope.recipe.trigger.channel + '.png';
 		$scope.actionChannelImage = 'img/'+ $scope.recipe.action.channel + '.png';
 
 		// now i need to populate the divs
 		for(property in $scope.recipe.recipeTriggerFields){
-			var inputGroup = $('<div>').attr({
-						class : 'input-group'
-					});
-			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[property].name));
-			var input = fieldInputFactory.createInput($scope.recipe.trigger.triggerFields[property].type, $scope.recipe.recipeTriggerFields[property], 'recipe.recipeTriggerFields.'+ property +'.value');
-			$(input).change(function(){
-				if($(input).hasClass('ng-invalid')){
-					if($(input).hasClass('alert-danger') == false){
-						$(input).addClass('alert-danger');
-						fieldsErrorsNumber++;
+
+			(function(property){
+				var inputGroup = $('<div>').attr({
+							class : 'input-group'
+						});
+				var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[property].name));
+				var input = fieldInputFactory.createInput($scope.recipe.trigger.triggerFields[property].type, $scope.recipe.recipeTriggerFields[property], 'recipe.recipeTriggerFields.'+ property +'.value');
+				$(input).change(function(){
+					if($(input).hasClass('ng-invalid')){
+						if($(input).hasClass('alert-danger') == false){
+							$(input).addClass('alert-danger');
+							fieldsErrorsNumber++;
+						}
 					}
-				}
-				else {
-					if($(input).hasClass('alert-danger')){
-						$(input).removeClass('alert-danger');
-						fieldsErrorsNumber--;
+					else {
+						if($(input).hasClass('alert-danger')){
+							$(input).removeClass('alert-danger');
+							fieldsErrorsNumber--;
+						}
 					}
-				}
-			});
-			inputGroup.append(span).append(input);
-			$('#triggersDiv').append(inputGroup);
-			$compile(input)($scope);
+				});
+				inputGroup.append(span).append(input);
+				$('#triggersDiv').append(inputGroup);
+				$compile(input)($scope);
+			})(property);
+
 		}
+
+
 		for(property in $scope.recipe.recipeActionFields){
-			var inputGroup = $('<div>').attr({
-						class : 'input-group'
-					});
-			var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[property].name));
-			var input = fieldInputFactory.createInput($scope.recipe.action.actionFields[property].type, $scope.recipe.recipeActionFields[property], 'recipe.recipeActionFields.'+ property +'.value');
-			$(input).change(function(){
-				if($(input).hasClass('ng-invalid')){
-					if($(input).hasClass('alert-danger') == false){
-						$(input).addClass('alert-danger');
-						fieldsErrorsNumber++;
+			(function(property){
+				var inputGroup = $('<div>').attr({
+							class : 'input-group'
+						});
+				var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[property].name));
+				var input = fieldInputFactory.createInput($scope.recipe.action.actionFields[property].type, $scope.recipe.recipeActionFields[property], 'recipe.recipeActionFields.'+ property +'.value');
+
+				var button = ($('<div>').attr({class : 'input-group-addon', 'data-toggle' : 'modal', 'data-target' : '#ingredientsModal'}));
+				button.append($('<i>').attr({'class' : 'fa fa-flask'}));
+				button.on('click', function(){ $scope.inputSelected = input});
+
+				$(input).change(function(){
+					if($(input).hasClass('ng-invalid')){
+						if($(input).hasClass('alert-danger') == false){
+							$(input).addClass('alert-danger');
+							fieldsErrorsNumber++;
+						}
 					}
-				}
-				else {
-					if($(input).hasClass('alert-danger')){
-						$(input).removeClass('alert-danger');
-						fieldsErrorsNumber--;
+					else {
+						if($(input).hasClass('alert-danger')){
+							$(input).removeClass('alert-danger');
+							fieldsErrorsNumber--;
+						}
 					}
-				}
-			});
-			inputGroup.append(span).append(input);
-			$('#actionsDiv').append(inputGroup);
-			$compile(input)($scope);
+				});
+				inputGroup.append(span).append(input).append(button);
+				$('#actionsDiv').append(inputGroup);
+				$compile(input)($scope);
+			})(property);
 		}
 
 
@@ -119,4 +131,13 @@ var fieldsErrorsNumber = 0;
     });
 	}
 
+	self.insertIngredient = function(){
+    // in $scope.inputSelected i have the input where i should place the new element
+    // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+    var $txt = $($scope.inputSelected);
+    var caretPos = $txt[0].selectionStart;
+    var textAreaTxt = $txt.val();
+    var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
+    $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+  }
 } ]);
