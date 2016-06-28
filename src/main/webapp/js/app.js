@@ -5,7 +5,7 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
         templateUrl: 'partials/channels.html',
         controller: 'ChannelsController',
         controllerAs : 'controller',
-        
+
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
@@ -87,7 +87,8 @@ iftttclone.factory('fieldInputFactory',  function(){
     else if (type === 'TIMESTAMP') {
       input = $('<input>').attr({
        'type' : 'text',
-       'placeholder' : 'dd/MM/yyyy HH:mm'
+       'placeholder' : 'dd/MM/yyyy HH:mm',
+       pattern : '(0[1-9] | [1-2][0-9] | 3[0-1] )/(0[0-9] | 1[0-2])/([0-9][0-9][0-9][0-9]) ([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])'
       });
     }
     else {

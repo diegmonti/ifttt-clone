@@ -58,3 +58,26 @@
     </button>
   </div>
 </div>
+
+
+<div class="modal fade" id='ingredientsModal'>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Ingredients</h4>
+      </div>
+      <div class="modal-body row">
+        <select class="col-lg-offset-1" ng-model = 'selectedIngredient'>
+          <option data-ng-repeat='ingredient in recipe.trigger.ingredients' value={{ingredient.name}}>{{ingredient.name}}</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-ng-click="controller.insertIngredient()">Insert</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -80,28 +80,46 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      }
 
      for(arg in $scope.recipe.recipeActionFields){
-  		 var inputGroup = $('<div>').attr({
-  	         class : 'input-group'
-  	       });
-  	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
-            var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
-            $(input).change(function(){
-              if($(input).hasClass('ng-invalid')){
-                if($(input).hasClass('alert-danger') == false){
-                  $(input).addClass('alert-danger');
-                  fieldsErrorsNumber++;
+       (function(arg){
+         var inputGroup = $('<div>').attr({
+    	         class : 'input-group'
+    	       });
+    	        var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.action.actionFields[arg].name));
+              var  input = createInputType($scope.recipe.action.actionFields[arg].type, $scope.recipe.recipeActionFields[arg], 'recipe.recipeActionFields.'+ arg +'.value');
+
+              var button = ($('<div>').attr({class : 'input-group-addon', 'data-toggle' : 'modal', 'data-target' : '#ingredientsModal'}));
+              button.append($('<i>').attr({'class' : 'fa fa-flask'}));
+              button.on('click', function(){ $scope.inputSelected = input});
+
+              $(input).change(function(){
+                if($(input).hasClass('ng-invalid')){
+                  if($(input).hasClass('alert-danger') == false){
+                    $(input).addClass('alert-danger');
+                    fieldsErrorsNumber++;
+                  }
                 }
-              }
-              else {
-                if($(input).hasClass('alert-danger')){
-                  $(input).removeClass('alert-danger');
-                  fieldsErrorsNumber--;
+                else {
+                  if($(input).hasClass('alert-danger')){
+                    $(input).removeClass('alert-danger');
+                    fieldsErrorsNumber--;
+                  }
                 }
-              }
-            });
-            inputGroup.append(span).append(input);
-    	      $('#actionsDiv').append(inputGroup);
-    	      $compile(input)($scope);
+              });
+              inputGroup.append(span).append(input).append(button);
+      	      $('#actionsDiv').append(inputGroup);
+      	      $compile(input)($scope);
+       })(arg);
+
      }
    }, function errorCallback(){})
+
+   self.insertIngredient = function(){
+     // in $scope.inputSelected i have the input where i should place the new element
+     // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+     var $txt = $($scope.inputSelected);
+     var caretPos = $txt[0].selectionStart;
+     var textAreaTxt = $txt.val();
+     var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
+     $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+   }
  }]);
