@@ -57,6 +57,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     }).then(
       function successCallback(result){
           var index;
+          // first i need to save the ingredients
+          $scope.recipe.trigger.ingredients = result.data.triggers[$scope.recipe.trigger.method].ingredients;
+
           for(index in result.data.triggers[$scope.recipe.trigger.method].triggerFields) {
             var element = result.data.triggers[$scope.recipe.trigger.method].triggerFields[index];
 
@@ -93,7 +96,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
           var button = $('<button>').attr({
             class : 'btn btn-primary col-lg-4 col-lg-offset-3',
           }).text("Accetta");
-          div.append(button);
+          div.append($('<br>')).append(button);
           $('#triggerFieldsDiv').append(div);
           button.on('click', self.acceptTriggerFields);
 
@@ -141,6 +144,11 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
             $scope.recipe.recipeActionFields[index] = {value : ''};
 
             var input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeActionFields[index], 'recipe.recipeActionFields.'+ index +'.value');
+
+            var button = ($('<div>').attr({class : 'input-group-addon', 'data-toggle' : 'modal', 'data-target' : '#ingredientsModal'}));
+            button.append($('<i>').attr({'class' : 'fa fa-flask'}));
+            button.on('click', function(){ $scope.inputSelected = input});
+
             $(input).change(function(){
               if($(input).hasClass('ng-invalid')){
                 if($(input).hasClass('alert-danger') == false){
@@ -155,8 +163,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
                 }
               }
             });
+
             $compile(input)($scope);
-            div.append(label).append(input);
+            div.append(label).append(input).append(button);
             $('#actionFieldsDiv').append(div);
           })(index);
 
@@ -165,77 +174,12 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
         var button = $('<button>').attr({
           class : 'btn btn-primary col-lg-4 col-lg-offset-3',
         }).text("Accetta");
-        div.append(button);
+        div.append($('<br>')).append(button);
         $('#actionFieldsDiv').append(div);
         button.on('click', self.acceptActionsFields);
 
       },
       function errorCallback(result){});
-  }
-
-  self.selectTriggerClicked = function(){
-    self.currentSelected = "trigger";
-    downloadChannels();
-  };
-
-  self.selectActionClicked = function(){
-    self.currentSelected = "action";
-    downloadChannels();
-  };
-
-  self.channelSelected = function (id){
-    $scope.channels = [];
-    var image = $('<img>');
-    $(image).attr("src","img/"+id+".png");
-    $(image).attr("width", "110px");
-
-    if(self.currentSelected === "trigger"){
-    	$scope.recipe.trigger = {};
-        $scope.recipe.trigger.channel = id;
-      $("#triggerDiv").html(image);
-      dowloadTriggers();
-    }
-    else if(self.currentSelected === "action"){
-    	$scope.recipe.action = {};
-        $scope.recipe.action.channel = id;
-      $("#actionDiv").html(image);
-      downloadActions();
-    }
-  }
-
-  self.triggerSelected = function(id, name){
-      $scope.recipe.trigger.method = id;
-      $scope.recipe.trigger.name = name;
-    downloadTriggerFields();
-  }
-
-  self.acceptTriggerFields = function(){
-    if(fieldsErrorsNumber != 0) return;
-    $('#triggerFieldsDiv').hide();
-
-    var link = $('<a>').attr({
-      class : 'btn btn-link'
-    }).text('that').on('click', self.selectActionClicked);
-    $('#actionDiv').html(link)
-  }
-
-  self.actionSelected = function(id, name){
-    $scope.recipe.action.method = id;
-    $scope.recipe.action.name = name;
-    $scope.actions = [];
-    downloadActionFields();
-  }
-
-  self.acceptActionsFields = function(){
-    if(fieldsErrorsNumber != 0) return;
-    $('#actionFieldsDiv').hide();
-
-
-    var button = $('<button>').attr({
-      class : 'btn btn-primary col-lg-4 col-lg-offset-3'
-    }).text('Conferma');
-    button.on('click', createRecipe);
-    $('#confirmDiv').append(button);
   }
 
   function createRecipe(){
@@ -277,4 +221,80 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
     });
   }
+
+  self.selectTriggerClicked = function(){
+    self.currentSelected = "trigger";
+    downloadChannels();
+  };
+
+  self.selectActionClicked = function(){
+    self.currentSelected = "action";
+    downloadChannels();
+  };
+
+  self.channelSelected = function (id){
+    $scope.channels = [];
+    var image = $('<img>');
+    $(image).attr("src","img/"+id+".png");
+    $(image).attr("width", "110px");
+
+    if(self.currentSelected === "trigger"){
+    	$scope.recipe.trigger = {};
+        $scope.recipe.trigger.channel = id;
+      $("#triggerDiv").html(image);
+      dowloadTriggers();
+    }
+    else if(self.currentSelected === "action"){
+    	$scope.recipe.action = {};
+        $scope.recipe.action.channel = id;
+      $("#actionDiv").html(image);
+      downloadActions();
+    }
+  }
+
+  self.triggerSelected = function(id, name){
+      $scope.recipe.trigger.method = id;
+      $scope.recipe.trigger.name = name;
+      downloadTriggerFields();
+  }
+
+  self.acceptTriggerFields = function(){
+    if(fieldsErrorsNumber != 0) return;
+    $('#triggerFieldsDiv').hide();
+
+    var link = $('<a>').attr({
+      class : 'btn btn-link'
+    }).text('that').on('click', self.selectActionClicked);
+    $('#actionDiv').html(link)
+  }
+
+  self.actionSelected = function(id, name){
+    $scope.recipe.action.method = id;
+    $scope.recipe.action.name = name;
+    $scope.actions = [];
+    downloadActionFields();
+  }
+
+  self.acceptActionsFields = function(){
+    if(fieldsErrorsNumber != 0) return;
+    $('#actionFieldsDiv').hide();
+
+
+    var button = $('<button>').attr({
+      class : 'btn btn-primary col-lg-4 col-lg-offset-3'
+    }).text('Conferma');
+    button.on('click', createRecipe);
+    $('#confirmDiv').append(button);
+  }
+
+  self.insertIngredient = function(){
+    // in $scope.inputSelected i have the input where i should place the new element
+    // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+    var $txt = $($scope.inputSelected);
+    var caretPos = $txt[0].selectionStart;
+    var textAreaTxt = $txt.val();
+    var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
+    $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+  }
+
 }]);
