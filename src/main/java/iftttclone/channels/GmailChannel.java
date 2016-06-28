@@ -138,7 +138,7 @@ public class GmailChannel extends AbstractChannel {
 		}
 	}
 
-	/*
+	/**
 	 * This method returns an instance of the Gmail service.
 	 */
 	private Gmail getGmailService() throws GeneralSecurityException, IOException {

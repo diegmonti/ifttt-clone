@@ -16,6 +16,9 @@ import iftttclone.entities.Trigger;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.TriggerRepository;
 
+/**
+ * The client identifies a trigger with the pair channel name and method name.
+ */
 public class TriggerDeserializer extends JsonDeserializer<Trigger> {
 	@Autowired
 	private ChannelRepository channelRepository;

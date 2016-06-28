@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.entities.Action;
 
+/**
+ * If it is part of a summary, only the channel name is returned, in order to
+ * display the corresponding image.
+ */
 public class ActionSerializer extends JsonSerializer<Action> {
 
 	@Override

@@ -9,6 +9,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.entities.Channel;
 
+/**
+ * Only the identifier of the channel is returned.
+ */
 public class ChannelSerializer extends JsonSerializer<Channel> {
 
 	@Override

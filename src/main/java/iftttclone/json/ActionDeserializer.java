@@ -16,6 +16,9 @@ import iftttclone.entities.Channel;
 import iftttclone.repositories.ActionRepository;
 import iftttclone.repositories.ChannelRepository;
 
+/**
+ * The client identifies an action with the pair channel name and method name.
+ */
 public class ActionDeserializer extends JsonDeserializer<Action> {
 	@Autowired
 	private ChannelRepository channelRepository;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import iftttclone.exceptions.InvalidRequestException;
 
-/*
+/**
  * This class contains a static list of time zones.
  * For each time zone it is available an identifier and a display name.
  * The purpose of this class is to provide the list of supported time zones
@@ -146,14 +146,14 @@ public class TimezoneManager {
 		}
 	}
 
-	/*
+	/**
 	 * This method returns a set of all the display names available.
 	 */
 	public Set<String> getTimezones() {
 		return nameSet;
 	}
 
-	/*
+	/**
 	 * This method returns a display name given an identifier.
 	 */
 	public String getNameFromId(String id) {
@@ -163,7 +163,7 @@ public class TimezoneManager {
 		return idMap.get(id).name;
 	}
 
-	/*
+	/**
 	 * This method returns an identifier given a display name.
 	 */
 	public String getIdFromName(String name) {
@@ -173,7 +173,7 @@ public class TimezoneManager {
 		return nameMap.get(name).id;
 	}
 
-	/*
+	/**
 	 * This class models a time zone.
 	 */
 	private static final class TimezoneValue implements Comparable<TimezoneValue> {

@@ -208,7 +208,7 @@ public class WeatherChannel extends AbstractChannel {
 		return result;
 	}
 
-	/*
+	/**
 	 * This method returns true if the location is recognized by the service.
 	 */
 	public static boolean isValidLocation(String location) {
@@ -224,7 +224,7 @@ public class WeatherChannel extends AbstractChannel {
 		return true;
 	}
 
-	/*
+	/**
 	 * This method performs the connection to the service.
 	 */
 	private static JsonNode doQuery(String query) {

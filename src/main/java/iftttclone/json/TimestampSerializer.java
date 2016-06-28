@@ -14,6 +14,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.services.interfaces.UserService;
 
+/**
+ * The time stamp, saved in the database as a numerical value, is converted in a
+ * string according to the time zone of the user.
+ */
 public class TimestampSerializer extends JsonSerializer<Long> {
 	@Autowired
 	private UserService userService;

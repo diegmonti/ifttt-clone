@@ -25,11 +25,7 @@ import iftttclone.repositories.RecipeLogRepository;
 import iftttclone.repositories.RecipeRepository;
 
 /**
- * The method run is automatically called every fixedRate milliseconds. The
- * method executes the trigger of every active recipe. If the trigger returns
- * null, the action is not run. Otherwise each field of the action is parsed,
- * substituting every {{ingredient}} with the value returned by the trigger,
- * then the action is called.
+ * This class is responsible for processing the active recipes.
  */
 @Component
 public class Scheduler {
@@ -40,8 +36,14 @@ public class Scheduler {
 	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
 
+	/**
+	 * This method executes the trigger of active recipes every 15 minutes. If
+	 * the trigger returns null, the action is not run. Otherwise each field of
+	 * the action is parsed, substituting every {{ingredient}} with the value
+	 * returned by the trigger, then the action is called.
+	 */
 	@Transactional
-	@Scheduled(fixedRate = 30000)	// every 30 seconds
+	@Scheduled(fixedRate = 30000)
 	public void run() {
 		System.err.println("----SCHEDULER: Start processing recipes");
 		Iterator<Recipe> recipes = recipeRepository.findAll().iterator();
@@ -58,7 +60,7 @@ public class Scheduler {
 					triggerResult = runTrigger(recipe);
 
 					// Run the action?
-					if ((triggerResult != null) && (triggerResult.size()>0)) {
+					if ((triggerResult != null) && (triggerResult.size() > 0)) {
 						System.err.println("----SCHEDULER: Running action for recipe " + recipe.getTitle());
 						runAction(recipe, triggerResult);
 						recipe.setLastRun(System.currentTimeMillis());
@@ -131,19 +133,20 @@ public class Scheduler {
 		Map<String, RecipeActionField> recipeActionFields = recipe.getRecipeActionFields();
 		// All parameters are strings
 		Class<?>[] parameterTypes = new Class<?>[recipeActionFields.keySet().size()];
-		for (Integer j = 0; j < recipeActionFields.keySet().size(); j++) {	// assuming everything is fine (as it should)
+		// Assuming that everything is fine (as it should)
+		for (Integer j = 0; j < recipeActionFields.keySet().size(); j++) {
 			parameterTypes[j] = String.class;
 		}
 		Method method = channelClass.getMethod(action.getMethod(), parameterTypes);
 		// Run action
-		for(Map<String, String> triggerResultEntry : triggerResult){
+		for (Map<String, String> triggerResultEntry : triggerResult) {
 			Integer i = 0;
 			List<String> parameters = new ArrayList<String>();
 			while (recipeActionFields.containsKey("arg" + i)) {
 				parameters.add(parseField(recipeActionFields.get("arg" + i).getValue(), triggerResultEntry));
 				i++;
 			}
-	
+
 			method.invoke(instance, parameters.toArray());
 		}
 	}

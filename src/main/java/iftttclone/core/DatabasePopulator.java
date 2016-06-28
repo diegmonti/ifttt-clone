@@ -57,8 +57,8 @@ public class DatabasePopulator {
 	@EventListener
 	@Transactional
 	public void populateDatabase(ContextRefreshedEvent event) {
-		// This avoids double calling (one for ContextLoaderListener and another
-		// for DispatcherServlet)
+		// This avoids double calling, one for ContextLoaderListener and
+		// another for DispatcherServlet
 		if (event.getApplicationContext().getParent() != null) {
 			return;
 		}

@@ -13,20 +13,28 @@ import iftttclone.exceptions.InvalidRequestException;
 
 @Component
 public class Validator {
-	// The maximum length of a field that can be stored in the database
+	/**
+	 * The maximum length of a field that can be stored in the database.
+	 */
 	public static final int MAX_VARCHAR = 512;
+	/**
+	 * The default format for the TIMESTAMP data type.
+	 */
 	public static final String TIMESTAMP_FORMAT = "dd/MM/yyyy HH:mm";
+	/**
+	 * The default format for the TIME data type.
+	 */
 	public static final String TIME_FORMAT = "HH:mm";
 
-	/*
-	 * This enumeration contains the possible data types for a trigger field or
-	 * an action field. Their value is serialized in the database as a string.
+	/**
+	 * This enumeration contains the possible data types for a trigger or an
+	 * action field. Their value is serialized in the database as a string.
 	 */
 	public static enum FieldType {
 		TEXT, NULLABLETEXT, LONGTEXT, EMAIL, INTEGER, TIMESTAMP, TIME, TEMPERATURE, LOCATION
 	}
 
-	/*
+	/**
 	 * This method is in charge of validating the fields of a recipe, according
 	 * to the specified FieldType. If the validation is not successful an
 	 * exception is thrown.
@@ -112,7 +120,7 @@ public class Validator {
 		}
 	}
 
-	/*
+	/**
 	 * This method checks if a string is a formally correct email address.
 	 */
 	public static boolean isValidEmail(String email) {

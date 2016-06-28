@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import iftttclone.core.TimezoneManager;
 
+/**
+ * The time zone identified is converted into the display name.
+ */
 public class TimezoneSerializer extends JsonSerializer<String> {
 	@Autowired
 	private TimezoneManager timezoneManager;
