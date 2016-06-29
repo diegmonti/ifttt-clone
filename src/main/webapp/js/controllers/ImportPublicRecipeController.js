@@ -99,7 +99,13 @@ var fieldsErrorsNumber = 0;
 						}
 					}
 				});
-				inputGroup.append(span).append(input).append(button);
+
+				inputGroup.append(span).append(input);
+				if($scope.recipe.action.actionFields[property].type == 'TEXT' ||
+				 	$scope.recipe.action.actionFields[property].type == 'LONGTEXT' ||
+					$scope.recipe.action.actionFields[property].type == 'NULLABLETEXT') inputGroup.append(button);
+					$('#actionFieldsDiv').append(div);
+
 				$('#actionsDiv').append(inputGroup);
 				$compile(input)($scope);
 			})(property);

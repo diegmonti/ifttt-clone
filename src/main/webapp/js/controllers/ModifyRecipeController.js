@@ -106,7 +106,11 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
                   }
                 }
               });
-              inputGroup.append(span).append(input).append(button);
+              inputGroup.append(span).append(input);
+              if($scope.recipe.action.actionFields[arg].type == 'TEXT' ||
+      				 	$scope.recipe.action.actionFields[arg].type == 'LONGTEXT' ||
+      					$scope.recipe.action.actionFields[arg].type == 'NULLABLETEXT') inputGroup.append(button);
+
       	      $('#actionsDiv').append(inputGroup);
       	      $compile(input)($scope);
        })(arg);

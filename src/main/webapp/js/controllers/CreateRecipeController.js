@@ -177,7 +177,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
             $compile(input)($scope);
             div.append(label).append(input);
             if(element.type == 'TEXT' || element.type == 'LONGTEXT' || element.type == 'NULLABLETEXT') div.append(button);
-            $('#actionFieldsDiv').append(div);
+              $('#actionFieldsDiv').append(div);
           })(index);
 
         }

@@ -110,7 +110,11 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                   }
                 }
               });
-              inputGroup.append(span).append(input).append(button);
+              inputGroup.append(span).append(input);
+              if($scope.recipe.action.actionFields[arg].type == 'TEXT' ||
+      				 	$scope.recipe.action.actionFields[arg].type == 'LONGTEXT' ||
+      					$scope.recipe.action.actionFields[arg].type == 'NULLABLETEXT') inputGroup.append(button);
+
               $('#actionFieldsDiv').append(inputGroup);
               $compile(input)($scope);
             })($scope.recipe, arg);
