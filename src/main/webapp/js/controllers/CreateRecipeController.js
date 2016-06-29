@@ -124,7 +124,6 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       url : 'api/channels/'+  $scope.recipe.action.channel
     }).then(
       function successCallback(result){
-
         $scope.actions = [];
         console.log();
         for(var element in result.data.actions)
@@ -140,6 +139,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   }
 
   function downloadActionFields(){
+    $scope.recipe.recipeTriggerFields = {};
     $http({
       method : 'GET',
       url : 'api/channels/'+  $scope.recipe.action.channel
