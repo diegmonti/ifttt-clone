@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,6 +53,7 @@ public class Recipe {
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
+	@OrderBy("parameter ASC")
 	private Map<String, RecipeTriggerField> recipeTriggerFields;
 
 	@JsonView(JsonViews.Summary.class)
@@ -63,6 +65,7 @@ public class Recipe {
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@MapKey(name = "parameter")
+	@OrderBy("parameter ASC")
 	private Map<String, RecipeActionField> recipeActionFields;
 
 	@JsonIgnore

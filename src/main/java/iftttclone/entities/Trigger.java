@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,10 +44,12 @@ public class Trigger {
 
 	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
 	@MapKey(name = "parameter")
+	@OrderBy("parameter ASC")
 	private Map<String, TriggerField> triggerFields;
 
 	@OneToMany(mappedBy = "trigger", fetch = FetchType.EAGER)
 	@MapKey(name = "name")
+	@OrderBy("id ASC")
 	private Map<String, Ingredient> ingredients;
 
 	public Long getId() {
