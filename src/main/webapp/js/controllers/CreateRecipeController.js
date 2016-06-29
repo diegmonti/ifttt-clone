@@ -4,8 +4,12 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   var self = this;
   self.currentSelected = "";
   var fieldsErrorsNumber = 0;
-  $scope.recipe = {};
-  $scope.channels = [];
+  $scope.recipe = {
+  };
+  $scope.triggerChannels = [];
+  $scope.actionChannels = [];
+  $scope.triggers = [];
+  $scope.actions = [];
 
   function downloadChannels() {
     $scope.channels = [];
@@ -16,7 +20,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       function successCallback(result){
           result.data.forEach(function(element) {
             if(self.currentSelected == "trigger" && element.triggers){
-              $scope.channels.push({
+              $scope.triggerChannels.push({
                 id : element.id,
                 title : element.name,
                 description : element.description,
@@ -24,7 +28,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
               });
             }
             else if (self.currentSelected == "action" && element.actions) {
-              $scope.channels.push({
+              $scope.actionChannels.push({
                 id : element.id,
                 title : element.name,
                 description : element.description,
@@ -40,14 +44,12 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   };
 
   function dowloadTriggers(){
+    $scope.triggers = [];
     $http({
       method : 'GET',
       url : 'api/channels/'+  $scope.recipe.trigger.channel
     }).then(
       function successCallback(result){
-
-        $scope.triggers = [];
-
         for(var element in result.data.triggers)
           $scope.triggers.push({
             title: result.data.triggers[element].name,
@@ -60,7 +62,9 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   }
 
   function downloadTriggerFields(){
-    $scope.triggers = [];
+    // $scope.triggers = [];
+    $scope.recipe.recipeTriggerFields = {};
+    $('#triggerFieldsDiv').empty();
     $http({
       method : 'GET',
       url : 'api/channels/'+  $scope.recipe.trigger.channel
@@ -244,18 +248,27 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   };
 
   self.channelSelected = function (id){
-    $scope.channels = [];
+
     var image = $('<img>');
     $(image).attr("src","img/"+id+".png");
     $(image).attr("width", "110px");
 
     if(self.currentSelected === "trigger"){
+      $('#triggerFieldsDiv').empty();
+      $('#actionFieldsDiv').empty();
+
+      delete($scope.recipe.recipeTriggerFields);
+      delete($scope.recipe.recipeActionFields);
+
     	$scope.recipe.trigger = {};
         $scope.recipe.trigger.channel = id;
       $("#triggerDiv").html(image);
       dowloadTriggers();
     }
     else if(self.currentSelected === "action"){
+      $('#actionFieldsDiv').empty();
+      delete($scope.recipe.recipeActionFields);
+
     	$scope.recipe.action = {};
         $scope.recipe.action.channel = id;
       $("#actionDiv").html(image);
@@ -271,7 +284,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
 
   self.acceptTriggerFields = function(){
     if(fieldsErrorsNumber != 0) return;
-    $('#triggerFieldsDiv').hide();
+    $('#acceptTriggerButton').hide();
 
     var link = $('<a>').attr({
       class : 'btn btn-link'
@@ -282,14 +295,12 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   self.actionSelected = function(id, name){
     $scope.recipe.action.method = id;
     $scope.recipe.action.name = name;
-    $scope.actions = [];
     downloadActionFields();
   }
 
   self.acceptActionsFields = function(){
     if(fieldsErrorsNumber != 0) return;
-    $('#actionFieldsDiv').hide();
-
+    $('#acceptActionButton').hide();
 
     var button = $('<button>').attr({
       class : 'btn btn-primary col-lg-4 col-lg-offset-3'

@@ -4,7 +4,7 @@
 
 <!-- title -->
 <div class="row">
-    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title"/>
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title" required="true"/>
 </div>
 
 <div class="row">
@@ -20,16 +20,24 @@
   </div>
 </div>
 
-<div id="channlesDiv">
-  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in channels" data-ng-click="controller.channelSelected(channel.id)">
+<div id="channlelTriggersDiv" class="container">
+  <ol class="breadcrumb" data-ng-show="triggerChannels.length != 0">
+    <li class="active">Trigger Channes</li>
+  </ol>
+<div>
+  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id)">
     <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="110px">
     <div class="card-block">
       <h4 class="card-title">{{channel.title}}</h4>
     </div>
   </div>
 </div>
+</div>
 
 <div id="triggerChoicesDiv" class="container">
+  <ol class="breadcrumb" data-ng-show="triggers.length != 0">
+    <li class="active">Triggers</li>
+  </ol>
   <!-- Put here the choices -->
   <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
     <div class="card-block">
@@ -39,11 +47,35 @@
   </div>
 </div>
 
+<div>
+  <ol class="breadcrumb" data-ng-show="recipe.recipeTriggerFields">
+    <li class="active">Trigger fields</li>
+  </ol>
+  <div id="triggerFieldsDiv"></div>
+</div>
 <div id="triggerFieldsHeaderDiv"></div>
-<div id="triggerFieldsDiv"></div>
 
-<div id="actionsChoicesDiv">
-  <!-- Put here the choices for the action -->
+<br />
+
+<div id="channlelActionsDiv" class="container">
+  <ol class="breadcrumb" data-ng-show="actionChannels.length != 0">
+    <li class="active">Action channels</li>
+  </ol>
+
+  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in actionChannels" data-ng-click="controller.channelSelected(channel.id)">
+    <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="110px">
+    <div class="card-block">
+      <h4 class="card-title">{{channel.title}}</h4>
+    </div>
+  </div>
+</div>
+
+
+<div id="actionsChoicesDiv" class="container">
+  <ol class="breadcrumb" data-ng-show="actions.length != 0">
+    <li class="active">Channel actions</li>
+  </ol>
+
   <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.method, action.title)">
     <div class="card-block">
       <h4 class="card-title">{{action.title}}</h4>
@@ -52,8 +84,13 @@
   </div>
 </div>
 
-<div id="actionFieldsHeaderDiv"></div>
-<div id="actionFieldsDiv"></div>
+<div class="container">
+  <ol class="breadcrumb" data-ng-show="recipe.recipeActionFields">
+    <li class="active">Action fields</li>
+  </ol>
+  <div id="actionFieldsDiv"></div>
+</div>
+
 
 <div id='confirmDiv' class="row"> </div>
 
