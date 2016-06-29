@@ -1,6 +1,11 @@
 <div class="alert alert-danger" data-ng-show="controller.error">
     There was a problem logging in. Please try again.
 </div>
+
+<div class="alert alert-success" data-ng-show="controller.registered">
+    You have been registered. Please log in
+</div>
+
 <form role="form" data-ng-submit="controller.login()">
     <div class="form-group">
         <label for="username">Username:</label> <input type="text" class="form-control" id="username" name="username"

@@ -15,12 +15,22 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     }).then(
       function successCallback(result){
           result.data.forEach(function(element) {
-          $scope.channels.push({
-            id : element.id,
-            title : element.name,
-            description : element.description,
-            link : 'img/'+element.id + '.png'
-          });
+            if(self.currentSelected == "trigger" && element.hasTriggers){
+              $scope.channels.push({
+                id : element.id,
+                title : element.name,
+                description : element.description,
+                link : 'img/'+element.id + '.png'
+              });
+            }
+            else if (self.currentSelected == "action" && element.hasActions) {
+              $scope.channels.push({
+                id : element.id,
+                title : element.name,
+                description : element.description,
+                link : 'img/'+element.id + '.png'
+              });
+            }
         });
       },
       function errorCallback(result){

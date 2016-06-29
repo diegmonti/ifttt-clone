@@ -10,8 +10,11 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
         controllerAs: 'controller',
-    })
-    .when('/signIn', {
+    }).when('/login/:registered', {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginController',
+        controllerAs: 'controller',
+    }).when('/signIn', {
       templateUrl: 'partials/signIn.html',
       controller: 'SignInController',
       controllerAs: 'controller',
@@ -150,12 +153,16 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
     }]
 );
 
-iftttclone.controller('LoginController', ['$rootScope', '$http', '$location',
-    function ($rootScope, $http, $location) {
+iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$routeParams',
+    function ($rootScope, $http, $location, $routeParams) {
+
         var self = this;
+        self.credentials = {};
+        if($routeParams.registered != null ){
+          self.registered = true;
+        }
 
         var authenticate = function (credentials, callback) {
-
             var headers = credentials ? {
                 authorization: "Basic "
                 + btoa(credentials.username + ":" + credentials.password)
@@ -174,9 +181,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location',
             });
 
         };
-
         authenticate();
-        self.credentials = {};
         self.login = function () {
             authenticate(self.credentials, function () {
                 if ($rootScope.authenticated) {
@@ -206,9 +211,7 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         method: 'GET',
         url: 'api/user/timezones'
       }).then(function successCallback(data){
-
         $scope.timezones = data.data;
-
       }, function errorCallback(data){
         console.error(data);
       });
@@ -226,9 +229,14 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         headers : {
           'Content-Type': 'application/json'
         }
-      }).then(function () {
+      }).then(function successCallback() {
             $rootScope.authenticated = false;
-            $location.path("/");
+            var loginPage = "/login/registered";
+            $location.path(loginPage);
+
+        }, function errorCallback(response){
+          self.error = true;
+          $scope.errorMessage = response.message;
         });
       }
 
