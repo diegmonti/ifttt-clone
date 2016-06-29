@@ -1,7 +1,5 @@
 package iftttclone.controllers;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +25,15 @@ public class GmailConnectorController {
 	}
 
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
-	public ModelAndView callback(HttpServletRequest req) throws IOException {
+	public ModelAndView callback(HttpServletRequest req) {
 		gmailConnectorService.validateConnection(Utils.getURL(req), req.getParameter("code"),
 				req.getParameter("state"));
-		return new ModelAndView("redirect:/");
+		return new ModelAndView("redirect:/#/channel/gmail");
+	}
+	
+	@RequestMapping(value = "/deactivate", method = RequestMethod.POST)
+	public void deauth(HttpServletRequest req) {
+		gmailConnectorService.removeConnection();
 	}
 
 }

@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -25,16 +25,17 @@ import iftttclone.entities.User;
 import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
-import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.AbstractConnectorService;
+import iftttclone.services.interfaces.UserService;
 
 public abstract class GoogleConnectorService implements AbstractConnectorService {
-	@Autowired
-	private UserRepository userRepository;
 	@Autowired
 	private ChannelRepository channelRepository;
 	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
+
+	@Autowired
+	private UserService userService;
 
 	private JsonFactory jsonFactory;
 	private GoogleClientSecrets secrets;
@@ -60,8 +61,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Transactional
 	public String requestConnection(String path) {
 		// Get the current user
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepository.getUserByUsername(auth.getName());
+		User user = userService.getUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -93,10 +93,9 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
-	public void validateConnection(String path, String code, String token) throws IOException {
+	public void validateConnection(String path, String code, String token) {
 		// Get the current user
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepository.getUserByUsername(auth.getName());
+		User user = userService.getUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -117,13 +116,42 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				Collections.singleton(scope)).setAccessType("offline").build();
 
 		// Exchange authorization code for user credentials
-		GoogleTokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(path + callback).execute();
+		try {
+			GoogleTokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(path + callback).execute();
 
-		channelConnector.setToken(tokenResponse.getAccessToken());
-		channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
-		channelConnector.setConnectionTime(System.currentTimeMillis());
+			channelConnector.setToken(tokenResponse.getAccessToken());
+			channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
+			channelConnector.setConnectionTime(System.currentTimeMillis());
 
-		channelConnectorRepository.save(channelConnector);
+			channelConnectorRepository.save(channelConnector);
+		} catch (IOException e) {
+
+		}
+
+	}
+
+	@Override
+	public void removeConnection() {
+		// Get the current user
+		User user = userService.getUser();
+
+		// Get channel
+		Channel channel = channelRepository.getChannelByClasspath(channelPath);
+
+		// Get channel connector
+		ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
+				user);
+
+		HttpRequestFactory factory = httpTransport.createRequestFactory();
+		GenericUrl url = new GenericUrl(
+				"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getRefreshToken());
+
+		try {
+			factory.buildGetRequest(url).execute();
+			channelConnectorRepository.delete(channelConnector);
+		} catch (IOException e) {
+
+		}
 	}
 
 }
