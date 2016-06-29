@@ -42,11 +42,6 @@ public class ChannelServiceImpl implements ChannelService {
 			}
 		}
 
-		// Check if the channel has triggers or actions
-		for (Channel channel : collection) {
-			setTriggersAndActions(channel);
-		}
-
 		return collection;
 	}
 
@@ -67,9 +62,6 @@ public class ChannelServiceImpl implements ChannelService {
 			setConnectionTime(channel, user);
 		}
 
-		// Check if the channel has triggers or actions
-		setTriggersAndActions(channel);
-
 		return channel;
 	}
 
@@ -80,20 +72,6 @@ public class ChannelServiceImpl implements ChannelService {
 			if (channelConnector.getConnectionTime() != null) {
 				channel.setConnectionTime(channelConnector.getConnectionTime());
 			}
-		}
-	}
-
-	private void setTriggersAndActions(Channel channel) {
-		if (!channel.getTriggers().isEmpty()) {
-			channel.setHasTriggers(true);
-		} else {
-			channel.setHasTriggers(false);
-		}
-
-		if (!channel.getActions().isEmpty()) {
-			channel.setHasActions(true);
-		} else {
-			channel.setHasTriggers(false);
 		}
 	}
 
