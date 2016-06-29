@@ -15,7 +15,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
     }).then(
       function successCallback(result){
           result.data.forEach(function(element) {
-            if(self.currentSelected == "trigger" && element.hasTriggers){
+            if(self.currentSelected == "trigger" && element.triggers){
               $scope.channels.push({
                 id : element.id,
                 title : element.name,
@@ -23,7 +23,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
                 link : 'img/'+element.id + '.png'
               });
             }
-            else if (self.currentSelected == "action" && element.hasActions) {
+            else if (self.currentSelected == "action" && element.actions) {
               $scope.channels.push({
                 id : element.id,
                 title : element.name,
