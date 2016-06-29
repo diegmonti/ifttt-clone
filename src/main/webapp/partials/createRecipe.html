@@ -22,7 +22,7 @@
 
 <div id="channlesDiv">
   <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in channels" data-ng-click="controller.channelSelected(channel.id)">
-    <img class="card-img-top" src={{channel.link}} alt={{channel.title}} width="110px">
+    <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="110px">
     <div class="card-block">
       <h4 class="card-title">{{channel.title}}</h4>
     </div>

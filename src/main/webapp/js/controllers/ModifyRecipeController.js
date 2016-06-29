@@ -35,8 +35,6 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      else {
        console.error('there are still ' + fieldsErrorsNumber + 'errors');
      }
-
-
    };
 
    // now i need to populate the recipe object
@@ -89,7 +87,10 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
               var button = ($('<div>').attr({class : 'input-group-addon', 'data-toggle' : 'modal', 'data-target' : '#ingredientsModal'}));
               button.append($('<i>').attr({'class' : 'fa fa-flask'}));
-              button.on('click', function(){ $scope.inputSelected = input});
+              button.on('click', function(){
+                $scope.inputSelected = input;
+                $scope.model = arg;
+              });
 
               $(input).change(function(){
                 if($(input).hasClass('ng-invalid')){
@@ -116,10 +117,11 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
    self.insertIngredient = function(){
      // in $scope.inputSelected i have the input where i should place the new element
      // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+     // $scope.model contains the selected action field
      var $txt = $($scope.inputSelected);
      var caretPos = $txt[0].selectionStart;
      var textAreaTxt = $txt.val();
      var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
-     $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+     $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
    }
  }]);

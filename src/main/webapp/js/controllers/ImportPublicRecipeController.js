@@ -132,12 +132,13 @@ var fieldsErrorsNumber = 0;
 	}
 
 	self.insertIngredient = function(){
-    // in $scope.inputSelected i have the input where i should place the new element
-    // in $scope.selectedIngredient i have the ingredient that that user wants to insert
-    var $txt = $($scope.inputSelected);
-    var caretPos = $txt[0].selectionStart;
-    var textAreaTxt = $txt.val();
-    var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
-    $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
-  }
+		// in $scope.inputSelected i have the input where i should place the new element
+		// in $scope.selectedIngredient i have the ingredient that that user wants to insert
+		// $scope.model contains the selected action field
+		var $txt = $($scope.inputSelected);
+		var caretPos = $txt[0].selectionStart;
+		var textAreaTxt = $txt.val();
+		var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
+		$scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+	}
 } ]);
