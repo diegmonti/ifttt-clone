@@ -1,7 +1,5 @@
 package iftttclone.services.interfaces;
 
-import java.io.IOException;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public abstract interface AbstractConnectorService {
@@ -10,6 +8,9 @@ public abstract interface AbstractConnectorService {
 	public String requestConnection(String path);
 
 	@PreAuthorize("isAuthenticated()")
-	public void validateConnection(String path, String code, String token) throws IOException;
+	public void validateConnection(String path, String code, String token);
+
+	@PreAuthorize("isAuthenticated()")
+	public void removeConnection();
 
 }

@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,6 +44,7 @@ public class Action {
 
 	@OneToMany(mappedBy = "action", fetch = FetchType.EAGER)
 	@MapKey(name = "parameter")
+	@OrderBy("parameter ASC")
 	private Map<String, ActionField> actionFields;
 
 	public Long getId() {

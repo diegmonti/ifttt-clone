@@ -25,9 +25,15 @@ public class GoogleCalendarConnectorController {
 	}
 
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
-	public ModelAndView callback(HttpServletRequest req) throws IOException {
+	public ModelAndView callback(HttpServletRequest req) {
 		googleCalendarConnectorService.validateConnection(Utils.getURL(req), req.getParameter("code"),
 				req.getParameter("state"));
-		return new ModelAndView("redirect:/");
+		return new ModelAndView("redirect:/#/channel/google_calendar");
 	}
+
+	@RequestMapping(value = "/deactivate", method = RequestMethod.POST)
+	public void deauth(HttpServletRequest req) throws IOException {
+		googleCalendarConnectorService.removeConnection();
+	}
+
 }

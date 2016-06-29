@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,6 +43,10 @@ public class User {
 	@JsonSerialize(using = TimezoneSerializer.class)
 	@Column(nullable = false)
 	private String timezone;
+
+	@JsonProperty(access = Access.READ_ONLY)
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private Set<ChannelConnector> channelConnectors;
 
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -86,6 +91,14 @@ public class User {
 
 	public void setTimezone(String timezone) {
 		this.timezone = timezone;
+	}
+
+	public Set<ChannelConnector> getChannelConnectors() {
+		return channelConnectors;
+	}
+
+	public void setChannelConnectors(Set<ChannelConnector> channelConnectors) {
+		this.channelConnectors = channelConnectors;
 	}
 
 	public Set<PublicRecipe> getFavoritePublicRecipes() {
