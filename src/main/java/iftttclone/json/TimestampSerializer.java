@@ -12,7 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import iftttclone.services.interfaces.UserService;
+import iftttclone.core.Utils;
+import iftttclone.entities.User;
 
 /**
  * The time stamp, saved in the database as a numerical value, is converted in a
@@ -20,14 +21,17 @@ import iftttclone.services.interfaces.UserService;
  */
 public class TimestampSerializer extends JsonSerializer<Long> {
 	@Autowired
-	private UserService userService;
+	private Utils utils;
 
 	@Override
 	public void serialize(Long value, JsonGenerator gen, SerializerProvider prov)
 			throws IOException, JsonProcessingException {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-		String timezone = userService.getUser().getTimezone();
-		formatter.setTimeZone(TimeZone.getTimeZone(timezone));
+		User user = utils.getCurrentUser();
+
+		if (user != null) {
+			formatter.setTimeZone(TimeZone.getTimeZone(user.getTimezone()));
+		}
 
 		if (value == null) {
 			gen.writeNull();

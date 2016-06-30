@@ -26,7 +26,6 @@ import iftttclone.exceptions.ResourceNotFoundException;
 import iftttclone.repositories.PublicRecipeRepository;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.PublicRecipeService;
-import iftttclone.services.interfaces.UserService;
 
 @Component
 @Transactional
@@ -38,7 +37,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private UserService userService;
+	private Utils utils;
 
 	@Override
 	public List<PublicRecipe> getPublicRecipes(Integer page) {
@@ -64,8 +63,8 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 	private void setFavorite(List<PublicRecipe> publicRecipes) {
 		// Get the current user, if exists
-		User user = Utils.getCurrentUser();
-		
+		User user = utils.getCurrentUser();
+
 		// Check if the public recipe is favorite
 		if (user != null) {
 			Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
@@ -80,14 +79,14 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public PublicRecipe getPublicRecipe(Long publicRecipeId) {
 		PublicRecipe publicRecipe = publicRecipeRepository.findOne(publicRecipeId);
-		
+
 		if (publicRecipe == null) {
 			throw new ResourceNotFoundException();
 		}
-		
+
 		// Get the current user, if exists
-		User user = Utils.getCurrentUser();
-		
+		User user = utils.getCurrentUser();
+
 		// Check if the public recipe is favorite
 		if (user != null) {
 			Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
@@ -95,7 +94,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 				publicRecipe.setFavorite(true);
 			}
 		}
-		
+
 		return publicRecipe;
 	}
 
@@ -159,7 +158,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		}
 
 		// Set default values
-		publicRecipe.setUser(userService.getUser());
+		publicRecipe.setUser(utils.getCurrentUser());
 		publicRecipe.setFavorites(0);
 
 		publicRecipeRepository.save(publicRecipe);
@@ -170,7 +169,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public PublicRecipe updatePublicRecipe(Long publicRecipeId, PublicRecipe stub) {
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId,
-				userService.getUser());
+				utils.getCurrentUser());
 		if (publicRecipe == null) {
 			new ForbiddenException();
 		}
@@ -246,7 +245,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 	@Override
 	public void deletePublicRecipe(Long publicRecipeId) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		PublicRecipe publicRecipe = publicRecipeRepository.findPublicRecipeByIdAndUser(publicRecipeId, user);
 		if (publicRecipe == null) {
 			throw new ForbiddenException();
@@ -256,7 +255,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 	@Override
 	public void addToFavorite(Long publicRecipeId) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		PublicRecipe publicRecipe = publicRecipeRepository.findOne(publicRecipeId);
 		if (publicRecipe == null) {
 			throw new ResourceNotFoundException();
@@ -273,7 +272,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 	@Override
 	public void removeFromFavorite(Long publicRecipeId) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		PublicRecipe publicRecipe = publicRecipeRepository.findOne(publicRecipeId);
 		if (publicRecipe == null) {
 			throw new ResourceNotFoundException();
@@ -290,7 +289,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 	@Override
 	public Set<PublicRecipe> getFavoritePublicRecipes() {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		return user.getFavoritePublicRecipes();
 	}
 
@@ -299,7 +298,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		if (page < 0) {
 			throw new InvalidRequestException("Page cannot be negative");
 		}
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		return publicRecipeRepository.findAllByUser(user, pageable);
 	}

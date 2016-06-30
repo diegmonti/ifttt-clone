@@ -18,15 +18,17 @@ import iftttclone.services.interfaces.GoogleCalendarConnectorService;
 public class GoogleCalendarConnectorController {
 	@Autowired
 	private GoogleCalendarConnectorService googleCalendarConnectorService;
+	@Autowired
+	private Utils utils;
 
 	@RequestMapping(value = "/activate", method = RequestMethod.POST)
 	public ModelAndView auth(HttpServletRequest req) {
-		return new ModelAndView("redirect:" + googleCalendarConnectorService.requestConnection(Utils.getURL(req)));
+		return new ModelAndView("redirect:" + googleCalendarConnectorService.requestConnection(utils.getURL(req)));
 	}
 
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
 	public ModelAndView callback(HttpServletRequest req) {
-		googleCalendarConnectorService.validateConnection(Utils.getURL(req), req.getParameter("code"),
+		googleCalendarConnectorService.validateConnection(utils.getURL(req), req.getParameter("code"),
 				req.getParameter("state"));
 		return new ModelAndView("redirect:/#/channel/google_calendar");
 	}

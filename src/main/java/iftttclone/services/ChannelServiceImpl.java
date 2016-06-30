@@ -3,18 +3,16 @@ package iftttclone.services;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
 import iftttclone.exceptions.ResourceNotFoundException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
-import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.ChannelService;
 
 @Component
@@ -23,20 +21,19 @@ public class ChannelServiceImpl implements ChannelService {
 	@Autowired
 	private ChannelRepository channels;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
+	@Autowired
+	private Utils utils;
 
 	@Override
 	public Collection<Channel> getChannels() {
 		Collection<Channel> collection = channels.findAll();
 
 		// Get the current user, if exists
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = utils.getCurrentUser();
 
 		// Set connection time, if present
-		if (auth.isAuthenticated()) {
-			User user = userRepository.getUserByUsername(auth.getName());
+		if (user != null) {
 			for (Channel channel : collection) {
 				setConnectionTime(channel, user);
 			}
@@ -54,11 +51,10 @@ public class ChannelServiceImpl implements ChannelService {
 		}
 
 		// Get the current user, if exists
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = utils.getCurrentUser();
 
 		// Set connection time, if present
-		if (auth.isAuthenticated()) {
-			User user = userRepository.getUserByUsername(auth.getName());
+		if (user != null) {
 			setConnectionTime(channel, user);
 		}
 

@@ -17,16 +17,18 @@ import iftttclone.services.interfaces.GmailConnectorService;
 public class GmailConnectorController {
 	@Autowired
 	private GmailConnectorService gmailConnectorService;
+	@Autowired
+	private Utils utils;
 
 	@CrossOrigin
 	@RequestMapping(value = "/activate", method = RequestMethod.POST)
 	public ModelAndView auth(HttpServletRequest req) {
-		return new ModelAndView("redirect:" + gmailConnectorService.requestConnection(Utils.getURL(req)));
+		return new ModelAndView("redirect:" + gmailConnectorService.requestConnection(utils.getURL(req)));
 	}
 
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
 	public ModelAndView callback(HttpServletRequest req) {
-		gmailConnectorService.validateConnection(Utils.getURL(req), req.getParameter("code"),
+		gmailConnectorService.validateConnection(utils.getURL(req), req.getParameter("code"),
 				req.getParameter("state"));
 		return new ModelAndView("redirect:/#/channel/gmail");
 	}

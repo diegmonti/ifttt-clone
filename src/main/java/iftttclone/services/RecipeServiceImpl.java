@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Utils;
 import iftttclone.core.Validator;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
@@ -29,7 +30,6 @@ import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.RecipeLogRepository;
 import iftttclone.repositories.RecipeRepository;
 import iftttclone.services.interfaces.RecipeService;
-import iftttclone.services.interfaces.UserService;
 
 @Component
 @Transactional
@@ -43,17 +43,17 @@ public class RecipeServiceImpl implements RecipeService {
 	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
 	@Autowired
-	private UserService userService;
+	private Utils utils;
 
 	@Override
 	public Set<Recipe> getRecipes() {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		return recipeRepository.findRecipeByUser(user);
 	}
 
 	@Override
 	public Recipe getRecipe(Long id) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
 			throw new ForbiddenException();
@@ -63,6 +63,8 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public Recipe addRecipe(Recipe recipe) {
+		User user = utils.getCurrentUser();
+
 		// Fields are not null
 		if (recipe.getTitle() == null || recipe.getTrigger() == null || recipe.getRecipeTriggerFields() == null
 				|| recipe.getAction() == null || recipe.getRecipeActionFields() == null) {
@@ -78,8 +80,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check trigger channel connection
 		if (triggerChannel.isWithConnection()) {
-			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(triggerChannel,
-					userService.getUser()) == null) {
+			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(triggerChannel, user) == null) {
 				throw new InvalidRequestException("The trigger channel must be connected");
 			}
 		}
@@ -108,8 +109,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check action channel connection
 		if (actionChannel.isWithConnection()) {
-			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(actionChannel,
-					userService.getUser()) == null) {
+			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(actionChannel, user) == null) {
 				throw new InvalidRequestException("The action channel must be connected");
 			}
 		}
@@ -137,7 +137,7 @@ public class RecipeServiceImpl implements RecipeService {
 		// Set default values
 		recipe.setCreationTime(System.currentTimeMillis());
 		recipe.setLastRun(System.currentTimeMillis());
-		recipe.setUser(userService.getUser());
+		recipe.setUser(user);
 		recipe.setActive(true);
 		recipe.setRuns(0);
 
@@ -152,7 +152,8 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public Recipe updateRecipe(Long id, Recipe stub) {
-		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
+		User user = utils.getCurrentUser();
+		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
 			new ForbiddenException();
 		}
@@ -226,7 +227,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void deleteRecipe(Long id) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
 			throw new ForbiddenException();
@@ -236,7 +237,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void turnOn(Long id) {
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
 			throw new ForbiddenException();
@@ -278,7 +279,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void turnOff(Long id) {
-		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
+		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, utils.getCurrentUser());
 		if (recipe == null) {
 			throw new ForbiddenException();
 		}
@@ -299,7 +300,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public List<RecipeLog> getRecipeLogs(Long id, Integer page) {
-		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
+		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, utils.getCurrentUser());
 		if (recipe == null) {
 			throw new ForbiddenException();
 		}

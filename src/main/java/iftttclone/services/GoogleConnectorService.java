@@ -19,6 +19,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
@@ -27,7 +28,6 @@ import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeRepository;
 import iftttclone.services.interfaces.AbstractConnectorService;
-import iftttclone.services.interfaces.UserService;
 
 public abstract class GoogleConnectorService implements AbstractConnectorService {
 	@Autowired
@@ -36,9 +36,8 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	private ChannelConnectorRepository channelConnectorRepository;
 	@Autowired
 	private RecipeRepository recipeRepository;
-
 	@Autowired
-	private UserService userService;
+	private Utils utils;
 
 	private JsonFactory jsonFactory;
 	private GoogleClientSecrets secrets;
@@ -64,7 +63,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Transactional
 	public String requestConnection(String path) {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -98,7 +97,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Override
 	public void validateConnection(String path, String code, String token) {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -142,7 +141,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Transactional
 	public void removeConnection() {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
