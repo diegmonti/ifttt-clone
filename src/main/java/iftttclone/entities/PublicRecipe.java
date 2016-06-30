@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -76,6 +77,10 @@ public class PublicRecipe {
 	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private Integer favorites;
+
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private boolean favorite;
 
 	public Long getId() {
 		return id;
@@ -147,6 +152,14 @@ public class PublicRecipe {
 
 	public void setFavorites(Integer favorites) {
 		this.favorites = favorites;
+	}
+
+	public boolean isFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
 	}
 
 	@Override

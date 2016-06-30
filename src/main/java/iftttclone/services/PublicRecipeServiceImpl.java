@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import iftttclone.core.Utils;
 import iftttclone.core.Validator;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
@@ -45,7 +46,9 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			throw new InvalidRequestException("Page cannot be negative");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
-		return publicRecipeRepository.findAll(pageable);
+		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAll(pageable);
+		setFavorite(publicRecipes);
+		return publicRecipes;
 	}
 
 	@Override
@@ -54,15 +57,45 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			throw new InvalidRequestException("Page cannot be negative");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
-		return publicRecipeRepository.findAllByTitleContaining(title, pageable);
+		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAllByTitleContaining(title, pageable);
+		setFavorite(publicRecipes);
+		return publicRecipes;
+	}
+
+	private void setFavorite(List<PublicRecipe> publicRecipes) {
+		// Get the current user, if exists
+		User user = Utils.getCurrentUser();
+		
+		// Check if the public recipe is favorite
+		if (user != null) {
+			Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
+			for (PublicRecipe publicRecipe : publicRecipes) {
+				if (favoritePublicRecipes.contains(publicRecipe)) {
+					publicRecipe.setFavorite(true);
+				}
+			}
+		}
 	}
 
 	@Override
 	public PublicRecipe getPublicRecipe(Long publicRecipeId) {
 		PublicRecipe publicRecipe = publicRecipeRepository.findOne(publicRecipeId);
+		
 		if (publicRecipe == null) {
 			throw new ResourceNotFoundException();
 		}
+		
+		// Get the current user, if exists
+		User user = Utils.getCurrentUser();
+		
+		// Check if the public recipe is favorite
+		if (user != null) {
+			Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
+			if (favoritePublicRecipes.contains(publicRecipe)) {
+				publicRecipe.setFavorite(true);
+			}
+		}
+		
 		return publicRecipe;
 	}
 
