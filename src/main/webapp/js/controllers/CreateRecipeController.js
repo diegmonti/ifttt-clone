@@ -10,6 +10,7 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
   $scope.actionChannels = [];
   $scope.triggers = [];
   $scope.actions = [];
+  $scope.triggerChannelNotConnected = false;
 
   function downloadChannels() {
     $scope.channels = [];
@@ -50,6 +51,11 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       url : 'api/channels/'+  $scope.recipe.trigger.channel
     }).then(
       function successCallback(result){
+        if(result.data.connectionTime == null && result.data.withConnection == true){
+          $scope.triggerChannelNotConnected = true;
+          return;
+        }
+        $scope.triggerChannelNotConnected = false;
         for(var element in result.data.triggers)
           $scope.triggers.push({
             title: result.data.triggers[element].name,
@@ -124,6 +130,11 @@ function($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFac
       url : 'api/channels/'+  $scope.recipe.action.channel
     }).then(
       function successCallback(result){
+        if(result.data.connectionTime == null && result.data.withConnection == true){
+          $scope.actionChannelNotConnected = true;
+          return;
+        }
+        $scope.actionChannelNotConnected = false;
         $scope.actions = [];
         console.log();
         for(var element in result.data.actions)
