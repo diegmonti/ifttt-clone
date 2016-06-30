@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-lg-5"><h1>Username</h1></div>
+  <input class="col-lg-5 form-control" type="text" data-ng-model = 'user.username' />
+</div>
+<br />
+<div class="row">
+  <div class="col-lg-6"><h1>Password</h1></div>
+  <input class="col-lg-6 form-control" type="password" data-ng-model = 'user.password' />
+</div>
+<br />
+<div class="row">
+  <div class="col-lg-6"><h1>Email</h1></div>
+  <input class="col-lg-6 form-control" type="text" data-ng-model = 'user.email' />
+</div>
+<br />
+<div class="row">
+  <div class="col-lg-6"><h1>Timezone</h1></div>
+  <select class="col-lg-6 form-control" data-ng-model = 'user.timezone'>
+    <option data-ng-repeat="tz in timezones">{{tz}}</option>
+  </select>
+</div>
+<br />
+<div class="row">
+  <div class="col-lg-3 col-lg-offset-4">
+    <a class="btn btn-primary" data-ng-click='controller.updateProfile()'>Update Profile</a>
+  </div>
+</div>
+
+<br/> <hr /> <br />
+
+<div class="row" data-ng-show='user.channelConnectors.length > 0'>
+  <div class="col-lg-6 col-lg-offset-3">
+    <h1>Connected Channels</h1>
+  </div>
+</div>
+<br /> <br />
+
+<div class="row" data-ng-repeat='channel in user.channelConnectors'>
+  <div class="col-lg-8">
+    <p>
+      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> authorizations for {{channel.channel}}: ...
+    </p>
+  </div>
+  <div class="col-lg-4">
+    <a class="btn btn-danger" data-ng-click='controller.deactivateChannel(channel.channel)'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+  </div>
+</div>

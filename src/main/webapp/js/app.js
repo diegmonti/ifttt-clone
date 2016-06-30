@@ -5,7 +5,6 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
         templateUrl: 'partials/channels.html',
         controller: 'ChannelsController',
         controllerAs : 'controller',
-
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController',
@@ -52,6 +51,10 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
     .when('/publicRecipes', {
       templateUrl: 'partials/publicRecipes.html',
       controller: 'PublicRecipesController',
+      controllerAs: 'controller',
+    }).when('/preferences', {
+      templateUrl: 'partials/preferences.html',
+      controller: 'PreferencesController',
       controllerAs: 'controller',
     })
     .otherwise('/');
