@@ -18,17 +18,20 @@
 		<a class="navbar-brand" href="#/">IFTTT-CLONE</a>
 
 		<ul class="nav pull-lg-right navbar-nav">
-
-			<!--  Only for authenticated people  -->
-			<li data-ng-show="authenticated" class="nav-item"><a href="#/myRecipes" class="nav-link">Le mie ricette</a></li>
 			<!-- For everyone -->
-			<li class="nav-item active"><a href="#/" class="nav-link">Canali</a></li>
-			<li class="nav-item"><a href="#/publicRecipes" class="nav-link">Ricette pubbliche</a></li>
+			<li class="nav-item active"><a href="#/" class="nav-link">Channels</a></li>
+			<li class="nav-item active"><a href="#/publicRecipes" class="nav-link">Pubblic Recipes</a></li>
 
+			<li class="nav-item active btn-group" data-ng-show="authenticated">
+          <a class="dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Wellcome {{username}}</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+              <a class="dropdown-item" href="#">My Account</a>
+              <a class="dropdown-item" href="#/myRecipes">My Recipes</a>
+              <a class="dropdown-item" data-ng-click='nav.logout()'>Logout</a>
+          </div>
+      </li>
 			<!-- only for anonymous people -->
-			<li data-ng-show="!authenticated" class="nav-item"><a class="nav-link" href="#/login">Login</a></li>
-			<!-- only if auth you can see the dropdown -->
-			<li data-ng-show="authenticated" class="nav-item"><a class="nav-link" href="#" data-ng-click="nav.logout()">Logout</a></li>
+			<li data-ng-show="!authenticated" class="nav-item active"><a class="nav-link" href="#/login">Login</a></li>
 		</ul>
 
 

@@ -171,6 +171,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
             $http.get('api/user', {headers: headers}).then(function (response) {
                 if (response.data.username) {
                     $rootScope.authenticated = true;
+                    $rootScope.username = response.data.username;
                 } else {
                     $rootScope.authenticated = false;
                 }
@@ -200,6 +201,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
                 $location.path("/");
             });
         }
+
     }]);
 
 iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$location',
