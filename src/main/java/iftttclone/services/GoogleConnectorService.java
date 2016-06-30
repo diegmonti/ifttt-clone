@@ -19,23 +19,25 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
 import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
+import iftttclone.repositories.RecipeRepository;
 import iftttclone.services.interfaces.AbstractConnectorService;
-import iftttclone.services.interfaces.UserService;
 
 public abstract class GoogleConnectorService implements AbstractConnectorService {
 	@Autowired
 	private ChannelRepository channelRepository;
 	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
-
 	@Autowired
-	private UserService userService;
+	private RecipeRepository recipeRepository;
+	@Autowired
+	private Utils utils;
 
 	private JsonFactory jsonFactory;
 	private GoogleClientSecrets secrets;
@@ -61,7 +63,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Transactional
 	public String requestConnection(String path) {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -95,7 +97,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	@Override
 	public void validateConnection(String path, String code, String token) {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -119,6 +121,11 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		try {
 			GoogleTokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(path + callback).execute();
 
+			if (tokenResponse.getRefreshToken() == null) {
+				// This should not happen
+				return;
+			}
+
 			channelConnector.setToken(tokenResponse.getAccessToken());
 			channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
 			channelConnector.setConnectionTime(System.currentTimeMillis());
@@ -131,9 +138,10 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
+	@Transactional
 	public void removeConnection() {
 		// Get the current user
-		User user = userService.getUser();
+		User user = utils.getCurrentUser();
 
 		// Get channel
 		Channel channel = channelRepository.getChannelByClasspath(channelPath);
@@ -147,11 +155,15 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getRefreshToken());
 
 		try {
-			factory.buildGetRequest(url).execute();
-			channelConnectorRepository.delete(channelConnector);
+			factory.buildGetRequest(url).executeAsync();
 		} catch (IOException e) {
 
 		}
+
+		// Delete the connector in any case
+		channelConnectorRepository.delete(channelConnector);
+		recipeRepository.setAllInactiveByUserAndChannel(user, channel);
+
 	}
 
 }

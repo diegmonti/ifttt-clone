@@ -3,13 +3,12 @@ package iftttclone.services;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.TimezoneManager;
+import iftttclone.core.Utils;
 import iftttclone.core.Validator;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
@@ -20,16 +19,17 @@ import iftttclone.services.interfaces.UserService;
 @Transactional
 public class UserServiceImpl implements UserService {
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	@Autowired
-	TimezoneManager timezoneManager;
+	private TimezoneManager timezoneManager;
+	@Autowired
+	private Utils utils;
 
 	@Override
 	public User getUser() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return userRepository.getUserByUsername(auth.getName());
+		return utils.getCurrentUser();
 	}
 
 	@Override

@@ -2,12 +2,24 @@ package iftttclone.core;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import iftttclone.entities.User;
+import iftttclone.repositories.UserRepository;
+
+@Component
 public class Utils {
+	@Autowired
+	private UserRepository userRepository;
 
 	/**
 	 * This method, given a request, returns the full URL of the request.
 	 */
-	public static String getURL(HttpServletRequest req) {
+	public String getURL(HttpServletRequest req) {
 		String scheme = req.getScheme();
 		String serverName = req.getServerName();
 		int serverPort = req.getServerPort();
@@ -23,6 +35,20 @@ public class Utils {
 		url.append(contextPath);
 
 		return url.toString();
+	}
+
+	/**
+	 * This method returns the current authenticated user or null if the user is
+	 * anonymous.
+	 */
+	public User getCurrentUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			return null;
+		}
+
+		return userRepository.getUserByUsername(authentication.getName());
 	}
 
 }
