@@ -25,6 +25,7 @@ import iftttclone.entities.User;
 import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
+import iftttclone.repositories.RecipeRepository;
 import iftttclone.services.interfaces.AbstractConnectorService;
 import iftttclone.services.interfaces.UserService;
 
@@ -33,6 +34,8 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	private ChannelRepository channelRepository;
 	@Autowired
 	private ChannelConnectorRepository channelConnectorRepository;
+	@Autowired
+	private RecipeRepository recipeRepository;
 
 	@Autowired
 	private UserService userService;
@@ -119,6 +122,11 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		try {
 			GoogleTokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(path + callback).execute();
 
+			if (tokenResponse.getRefreshToken() == null) {
+				// This should not happen
+				return;
+			}
+
 			channelConnector.setToken(tokenResponse.getAccessToken());
 			channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
 			channelConnector.setConnectionTime(System.currentTimeMillis());
@@ -131,6 +139,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
+	@Transactional
 	public void removeConnection() {
 		// Get the current user
 		User user = userService.getUser();
@@ -147,11 +156,15 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getRefreshToken());
 
 		try {
-			factory.buildGetRequest(url).execute();
-			channelConnectorRepository.delete(channelConnector);
+			factory.buildGetRequest(url).executeAsync();
 		} catch (IOException e) {
 
 		}
+
+		// Delete the connector in any case
+		channelConnectorRepository.delete(channelConnector);
+		recipeRepository.setAllInactiveByUserAndChannel(user, channel);
+
 	}
 
 }

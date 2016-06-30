@@ -14,6 +14,7 @@ import iftttclone.core.Validator;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.Channel;
+import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.Recipe;
 import iftttclone.entities.RecipeActionField;
 import iftttclone.entities.RecipeLog;
@@ -235,7 +236,8 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Override
 	public void turnOn(Long id) {
-		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, userService.getUser());
+		User user = userService.getUser();
+		Recipe recipe = recipeRepository.findRecipeByIdAndUser(id, user);
 		if (recipe == null) {
 			throw new ForbiddenException();
 		}
@@ -243,6 +245,26 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check if it is already active
 		if (recipe.isActive()) {
 			throw new InvalidRequestException("The recipe is already active");
+		}
+
+		// Check if the trigger channel is connected
+		Channel triggerChannel = recipe.getTrigger().getChannel();
+		if (triggerChannel.isWithConnection()) {
+			ChannelConnector channelConnector = channelConnectorRepository
+					.getChannelConnectorByChannelAndUser(triggerChannel, user);
+			if (channelConnector == null) {
+				throw new InvalidRequestException("The trigger channel must be connected.");
+			}
+		}
+
+		// Check if the action channel is connected
+		Channel actionChannel = recipe.getAction().getChannel();
+		if (actionChannel.isWithConnection()) {
+			ChannelConnector channelConnector = channelConnectorRepository
+					.getChannelConnectorByChannelAndUser(actionChannel, user);
+			if (channelConnector == null) {
+				throw new InvalidRequestException("The action channel must be connected.");
+			}
 		}
 
 		// Add log entry
