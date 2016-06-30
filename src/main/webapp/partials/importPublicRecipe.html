@@ -1,6 +1,6 @@
 
 <div class="row">
-    <input  class="form-control form-control-lg col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
+    <input  class="form-control form-control col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
 </div>
 
 <br/> <hr /> <br />
@@ -35,19 +35,25 @@
   <ol class="breadcrumb">
     <li class="active">Action: {{recipe.action.method}}</li>
   </ol>
-
 </div>
-<div id="actionsDiv"></div>
+
+<div id="actionFieldsDiv"></div>
 <br/> <hr /> <br />
 
+
 <div class="row">
-  <div class="col-lg-offset-5">
-    <button class="btn btn-primary" data-ng-click="controller.importRecipe()">
-      Importa
+  <div class="col-lg-3 col-lg-offset-5">
+    <button class="btn btn-primary" data-ng-click="controller.importRecipe()">Import</button>
+  </div>
+  <div class="col-lg-1">
+    <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe()'>
+      <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
+      <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
     </button>
   </div>
 </div>
 
+<br />
 <div class="modal fade" id='ingredientsModal'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -58,7 +64,7 @@
         <h4 class="modal-title">Ingredients</h4>
       </div>
       <div class="modal-body row">
-        <select class="col-lg-offset-1" ng-model = 'selectedIngredient'>
+        <select class="col-lg-offset-1" data-ng-model = 'selectedIngredient'>
           <option data-ng-repeat='ingredient in recipe.trigger.ingredients' value={{ingredient.name}}>{{ingredient.name}}</option>
         </select>
       </div>

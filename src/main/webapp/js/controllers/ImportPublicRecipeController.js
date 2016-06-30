@@ -5,7 +5,6 @@ var fieldsErrorsNumber = 0;
 	if($rootScope.authenticated != true){
 		$location.path('/login');
 	}
-
   $scope.recipe = {};
 
   $http({
@@ -104,7 +103,7 @@ var fieldsErrorsNumber = 0;
 				if($scope.recipe.action.actionFields[property].type == 'TEXT' ||
 				 	$scope.recipe.action.actionFields[property].type == 'LONGTEXT' ||
 					$scope.recipe.action.actionFields[property].type == 'NULLABLETEXT') inputGroup.append(button);
-					$('#actionFieldsDiv').append(div);
+					$('#actionFieldsDiv').append(inputGroup);
 
 				$('#actionsDiv').append(inputGroup);
 				$compile(input)($scope);
@@ -146,5 +145,19 @@ var fieldsErrorsNumber = 0;
 		var textAreaTxt = $txt.val();
 		var txtToAdd = "{{"+  $scope.selectedIngredient + "}}";
 		$scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
+	}
+
+	self.favoriteRecipe = function(){
+		var promise;
+		if($scope.recipe.favorite == true)
+			promise = $http.post('api/publicrecipes/' + $scope.recipe.id + '/remove');
+		else
+			promise = $http.post('api/publicrecipes/' + $scope.recipe.id + '/add');
+
+			promise.then(function successCallback(){
+				$scope.recipe.favorite = !$scope.recipe.favorite;
+			}, function errorCallback(response){
+				console.error(response);
+			})
 	}
 } ]);

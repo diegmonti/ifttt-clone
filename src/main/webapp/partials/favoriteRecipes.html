@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-lg-6 col-lg-offset-3">
+    <h1>Your favorite recipes</h1>
+  </div>
+</div>
+
+<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in favoriteRecipes" data-ng-click="controller.importRecipe(recipe.id)">
+    <div class="card-block">
+      <div class="card-title" style="align:center">
+        <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+          if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px" /> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px" />
+        </p>
+      </div>
+      <div class="card-text row">
+        <div class="col-lg-10 col-lg-offset-1">
+          {{recipe.title}}
+        </div>
+      </div>
+    </div>
+</div>

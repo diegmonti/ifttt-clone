@@ -60,6 +60,10 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
       templateUrl: 'partials/recipeLog.html',
       controller: 'RecipeLogController',
       controllerAs: 'controller',
+    }).when('/favoriteRecipes', {
+      templateUrl: 'partials/favoriteRecipes.html',
+      controller: 'FavoriteRecipesController',
+      controllerAs: 'controller',
     })
     .otherwise('/');
     $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
