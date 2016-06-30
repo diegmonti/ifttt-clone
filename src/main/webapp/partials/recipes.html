@@ -7,7 +7,7 @@
 
 <div data-ng-repeat="recipe in recipes">
 <div class="row">
-  <div class="col-lg-9">
+  <div class="col-lg-7">
     <div class="row">
       <h1 style="display:inline"> if </h1>
       <span>
@@ -22,7 +22,7 @@
     <div class="row"><h3>{{recipe.title}}</h3></div>
   </div>
 
-  <div class="col-lg-3">
+  <div class="col-lg-5">
     <div class="row">
       <button class="btn btn-secondary" data-ng-show =recipe.active data-ng-click="controller.turnRecipeOnOff(recipe.id)">
         <i class="fa fa-toggle-on fa-2x" aria-hidden="true"></i>
@@ -39,7 +39,9 @@
       <button class="btn btn-secondary" data-ng-click="controller.publishRecipe(recipe.id)">
         <i class="fa fa-share-square-o fa-2x" aria-hidden="true"></i>
       </button>
-
+      <button class="btn btn-secondary" data-ng-click="controller.showLog(recipe.id)">
+        <i class="fa fa-list fa-2x" aria-hidden="true"></i>
+      </button>
 
     </div>
     <div class="row">Created on {{recipe.created}}</div>

@@ -11,6 +11,11 @@ function($scope, $rootScope, $http, $location, $routeParams){
     });
     self.updateProfile = function(){
       console.log($scope.user);
+      $http({
+        method: 'PUT',
+        url : 'api/user',
+        data : JSON.stringify($scope.user)
+      });
     }
     self.deactivateChannel = function(channel){
       console.log('api/channels/' + channel + '/deactivate');

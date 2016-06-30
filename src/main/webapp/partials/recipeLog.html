@@ -1,0 +1,17 @@
+
+<div class="row">
+  <p class="col-lg-6 col-lg-offset-3" style="vertical-align:middle;font-weight:bold;font-size:3em">
+    if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="110px" /> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="110px" />
+  </p>
+</div>
+<div class="row col-lg-6 col-lg-offset-3"><h5>{{recipe.title}}</h5></div>
+
+<br />
+
+<table class="table table-striped">
+  <tr data-ng-repeat='entry in logs'>
+    <td><img data-ng-src="img/{{recipe.trigger.channel}}.png" width="40px"/><img data-ng-src="img/{{recipe.action.channel}}.png" width="40px"/></td>
+    <td><h4>Personal Recipe {{entry.event}}</h4></td>
+    <td><h6>{{entry.timestamp}}</h6></td>
+  </tr>
+</table>

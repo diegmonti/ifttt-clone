@@ -81,4 +81,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
 			$location.path('/publishRecipe/'+ recipeID);
 		}
 
+		self.showLog = function (recipeId){
+			$location.path('/recipeLog/' + recipeId);
+		}
 }]);
