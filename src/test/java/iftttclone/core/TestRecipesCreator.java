@@ -51,6 +51,7 @@ public class TestRecipesCreator {
 	private boolean weatherTestsDone;
 	private boolean gCalendarTestsDone;
 	private boolean gMailTestsDone;
+	private boolean twitterTestsDone;
 	
 	@Transactional
 	public void createTests() {
@@ -67,9 +68,10 @@ public class TestRecipesCreator {
 			users.save(user);
 		}
 			
-		this.weatherTests(user);
+		/*this.weatherTests(user);
 		this.gCalendarTests(user);
-		this.gMailTests(user);
+		this.gMailTests(user);*/
+		this.twitterTests(user);
 		
 		System.err.println("-CHANNEL_TESTS: end");
 	}
@@ -517,6 +519,90 @@ public class TestRecipesCreator {
 		System.err.println("--GMAIL_TESTS: end");
 		
 		this.gMailTestsDone = true;
+	}
+	
+	// Create some tweets (more than one) in between the calls and check if the last is correctly changed
+	private void twitterTests(User user) {
+		if (this.twitterTestsDone) {
+			return;
+		}
+		
+		System.err.println("--TWITTER_TESTS: begin");
+		
+		System.err.println("--TWITTER_TESTS: creating connection");
+		String token = env.getProperty("twitter.token");
+		String secret = env.getProperty("twitter.secret");
+		ChannelConnector cc = new ChannelConnector();
+		cc.setToken(token);
+		cc.setRefreshToken(secret);
+		cc.setUser(user);
+		Channel channel = channels.getChannelByClasspath("iftttclone.channels.TwitterChannel");
+		cc.setChannel(channel);
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
+		cc.setConnectionTime(now.getTimeInMillis());
+		channelConnectors.save(cc);
+		
+		Action action = actions.getActionByMethodAndChannel("simpleAction", channels.getChannelByClasspath("iftttclone.channels.TestChannel"));
+		
+		
+		// new tweets
+		System.err.println("--TWITTER_TESTS: creating newTweetByYou");
+		Recipe r = this.createBasicRecipe(user, now, action);
+		r.setTitle("newTweetByYou");
+		
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("newTweetByYou", channel));
+		
+		Map<String, RecipeActionField> rafs = new HashMap<String, RecipeActionField>();
+		RecipeActionField raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue("Text: {{Text}}\nUserName: {{UserName}}\nCreatedAt: {{CreatedAt}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(null);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+		
+		// new mention
+		System.err.println("--TWITTER_TESTS: creating newMentionOfYou");
+		r = this.createBasicRecipe(user, now, action);
+		r.setTitle("newMentionOfYou");
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("newMentionOfYou", channel));
+		
+		raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue("Text: {{Text}}\nUserName: {{UserName}}\nCreatedAt: {{CreatedAt}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(null);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+		
+		// post a tweet
+		System.err.println("--TWITTER_TESTS: creating postTweet");	// always done
+		r = this.createBasicRecipe(user, now, actions.getActionByMethodAndChannel("postTweet", channel));
+		r.setTitle("postTweet");
+		r.setTrigger(triggers.getTriggerByMethodAndChannel("simpleTrigger", channels.getChannelByClasspath("iftttclone.channels.TestChannel")));
+		
+		Map<String, RecipeTriggerField> rtfs = new HashMap<String, RecipeTriggerField>();
+		RecipeTriggerField rtf = this.createBasicRecipeTriggerField(0, r);
+		rtf.setValue("Value of simpleTrigger");
+		rtfs.put("arg0", rtf);
+		rtf = this.createBasicRecipeTriggerField(1, r);
+		rtf.setValue("yes");
+		rtfs.put("arg1", rtf);
+		
+		raf = this.createBasicRecipeActionField(0, r);
+		raf.setValue("{{Key}}\n{{Key1}}\n{{Key2}}");
+		rafs.put("arg0", raf);
+		
+		r.setRecipeTriggerFields(rtfs);
+		r.setRecipeActionFields(rafs);
+		recipes.save(r);
+		
+				
+		System.err.println("--TWITTER_TESTS: end");
+		
+		this.twitterTestsDone = true;
 	}
 	
 	

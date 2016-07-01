@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -60,7 +59,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
-	@Transactional
 	public String requestConnection(String path) {
 		// Get the current user
 		User user = utils.getCurrentUser();
@@ -138,7 +136,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
-	@Transactional
 	public void removeConnection() {
 		// Get the current user
 		User user = utils.getCurrentUser();
@@ -161,6 +158,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		}
 
 		// Delete the connector in any case
+		// this could leave us without refreshToken (and the user will not be asked when connecting again since it is already connected)
 		channelConnectorRepository.delete(channelConnector);
 		recipeRepository.setAllInactiveByUserAndChannel(user, channel);
 

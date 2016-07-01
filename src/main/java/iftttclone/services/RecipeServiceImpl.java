@@ -84,6 +84,11 @@ public class RecipeServiceImpl implements RecipeService {
 				throw new InvalidRequestException("The trigger channel must be connected");
 			}
 		}
+		
+		/*// Add Twitter special info
+		if (triggerChannel.getId().equals("twitter")){
+			
+		}*/
 
 		Collection<TriggerField> triggerFields = recipe.getTrigger().getTriggerFields().values();
 
@@ -273,6 +278,7 @@ public class RecipeServiceImpl implements RecipeService {
 		recipeLogRepository.save(recipeLog);
 
 		// Turn on
+		recipe.setLastRun(System.currentTimeMillis());	// do not process things that happened while off
 		recipe.setActive(true);
 		recipeRepository.save(recipe);
 	}
@@ -295,6 +301,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Turn off
 		recipe.setActive(false);
+		//recipe.setSinceId(null);	// reset last execution time Twitter
 		recipeRepository.save(recipe);
 	}
 

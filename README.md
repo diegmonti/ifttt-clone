@@ -41,12 +41,24 @@ This file is required in order to interact with the APIs of Google for managing 
 3. Add a new project and then create an OAuth client ID for a web application
 4. Enter as *Authorized JavaScript origins* the domain of your application
 5. Enter as *Authorized redirect URIs*:
-    - http://[DOMAIN]/[PATH]/api/channels/gmail/authorize
-    - http://[DOMAIN]/[PATH]/api/channels/google_calendar/authorize
+    - https://[DOMAIN]/[PATH]/api/channels/gmail/authorize
+    - https://[DOMAIN]/[PATH]/api/channels/google_calendar/authorize
 6. Select *Download JSON*
 
+### src/main/resources/twitter4j.properties
+This file is required in order to interact with the APIs of Twitter.
+1. Go to https://apps.twitter.com/
+2. Create an app
+3. On *Website* put the domain of your application
+4. On *Callback URL* put: https://[DOMAIN]/[PATH]/api/channels/twitter/authorize
+5. Under the *Keys and Access Tokens* tab you will find your *Consumer Key* and *Consumer Secret*, put them like this:
+
+	oauth.consumerKey=
+	oauth.consumerSecret=
+*. It is a good idea to check *Enable Callback Locking* and to encrypt the contents of this file.
+
 ### src/test/resources/application.properties
-This file is required only if you plan to run the tests related to the channels. You must enter the authorization tokens for Gmail and Google Calendar: these tokens can be retrieved from the `channel_connector` table after having connected the channels.
+This file is required only if you plan to run the tests related to the channels. You must enter the authorization tokens for Gmail, Google Calendar and Twitter: these tokens can be retrieved from the `channel_connector` table after having connected the channels.
 
     jdbc.url=jdbc:mysql://localhost:3306/iftttclone
     jdbc.username=root
@@ -59,6 +71,8 @@ This file is required only if you plan to run the tests related to the channels.
     gMail.token=
     gMail.refreshToken=
     gMail.selfAddr=
+    twitter.token=
+    twitter.secret=
 
 ## Test
 It is possible to run the tests related to the channels with the command `mvn test`.

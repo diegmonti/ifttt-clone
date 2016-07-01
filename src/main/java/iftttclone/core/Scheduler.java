@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+//import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.channels.AbstractChannel;
@@ -42,7 +43,7 @@ public class Scheduler {
 	 * the action is parsed, substituting every {{ingredient}} with the value
 	 * returned by the trigger, then the action is called.
 	 */
-	@Transactional
+	@Transactional//(propagation = Propagation.REQUIRES_NEW)
 	@Scheduled(fixedDelayString = "${scheduler.fixedDelay}")
 	public void run() {
 		System.err.println("----SCHEDULER: Start processing recipes");
@@ -95,6 +96,8 @@ public class Scheduler {
 				channelConnectorRepository.getChannelConnectorByChannelAndUser(trigger.getChannel(), recipe.getUser()));
 		instance.setLastRun(new Date(recipe.getLastRun()));
 		instance.setUser(recipe.getUser());
+		/*instance.setRecipeId(recipe.getId());
+		instance.setRecipeRepository(recipeRepository);*/
 
 		// Load parameters
 		Map<String, RecipeTriggerField> recipeTriggerFields = recipe.getRecipeTriggerFields();
@@ -128,6 +131,8 @@ public class Scheduler {
 				channelConnectorRepository.getChannelConnectorByChannelAndUser(action.getChannel(), recipe.getUser()));
 		instance.setLastRun(new Date(recipe.getLastRun()));
 		instance.setUser(recipe.getUser());
+		/*instance.setRecipeId(recipe.getId());	// not needed as of now
+		instance.setRecipeRepository(recipeRepository);	// not needed as of now*/
 
 		// Load parameters
 		Map<String, RecipeActionField> recipeActionFields = recipe.getRecipeActionFields();

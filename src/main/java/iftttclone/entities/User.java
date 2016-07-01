@@ -52,6 +52,10 @@ public class User {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "public_recipe_id"))
 	private Set<PublicRecipe> favoritePublicRecipes;
+	
+	/*@JsonIgnore
+	@Column(name = "since_id")
+	private Long sinceId;*/
 
 	public Long getId() {
 		return id;
@@ -108,5 +112,13 @@ public class User {
 	public void setFavoritePublicRecipes(Set<PublicRecipe> favoritePublicRecipes) {
 		this.favoritePublicRecipes = favoritePublicRecipes;
 	}
+
+	/*public Long getSinceId() {
+		return sinceId;
+	}
+
+	public void setSinceId(Long sinceId) {
+		this.sinceId = sinceId;
+	}*/
 
 }

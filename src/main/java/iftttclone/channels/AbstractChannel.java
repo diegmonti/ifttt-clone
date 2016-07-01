@@ -4,6 +4,7 @@ import java.util.Date;
 
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
+//import iftttclone.repositories.RecipeRepository;
 
 /**
  * This class contains the information needed by the channels to execute triggers and actions.
@@ -22,6 +23,14 @@ public abstract class AbstractChannel {
 	 * The current user, useful to get the time zone.
 	 */
 	private User user;
+	/**
+	 * The id of the recipe, used in Twitter.
+	 */
+	//private Long recipeId;
+	/**
+	 * The recipe repository, used in Twitter.
+	 */
+	//private RecipeRepository recipeRepository;
 
 	public ChannelConnector getChannelConnector() {
 		return channelConnector;
@@ -46,5 +55,21 @@ public abstract class AbstractChannel {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	/*public Long getRecipeId() {
+		return recipeId;
+	}
+
+	public void setRecipeId(Long recipeId) {
+		this.recipeId = recipeId;
+	}
+
+	public RecipeRepository getRecipeRepository() {
+		return recipeRepository;
+	}
+
+	public void setRecipeRepository(RecipeRepository recipeRepository) {
+		this.recipeRepository = recipeRepository;
+	}*/
 
 }
