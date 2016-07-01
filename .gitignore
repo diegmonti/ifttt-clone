@@ -9,7 +9,6 @@ src/main/webapp/css
 src/main/webapp/fonts
 src/main/webapp/js/libs
 src/main/resources/application.properties
-src/main/resources/twitter.properties
 src/main/resources/twitter4j.properties
 src/main/resources/client_secret.json
 src/test/resources/application.properties

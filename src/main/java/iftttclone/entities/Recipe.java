@@ -98,10 +98,6 @@ public class Recipe {
 	@OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
 	private Set<RecipeLog> logs;
 	
-	/*// this field is used only for twitter triggers but keeping it here avoids useless joins and searches
-	@JsonIgnore
-	@Column(name = "since_id")
-	private Long sinceId;*/
 
 	public Long getId() {
 		return id;
@@ -198,13 +194,5 @@ public class Recipe {
 	public void setLogs(Set<RecipeLog> logs) {
 		this.logs = logs;
 	}
-
-	/*public Long getSinceId() {
-		return sinceId;
-	}
-
-	public void setSinceId(Long sinceId) {
-		this.sinceId = sinceId;
-	}*/
 
 }

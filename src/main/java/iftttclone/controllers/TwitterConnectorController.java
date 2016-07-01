@@ -22,7 +22,6 @@ public class TwitterConnectorController {
 	public ModelAndView auth(HttpServletRequest req) {
 		String rdct = twitterConnectorService.requestConnection("");
 		if(rdct == null){
-			//throw new RuntimeException();
 			return new ModelAndView("redirect:/#/channel/twitter");
 		}
 		return new ModelAndView("redirect:" + rdct);

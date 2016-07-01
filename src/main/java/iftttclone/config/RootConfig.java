@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.context.annotation.EnableLoadTimeWeaving;
 import org.springframework.context.annotation.PropertySource;
-//import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -28,10 +26,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableScheduling
 @ComponentScan(basePackages = { "iftttclone.config", "iftttclone.core", "iftttclone.services" })
 @EnableJpaRepositories("iftttclone.repositories")
-//@PropertySource({ "classpath:application.properties", "classpath:twitter.properties" })
 @PropertySource({ "classpath:application.properties" })
-/*@EnableSpringConfigured
-@EnableLoadTimeWeaving*/
 public class RootConfig {
 	@Autowired
 	private Environment env;
