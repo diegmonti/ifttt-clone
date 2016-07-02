@@ -68,9 +68,9 @@ public class TestRecipesCreator {
 			users.save(user);
 		}
 			
-		/*this.weatherTests(user);
+		this.weatherTests(user);
 		this.gCalendarTests(user);
-		this.gMailTests(user);*/
+		this.gMailTests(user);
 		this.twitterTests(user);
 		
 		System.err.println("-CHANNEL_TESTS: end");

@@ -16,6 +16,7 @@ import iftttclone.channels.annotations.IngredientTag;
 import iftttclone.channels.annotations.TriggerTag;
 import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldType;
+import iftttclone.exceptions.SchedulerException;
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -69,7 +70,7 @@ public class TwitterChannel extends AbstractChannel {
 				statuses = twitter.getUserTimeline(paging);
 			}
 		} catch (TwitterException e) {
-			return null;
+			throw new SchedulerException();
 		}
 
 		return result;
@@ -112,7 +113,7 @@ public class TwitterChannel extends AbstractChannel {
 				statuses = twitter.getMentionsTimeline(paging);
 			}
 		} catch (TwitterException e) {
-			return null;
+			throw new SchedulerException();
 		}
 
 		return result;
@@ -129,8 +130,7 @@ public class TwitterChannel extends AbstractChannel {
 			Twitter twitter = this.getTwitterService();
 			twitter.updateStatus(text);
 		} catch (TwitterException e) {
-			// e.printStackTrace();
-			return;
+			throw new SchedulerException();
 		}
 	}
 
