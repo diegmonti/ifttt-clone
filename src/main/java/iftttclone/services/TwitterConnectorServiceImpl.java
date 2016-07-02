@@ -54,14 +54,15 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 		channelConnector.setConnectionTime(null);
 
 		Twitter twitter = new TwitterFactory().getInstance();
-	    RequestToken requestToken;
+		RequestToken requestToken;
 		try {
 			requestToken = twitter.getOAuthRequestToken();
-		} catch (TwitterException e) {	// should not happen
+		} catch (TwitterException e) {
+			// Should not happen
 			return null;
 		}
 		String url = requestToken.getAuthorizationURL();
-		
+
 		channelConnector.setToken(requestToken.getToken());
 		channelConnector.setRefreshToken(requestToken.getTokenSecret());
 
@@ -94,8 +95,8 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 
 		AccessToken aToken;
 		try {
-			aToken = twitter.getOAuthAccessToken(new RequestToken(channelConnector.getToken(), channelConnector.getRefreshToken())
-					, code);
+			aToken = twitter.getOAuthAccessToken(
+					new RequestToken(channelConnector.getToken(), channelConnector.getRefreshToken()), code);
 		} catch (TwitterException e) {
 			return;
 		}

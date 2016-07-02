@@ -157,8 +157,9 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 
 		}
 
-		// Delete the connector in any case
-		// this could leave us without refreshToken (and the user will not be asked when connecting again since it is already connected)
+		// This could leave us without refreshToken (and the user will not be
+		// asked when connecting again since it is already connected)
+		// In this case the user must remove the connection manually from Google
 		channelConnectorRepository.delete(channelConnector);
 		recipeRepository.setAllInactiveByUserAndChannel(user, channel);
 

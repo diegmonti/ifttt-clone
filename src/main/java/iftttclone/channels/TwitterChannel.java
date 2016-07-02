@@ -23,41 +23,46 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 
-// the twitter api makes some restriction about the maxinum number of tweets to retrieve (newest 3200), as well as the number of read calls in a window (15 in 15 minutes per user), write calls limits are shared for all applications in a per user basis
-@ChannelTag(name = "Twitter", description = "Twitter is a free online social networking service that enables users to send and read short 140-character messages called \"tweets\"", withConnection = true)
+/**
+ * The Twitter API makes some restriction about the maximum number of tweets to
+ * retrieve (the newest 3200), as well as the number of read calls in a window
+ * (15 every 15 minutes per user), write calls limits are shared for all
+ * applications in a per user basis.
+ */
+@ChannelTag(name = "Twitter", description = "Twitter is a free online social networking service that enables users to send and read short 140-character messages called \"tweets\".", withConnection = true)
 public class TwitterChannel extends AbstractChannel {
 
 	@TriggerTag(name = "New tweet by you", description = "This trigger fires when you post a new tweet.")
 	@IngredientTag(name = "Text", description = "The actual tweet.", example = "I am eating something")
-	@IngredientTag(name = "UserName", description = "User name of tweeter.", example = "twitterMan")
+	@IngredientTag(name = "UserName", description = "Username of tweeter.", example = "twitterMan")
 	@IngredientTag(name = "CreatedAt", description = "The date and time of the reception of the tweet.", example = "23/05/2016 13:09")
 	public List<Map<String, String>> newTweetByYou() {
-		
+
 		Twitter twitter = this.getTwitterService();
-		
+
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
-		
+
 		long maxId = 0;
 		Paging paging = new Paging();
 		boolean loadMore = true;
 		try {
 			List<Status> statuses = twitter.getUserTimeline();
-			while(loadMore && !statuses.isEmpty()){
+			while (loadMore && !statuses.isEmpty()) {
 				for (Status status : statuses) {
 					Date createdAt = status.getCreatedAt();
 					if (this.getLastRun().after(createdAt)) {
 						loadMore = false;
 						break;
 					}
-					
+
 					Map<String, String> resEntry = new HashMap<String, String>();
 					this.addIngredients(status, resEntry);
 					result.add(resEntry);
-					
+
 					maxId = status.getId();
 				}
 				maxId--;
-				if(maxId < 0){
+				if (maxId < 0) {
 					break;
 				}
 				paging.setMaxId(maxId);
@@ -69,39 +74,38 @@ public class TwitterChannel extends AbstractChannel {
 
 		return result;
 	}
-	
-	
-	@TriggerTag(name = "New mention of you", description = "This Trigger fires every time you are @mentioned in a tweet.")
+
+	@TriggerTag(name = "New mention of you", description = "This trigger fires every time you are @mentioned in a tweet.")
 	@IngredientTag(name = "Text", description = "The actual tweet.", example = "I am eating something")
-	@IngredientTag(name = "UserName", description = "User name of tweeter.", example = "twitterMan")
+	@IngredientTag(name = "UserName", description = "Username of tweeter.", example = "twitterMan")
 	@IngredientTag(name = "CreatedAt", description = "The date and time of the reception of the tweet.", example = "23/05/2016 13:09")
-	public List<Map<String, String>> newMentionOfYou(){
-		
+	public List<Map<String, String>> newMentionOfYou() {
+
 		Twitter twitter = this.getTwitterService();
-		
+
 		List<Map<String, String>> result = new LinkedList<Map<String, String>>();
-		
+
 		long maxId = 0;
 		Paging paging = new Paging();
 		boolean loadMore = true;
 		try {
 			List<Status> statuses = twitter.getMentionsTimeline();
-			while(loadMore && !statuses.isEmpty()){
+			while (loadMore && !statuses.isEmpty()) {
 				for (Status status : statuses) {
 					Date createdAt = status.getCreatedAt();
 					if (this.getLastRun().after(createdAt)) {
 						loadMore = false;
 						break;
 					}
-					
+
 					Map<String, String> resEntry = new HashMap<String, String>();
 					this.addIngredients(status, resEntry);
 					result.add(resEntry);
-					
+
 					maxId = status.getId();
 				}
 				maxId--;
-				if(maxId < 0){
+				if (maxId < 0) {
 					break;
 				}
 				paging.setMaxId(maxId);
@@ -114,8 +118,9 @@ public class TwitterChannel extends AbstractChannel {
 		return result;
 	}
 
-	
-	// this will not post duplicates (twitter policy)
+	/**
+	 * This will not post duplicates because of Twitter policy.
+	 */
 	@ActionTag(name = "Post a tweet", description = "This action will post a tweet to your Twitter account.")
 	public void postTweet(
 			@FieldTag(name = "Text", description = "The actual tweet to post.", type = FieldType.TEXT) String text) {
@@ -124,12 +129,11 @@ public class TwitterChannel extends AbstractChannel {
 			Twitter twitter = this.getTwitterService();
 			twitter.updateStatus(text);
 		} catch (TwitterException e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 			return;
 		}
 	}
 
-	
 	/**
 	 * This method returns an instance of the Twitter service.
 	 */
@@ -141,7 +145,7 @@ public class TwitterChannel extends AbstractChannel {
 	private void addIngredients(Status status, Map<String, String> ingredients) {
 		DateFormat toFormat = new SimpleDateFormat(Validator.TIMESTAMP_FORMAT);
 		toFormat.setTimeZone(TimeZone.getTimeZone(this.getUser().getTimezone()));
-		
+
 		ingredients.put("Text", status.getText());
 		ingredients.put("UserName", status.getUser().getScreenName());
 		ingredients.put("CreatedAt", toFormat.format(status.getCreatedAt()));
