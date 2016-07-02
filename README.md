@@ -52,12 +52,12 @@ This file is required in order to interact with the APIs of Twitter.
 2. Create a new app
 3. On *Website* put the domain of your application
 4. On *Callback URL* put: https://[DOMAIN]/[PATH]/api/channels/twitter/authorize
-5. Under the *Keys and Access Tokens* tab you will find your *Consumer Key* and *Consumer Secret*, put them like this:
+5. Under the *Keys and Access Tokens* tab you will find your *Consumer Key* and *Consumer Secret*; put them in the file.
+
+It is a good idea to check *Enable Callback Locking* and to encrypt the contents of the file.
 
     oauth.consumerKey=
     oauth.consumerSecret=
-
-It is a good idea to check *Enable Callback Locking* and to encrypt the contents of this file.
 
 ### src/test/resources/application.properties
 This file is required only if you plan to run the tests related to the channels. You must enter the authorization tokens for Gmail, Google Calendar and Twitter: these tokens can be retrieved from the `channel_connector` table after having connected the channels.
