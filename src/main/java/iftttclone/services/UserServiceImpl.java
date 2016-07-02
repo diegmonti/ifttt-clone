@@ -48,19 +48,19 @@ public class UserServiceImpl implements UserService {
 		String timezone = user.getTimezone();
 
 		if (username == null || password == null || email == null || timezone == null) {
-			throw new InvalidRequestException("All fields must be present");
+			throw new InvalidRequestException("All fields must be present.");
 		}
 
 		if (userRepository.getUserByUsername(username) != null) {
-			throw new InvalidRequestException("The chosen username is already registered");
+			throw new InvalidRequestException("The chosen username is already registered.");
 		}
 
 		if (password.equals("")) {
-			throw new InvalidRequestException("The password cannot be empty");
+			throw new InvalidRequestException("The password cannot be empty.");
 		}
 
 		if (!Validator.isValidEmail(email)) {
-			throw new InvalidRequestException("Enter a valid email address");
+			throw new InvalidRequestException("Enter a valid email address.");
 		}
 
 		user.setPassword(passwordEncoder.encode(password));
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 			if (!password.equals("")) {
 				user.setPassword(passwordEncoder.encode(password));
 			} else {
-				throw new InvalidRequestException("The password cannot be empty");
+				throw new InvalidRequestException("The password cannot be empty.");
 			}
 		}
 
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 			if (Validator.isValidEmail(email)) {
 				user.setEmail(email);
 			} else {
-				throw new InvalidRequestException("Enter a valid email address");
+				throw new InvalidRequestException("Enter a valid email address.");
 			}
 		}
 

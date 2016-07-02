@@ -42,7 +42,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public List<PublicRecipe> getPublicRecipes(Integer page) {
 		if (page < 0) {
-			throw new InvalidRequestException("Page cannot be negative");
+			throw new InvalidRequestException("Page cannot be negative.");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAll(pageable);
@@ -53,7 +53,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public List<PublicRecipe> getPublicRecipesByTitle(String title, Integer page) {
 		if (page < 0) {
-			throw new InvalidRequestException("Page cannot be negative");
+			throw new InvalidRequestException("Page cannot be negative.");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAllByTitleContaining(title, pageable);
@@ -104,17 +104,17 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		if (publicRecipe.getTitle() == null || publicRecipe.getDescription() == null
 				|| publicRecipe.getTrigger() == null || publicRecipe.getPublicRecipeTriggerFields() == null
 				|| publicRecipe.getAction() == null || publicRecipe.getPublicRecipeActionFields() == null) {
-			throw new InvalidRequestException("A required field is missing or inconsistent");
+			throw new InvalidRequestException("A required field is missing or inconsistent.");
 		}
 
 		// Title is not empty
 		if (publicRecipe.getTitle().equals("")) {
-			throw new InvalidRequestException("The title cannot be empty");
+			throw new InvalidRequestException("The title cannot be empty.");
 		}
 
 		// Description is not empty
 		if (publicRecipe.getDescription().equals("")) {
-			throw new InvalidRequestException("The description cannot be empty");
+			throw new InvalidRequestException("The description cannot be empty.");
 		}
 
 		Collection<TriggerField> triggerFields = publicRecipe.getTrigger().getTriggerFields().values();
@@ -134,7 +134,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 		// Check trigger fields number
 		if (validTriggerFields != publicRecipe.getPublicRecipeTriggerFields().values().size()) {
-			throw new InvalidRequestException("The name of a trigger field is not correct");
+			throw new InvalidRequestException("The name of a trigger field is not correct.");
 		}
 
 		Collection<ActionField> actionsFields = publicRecipe.getAction().getActionFields().values();
@@ -154,7 +154,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 		// Check action fields number
 		if (validActionFields != publicRecipe.getPublicRecipeActionFields().values().size()) {
-			throw new InvalidRequestException("The name of an action field is not correct");
+			throw new InvalidRequestException("The name of an action field is not correct.");
 		}
 
 		// Set default values
@@ -177,18 +177,18 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		// Fields are not null
 		if (stub.getTitle() == null || stub.getDescription() == null || stub.getPublicRecipeTriggerFields() == null
 				|| stub.getPublicRecipeActionFields() == null) {
-			throw new InvalidRequestException("A required field is missing");
+			throw new InvalidRequestException("A required field is missing.");
 		}
 
 		// Title is not empty
 		if (stub.getTitle().equals("")) {
-			throw new InvalidRequestException("The title cannot be empty");
+			throw new InvalidRequestException("The title cannot be empty.");
 		}
 		publicRecipe.setTitle(stub.getTitle());
 
 		// Description is not empty
 		if (stub.getDescription().equals("")) {
-			throw new InvalidRequestException("The description cannot be empty");
+			throw new InvalidRequestException("The description cannot be empty.");
 		}
 		publicRecipe.setDescription(stub.getDescription());
 
@@ -210,7 +210,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 		// Check trigger fields number
 		if (validTriggerFields != stub.getPublicRecipeTriggerFields().values().size()) {
-			throw new InvalidRequestException("The name of a trigger field is not correct");
+			throw new InvalidRequestException("The name of a trigger field is not correct.");
 		}
 
 		publicRecipe.setPublicRecipeTriggerFields(stub.getPublicRecipeTriggerFields());
@@ -233,7 +233,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 
 		// Check action fields number
 		if (validActionFields != stub.getPublicRecipeActionFields().values().size()) {
-			throw new InvalidRequestException("The name of an action field is not correct");
+			throw new InvalidRequestException("The name of an action field is not correct.");
 		}
 
 		publicRecipe.setPublicRecipeActionFields(stub.getPublicRecipeActionFields());
@@ -266,7 +266,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			user.getFavoritePublicRecipes().add(publicRecipe);
 			userRepository.save(user);
 		} else {
-			throw new InvalidRequestException("The public recipe is already favorite");
+			throw new InvalidRequestException("The public recipe is already favorite.");
 		}
 	}
 
@@ -283,7 +283,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			user.getFavoritePublicRecipes().remove(publicRecipe);
 			userRepository.save(user);
 		} else {
-			throw new InvalidRequestException("The public recipe is already not favorite");
+			throw new InvalidRequestException("The public recipe is already not favorite.");
 		}
 	}
 
@@ -296,7 +296,7 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public List<PublicRecipe> getPublishedPublicRecipes(Integer page) {
 		if (page < 0) {
-			throw new InvalidRequestException("Page cannot be negative");
+			throw new InvalidRequestException("Page cannot be negative.");
 		}
 		User user = utils.getCurrentUser();
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);

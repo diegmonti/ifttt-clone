@@ -68,12 +68,12 @@ public class RecipeServiceImpl implements RecipeService {
 		// Fields are not null
 		if (recipe.getTitle() == null || recipe.getTrigger() == null || recipe.getRecipeTriggerFields() == null
 				|| recipe.getAction() == null || recipe.getRecipeActionFields() == null) {
-			throw new InvalidRequestException("A required field is missing or inconsistent");
+			throw new InvalidRequestException("A required field is missing or inconsistent.");
 		}
 
 		// Title is not empty
 		if (recipe.getTitle().equals("")) {
-			throw new InvalidRequestException("The title cannot be empty");
+			throw new InvalidRequestException("The title cannot be empty.");
 		}
 
 		Channel triggerChannel = recipe.getTrigger().getChannel();
@@ -81,7 +81,7 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check trigger channel connection
 		if (triggerChannel.isWithConnection()) {
 			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(triggerChannel, user) == null) {
-				throw new InvalidRequestException("The trigger channel must be connected");
+				throw new InvalidRequestException("The trigger channel must be connected.");
 			}
 		}
 
@@ -91,7 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
 		for (TriggerField triggerField : triggerFields) {
 			if (!recipe.getRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				throw new InvalidRequestException(
-						"The trigger field " + triggerField.getName().toLowerCase() + " is not present");
+						"The trigger field " + triggerField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeTriggerField recipeTriggerField = recipe.getRecipeTriggerFields().get(triggerField.getParameter());
 			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
@@ -102,7 +102,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check trigger fields number
 		if (triggerFields.size() != recipe.getRecipeTriggerFields().values().size()) {
-			throw new InvalidRequestException("Too many trigger fields");
+			throw new InvalidRequestException("Too many trigger fields.");
 		}
 
 		Channel actionChannel = recipe.getAction().getChannel();
@@ -110,7 +110,7 @@ public class RecipeServiceImpl implements RecipeService {
 		// Check action channel connection
 		if (actionChannel.isWithConnection()) {
 			if (channelConnectorRepository.getChannelConnectorByChannelAndUser(actionChannel, user) == null) {
-				throw new InvalidRequestException("The action channel must be connected");
+				throw new InvalidRequestException("The action channel must be connected.");
 			}
 		}
 
@@ -120,7 +120,7 @@ public class RecipeServiceImpl implements RecipeService {
 		for (ActionField actionField : actionsFields) {
 			if (!recipe.getRecipeActionFields().containsKey(actionField.getParameter())) {
 				throw new InvalidRequestException(
-						"The action field " + actionField.getName().toLowerCase() + " is not present");
+						"The action field " + actionField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeActionField recipeActionField = recipe.getRecipeActionFields().get(actionField.getParameter());
 			Validator.validate(recipeActionField.getValue(), actionField.getType(),
@@ -131,7 +131,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check action fields number
 		if (actionsFields.size() != recipe.getRecipeActionFields().values().size()) {
-			throw new InvalidRequestException("Too many action fields");
+			throw new InvalidRequestException("Too many action fields.");
 		}
 
 		// Set default values
@@ -160,12 +160,12 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Fields are not null
 		if (stub.getTitle() == null || stub.getRecipeTriggerFields() == null || stub.getRecipeActionFields() == null) {
-			throw new InvalidRequestException("A required field is missing");
+			throw new InvalidRequestException("A required field is missing.");
 		}
 
 		// Title is not empty
 		if (stub.getTitle().equals("")) {
-			throw new InvalidRequestException("The title cannot be empty");
+			throw new InvalidRequestException("The title cannot be empty.");
 		}
 		recipe.setTitle(stub.getTitle());
 
@@ -176,7 +176,7 @@ public class RecipeServiceImpl implements RecipeService {
 		for (TriggerField triggerField : trigger.getTriggerFields().values()) {
 			if (!stub.getRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				throw new InvalidRequestException(
-						"The trigger field " + triggerField.getName().toLowerCase() + " is not present");
+						"The trigger field " + triggerField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeTriggerField recipeTriggerField = stub.getRecipeTriggerFields().get(triggerField.getParameter());
 			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
@@ -187,7 +187,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check trigger fields number
 		if (trigger.getTriggerFields().values().size() != stub.getRecipeTriggerFields().values().size()) {
-			throw new InvalidRequestException("Too many trigger fields");
+			throw new InvalidRequestException("Too many trigger fields.");
 		}
 
 		recipe.setRecipeTriggerFields(stub.getRecipeTriggerFields());
@@ -199,7 +199,7 @@ public class RecipeServiceImpl implements RecipeService {
 		for (ActionField actionField : action.getActionFields().values()) {
 			if (!stub.getRecipeActionFields().containsKey(actionField.getParameter())) {
 				throw new InvalidRequestException(
-						"The action field " + actionField.getName().toLowerCase() + " is not present");
+						"The action field " + actionField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeActionField recipeActionField = stub.getRecipeActionFields().get(actionField.getParameter());
 			Validator.validate(recipeActionField.getValue(), actionField.getType(),
@@ -210,7 +210,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check action fields number
 		if (action.getActionFields().values().size() != stub.getRecipeActionFields().values().size()) {
-			throw new InvalidRequestException("Too many action fields");
+			throw new InvalidRequestException("Too many action fields.");
 		}
 
 		recipe.setRecipeActionFields(stub.getRecipeActionFields());
@@ -245,7 +245,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check if it is already active
 		if (recipe.isActive()) {
-			throw new InvalidRequestException("The recipe is already active");
+			throw new InvalidRequestException("The recipe is already active.");
 		}
 
 		// Check if the trigger channel is connected
@@ -287,7 +287,7 @@ public class RecipeServiceImpl implements RecipeService {
 
 		// Check if it is already not active
 		if (!recipe.isActive()) {
-			throw new InvalidRequestException("The recipe is already not active");
+			throw new InvalidRequestException("The recipe is already not active.");
 		}
 
 		// Add log entry
@@ -306,7 +306,7 @@ public class RecipeServiceImpl implements RecipeService {
 			throw new ForbiddenException();
 		}
 		if (page < 0) {
-			throw new InvalidRequestException("Page cannot be negative");
+			throw new InvalidRequestException("Page cannot be negative.");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		return recipeLogRepository.getRecipeLogByRecipeOrderByTimestampDesc(recipe, pageable);
