@@ -140,6 +140,9 @@ public class GmailChannel extends AbstractChannel {
 
 	/**
 	 * This method returns an instance of the Gmail service.
+	 * @return gmail service
+	 * @throws GeneralSecurityException the secrets are invalid
+	 * @throws IOException the file is not available
 	 */
 	private Gmail getGmailService() throws GeneralSecurityException, IOException {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();

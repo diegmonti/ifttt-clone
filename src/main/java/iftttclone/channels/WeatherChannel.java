@@ -210,6 +210,8 @@ public class WeatherChannel extends AbstractChannel {
 
 	/**
 	 * This method returns true if the location is recognized by the service.
+	 * @param location a location
+	 * @return if the location is valid
 	 */
 	public static boolean isValidLocation(String location) {
 		String query = "select item.condition.temp from weather.forecast where woeid in (select woeid from geo.places(1) where text=\""
@@ -226,6 +228,8 @@ public class WeatherChannel extends AbstractChannel {
 
 	/**
 	 * This method performs the connection to the service.
+	 * @param query a yql query
+	 * @return the channel node inside the result 
 	 */
 	private static JsonNode doQuery(String query) {
 		try {

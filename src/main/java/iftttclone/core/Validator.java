@@ -38,6 +38,9 @@ public class Validator {
 	 * This method is in charge of validating the fields of a recipe, according
 	 * to the specified FieldType. If the validation is not successful an
 	 * exception is thrown.
+	 * @param value the string to validate
+	 * @param type the type of the string
+	 * @param field the name of the field
 	 */
 	public static void validate(String value, FieldType type, String field) {
 		if (value == null) {
@@ -122,6 +125,8 @@ public class Validator {
 
 	/**
 	 * This method checks if a string is a formally correct email address.
+	 * @param email email address
+	 * @return if it is valid or not
 	 */
 	public static boolean isValidEmail(String email) {
 		String pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";

@@ -148,6 +148,7 @@ public class TimezoneManager {
 
 	/**
 	 * This method returns a set of all the display names available.
+	 * @return nameSet
 	 */
 	public Set<String> getTimezones() {
 		return nameSet;
@@ -155,6 +156,8 @@ public class TimezoneManager {
 
 	/**
 	 * This method returns a display name given an identifier.
+	 * @param id identifier
+	 * @return name
 	 */
 	public String getNameFromId(String id) {
 		if (!idMap.containsKey(id)) {
@@ -165,6 +168,8 @@ public class TimezoneManager {
 
 	/**
 	 * This method returns an identifier given a display name.
+	 * @param name display name
+	 * @return id
 	 */
 	public String getIdFromName(String name) {
 		if (!nameMap.containsKey(name)) {

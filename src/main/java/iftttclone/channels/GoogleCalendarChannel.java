@@ -228,6 +228,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 
 	/**
 	 * This method returns an instance of the Calendar service.
+	 * @return calendar service
+	 * @throws GeneralSecurityException the secrets are invalid
+	 * @throws IOException the file is not available
 	 */
 	private Calendar getCalendarService() throws GeneralSecurityException, IOException {
 		JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -244,6 +247,9 @@ public class GoogleCalendarChannel extends AbstractChannel {
 	/**
 	 * This method returns true if the keyword matches the event or if the
 	 * keyword is empty.
+	 * @param keyword the keyword
+	 * @param event the event to search in
+	 * @return if the keyword is present
 	 */
 	private boolean filterEvent(String keyword, Event event) {
 		if (keyword.isEmpty()) {

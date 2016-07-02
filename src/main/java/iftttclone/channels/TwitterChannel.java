@@ -121,6 +121,7 @@ public class TwitterChannel extends AbstractChannel {
 
 	/**
 	 * This will not post duplicates because of Twitter policy.
+	 * @param text the text of the tweet
 	 */
 	@ActionTag(name = "Post a tweet", description = "This action will post a tweet to your Twitter account.")
 	public void postTweet(
@@ -136,6 +137,7 @@ public class TwitterChannel extends AbstractChannel {
 
 	/**
 	 * This method returns an instance of the Twitter service.
+	 * @return twitter service
 	 */
 	private Twitter getTwitterService() {
 		return new TwitterFactory().getInstance(

@@ -18,6 +18,8 @@ public class Utils {
 
 	/**
 	 * This method, given a request, returns the full URL of the request.
+	 * @param req HTTP request
+	 * @return URL
 	 */
 	public String getURL(HttpServletRequest req) {
 		String scheme = req.getScheme();
@@ -40,6 +42,7 @@ public class Utils {
 	/**
 	 * This method returns the current authenticated user or null if the user is
 	 * anonymous.
+	 * @return the current user or null
 	 */
 	public User getCurrentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
