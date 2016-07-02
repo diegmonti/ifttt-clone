@@ -14,8 +14,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-/*import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequestFactory;*/
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -28,7 +26,6 @@ import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
-//import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeRepository;
@@ -112,7 +109,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				user);
 
 		if (channelConnector == null) {
-			//throw new ForbiddenException();
 			return;
 		}
 		
@@ -122,7 +118,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		}
 
 		if (!channelConnector.getToken().equals(token)) {
-			//throw new ForbiddenException();
 			return;
 		}
 
@@ -176,17 +171,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		// Get channel connector
 		ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
 				user);
-
-		/*HttpRequestFactory factory = httpTransport.createRequestFactory();
-		GenericUrl url = new GenericUrl(
-				"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getRefreshToken());
-				//"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getToken());
-
-		try {
-			factory.buildGetRequest(url).executeAsync();
-		} catch (IOException e) {
-
-		}*/
 
 		// This could leave us without refreshToken (and the user will not be
 		// asked when connecting again since it is already connected)

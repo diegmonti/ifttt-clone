@@ -8,7 +8,6 @@ import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
-//import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeRepository;
@@ -84,7 +83,6 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 				user);
 
 		if (channelConnector == null) {
-			//throw new ForbiddenException();
 			return;
 		}
 		
@@ -94,7 +92,6 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 		}
 
 		if (!channelConnector.getToken().equals(token)) {
-			//throw new ForbiddenException();
 			return;
 		}
 

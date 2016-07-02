@@ -34,12 +34,14 @@
 <br /> <br />
 
 <div class="row" data-ng-repeat='channel in user.channelConnectors'>
-  <div class="col-lg-8">
-    <p>
-      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> {{channel.channel}}: {{channel.account}} / {{channel.permits}}
-    </p>
-  </div>
-  <div class="col-lg-4">
-    <a class="btn btn-danger" data-ng-click='controller.deactivateChannel(channel.channel)'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+	<div data-ng-if='channel.connectionTime'>
+	  <div class="col-lg-8">
+	    <p>
+	      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> {{channel.account}} / {{channel.permits}}
+	    </p>
+	  </div>
+	  <div class="col-lg-4">
+	    <a class="btn btn-danger" data-ng-click='controller.deactivateChannel(channel.channel)'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+	  </div>
   </div>
 </div>
