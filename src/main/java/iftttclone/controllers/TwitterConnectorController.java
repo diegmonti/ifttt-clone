@@ -29,7 +29,7 @@ public class TwitterConnectorController {
 
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
 	public ModelAndView callback(HttpServletRequest req) {
-		twitterConnectorService.validateConnection("", req.getParameter("oauth_verifier"), req.getParameter("oauth_token"));
+		twitterConnectorService.validateConnection("", req.getParameter("oauth_verifier"), req.getParameter("oauth_token"), req.getParameter("denied"));
 		return new ModelAndView("redirect:/#/channel/twitter");
 	}
 	

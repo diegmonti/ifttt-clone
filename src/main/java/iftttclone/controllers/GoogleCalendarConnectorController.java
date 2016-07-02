@@ -29,7 +29,7 @@ public class GoogleCalendarConnectorController {
 	@RequestMapping(value = "/authorize", method = RequestMethod.GET)
 	public ModelAndView callback(HttpServletRequest req) {
 		googleCalendarConnectorService.validateConnection(utils.getURL(req), req.getParameter("code"),
-				req.getParameter("state"));
+				req.getParameter("state"), req.getParameter("error"));
 		return new ModelAndView("redirect:/#/channel/google_calendar");
 	}
 

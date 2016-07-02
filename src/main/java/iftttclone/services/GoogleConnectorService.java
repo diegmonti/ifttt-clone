@@ -14,8 +14,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequestFactory;
+/*import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequestFactory;*/
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -28,7 +28,7 @@ import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
-import iftttclone.exceptions.ForbiddenException;
+//import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeRepository;
@@ -91,7 +91,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		channelConnector.setToken(uuid);
 
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets,
-				scopes).setAccessType("offline").build();
+				scopes).setAccessType("offline").setApprovalPrompt("force").build();
 		String url = flow.newAuthorizationUrl().setRedirectUri(path + callback).setState(uuid).build();
 
 		channelConnectorRepository.save(channelConnector);
@@ -100,7 +100,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	}
 
 	@Override
-	public void validateConnection(String path, String code, String token) {
+	public void validateConnection(String path, String code, String token, String denied) {
 		// Get the current user
 		User user = utils.getCurrentUser();
 
@@ -112,11 +112,18 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				user);
 
 		if (channelConnector == null) {
-			throw new ForbiddenException();
+			//throw new ForbiddenException();
+			return;
+		}
+		
+		if(denied != null){
+			channelConnectorRepository.delete(channelConnector);	// clean the db
+			return;
 		}
 
 		if (!channelConnector.getToken().equals(token)) {
-			throw new ForbiddenException();
+			//throw new ForbiddenException();
+			return;
 		}
 
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets,
@@ -170,15 +177,16 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		ChannelConnector channelConnector = channelConnectorRepository.getChannelConnectorByChannelAndUser(channel,
 				user);
 
-		HttpRequestFactory factory = httpTransport.createRequestFactory();
+		/*HttpRequestFactory factory = httpTransport.createRequestFactory();
 		GenericUrl url = new GenericUrl(
 				"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getRefreshToken());
+				//"https://accounts.google.com/o/oauth2/revoke?token=" + channelConnector.getToken());
 
 		try {
 			factory.buildGetRequest(url).executeAsync();
 		} catch (IOException e) {
 
-		}
+		}*/
 
 		// This could leave us without refreshToken (and the user will not be
 		// asked when connecting again since it is already connected)

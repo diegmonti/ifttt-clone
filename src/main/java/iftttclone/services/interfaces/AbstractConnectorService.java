@@ -11,7 +11,7 @@ public abstract interface AbstractConnectorService {
 
 	@Transactional
 	@PreAuthorize("isAuthenticated()")
-	public void validateConnection(String path, String code, String token);
+	public void validateConnection(String path, String code, String token, String denied);
 
 	@Transactional
 	@PreAuthorize("isAuthenticated()")

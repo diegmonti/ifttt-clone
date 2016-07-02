@@ -8,7 +8,7 @@ import iftttclone.core.Utils;
 import iftttclone.entities.Channel;
 import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
-import iftttclone.exceptions.ForbiddenException;
+//import iftttclone.exceptions.ForbiddenException;
 import iftttclone.repositories.ChannelConnectorRepository;
 import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.RecipeRepository;
@@ -72,7 +72,7 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 	}
 
 	@Override
-	public void validateConnection(String path, String code, String token) {
+	public void validateConnection(String path, String code, String token, String denied) {
 		// Get the current user
 		User user = utils.getCurrentUser();
 
@@ -84,11 +84,18 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 				user);
 
 		if (channelConnector == null) {
-			throw new ForbiddenException();
+			//throw new ForbiddenException();
+			return;
+		}
+		
+		if(denied != null){
+			channelConnectorRepository.delete(channelConnector);	// clean the db, not done if user decides to not go back but it is not important anyway
+			return;
 		}
 
 		if (!channelConnector.getToken().equals(token)) {
-			throw new ForbiddenException();
+			//throw new ForbiddenException();
+			return;
 		}
 
 		Twitter twitter = new TwitterFactory().getInstance();
