@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import iftttclone.core.TimezoneManager;
 import iftttclone.core.Utils;
 import iftttclone.core.Validator;
+import iftttclone.entities.ChannelConnector;
 import iftttclone.entities.User;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.repositories.UserRepository;
@@ -29,7 +30,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUser() {
-		return utils.getCurrentUser();
+		User user = utils.getCurrentUser();
+		if(user != null){
+			Set<ChannelConnector> channelConnectors = user.getChannelConnectors();
+			for(ChannelConnector channelConnector : channelConnectors){
+				channelConnector.setPermits(channelConnector.getChannel().getPermits());
+			}
+		}
+		return user;
 	}
 
 	@Override

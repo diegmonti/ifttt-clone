@@ -97,15 +97,18 @@ public class TwitterConnectorServiceImpl implements TwitterConnectorService {
 		try {
 			aToken = twitter.getOAuthAccessToken(
 					new RequestToken(channelConnector.getToken(), channelConnector.getRefreshToken()), code);
+			
+			twitter.setOAuthAccessToken(aToken);
+			
+			channelConnector.setToken(aToken.getToken());
+			channelConnector.setRefreshToken(aToken.getTokenSecret());
+			channelConnector.setConnectionTime(System.currentTimeMillis());
+			channelConnector.setAccount(twitter.getScreenName());
+
+			channelConnectorRepository.save(channelConnector);
 		} catch (TwitterException e) {
-			return;
+			
 		}
-
-		channelConnector.setToken(aToken.getToken());
-		channelConnector.setRefreshToken(aToken.getTokenSecret());
-		channelConnector.setConnectionTime(System.currentTimeMillis());
-
-		channelConnectorRepository.save(channelConnector);
 
 	}
 

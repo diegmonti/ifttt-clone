@@ -88,6 +88,7 @@ public class DatabasePopulator {
 		channel.setName(channelTag.name());
 		channel.setDescription(channelTag.description());
 		channel.setWithConnection(channelTag.withConnection());
+		channel.setPermits(channelTag.permits());
 
 		channels.save(channel);
 

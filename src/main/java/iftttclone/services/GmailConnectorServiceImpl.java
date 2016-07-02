@@ -2,6 +2,8 @@ package iftttclone.services;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class GmailConnectorServiceImpl extends GoogleConnectorService implements
 	private final static String callback = "/api/channels/gmail/authorize";
 
 	public GmailConnectorServiceImpl() throws GeneralSecurityException, IOException {
-		super(GmailChannel.class.getName(), GmailScopes.MAIL_GOOGLE_COM, callback);
+		super(GmailChannel.class.getName(), new LinkedList<String>(Arrays.asList(GmailScopes.GMAIL_READONLY, GmailScopes.GMAIL_SEND)), callback);
 	}
 
 }

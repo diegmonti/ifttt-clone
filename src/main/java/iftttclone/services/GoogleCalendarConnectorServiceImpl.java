@@ -2,6 +2,8 @@ package iftttclone.services;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.springframework.stereotype.Component;
 
@@ -15,7 +17,7 @@ public class GoogleCalendarConnectorServiceImpl extends GoogleConnectorService i
 	private final static String callback = "/api/channels/google_calendar/authorize";
 
 	public GoogleCalendarConnectorServiceImpl() throws GeneralSecurityException, IOException {
-		super(GoogleCalendarChannel.class.getName(), CalendarScopes.CALENDAR, callback);
+		super(GoogleCalendarChannel.class.getName(), new LinkedList<String>(Arrays.asList(CalendarScopes.CALENDAR)), callback);
 	}
 
 }

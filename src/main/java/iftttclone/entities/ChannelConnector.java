@@ -8,11 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import iftttclone.json.ChannelSerializer;
+import iftttclone.json.JsonViews;
 import iftttclone.json.TimestampSerializer;
 
 @Entity
@@ -44,6 +49,14 @@ public class ChannelConnector {
 	@JsonSerialize(using = TimestampSerializer.class)
 	@Column(name = "connection_time")
 	private Long connectionTime;
+	
+	@JsonProperty(access = Access.READ_ONLY)
+	@JsonView(JsonViews.Summary.class)
+	private String account;
+	
+	@JsonView(JsonViews.Summary.class)
+	@Transient
+	private String permits;
 
 	public Long getId() {
 		return id;
@@ -91,6 +104,22 @@ public class ChannelConnector {
 
 	public void setConnectionTime(Long connectionTime) {
 		this.connectionTime = connectionTime;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
+	}
+
+	public String getPermits() {
+		return permits;
+	}
+
+	public void setPermits(String permits) {
+		this.permits = permits;
 	}
 
 }

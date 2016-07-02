@@ -12,7 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import iftttclone.json.ActionMapSerializer;
@@ -59,6 +61,10 @@ public class Channel {
 	@OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
 	@MapKey(name = "method")
 	private Map<String, Action> actions;
+	
+	@JsonProperty(access = Access.READ_ONLY)
+	@JsonView(JsonViews.Summary.class)
+	private String permits;
 
 	public String getId() {
 		return id;
@@ -122,6 +128,14 @@ public class Channel {
 
 	public void setActions(Map<String, Action> actions) {
 		this.actions = actions;
+	}
+
+	public String getPermits() {
+		return permits;
+	}
+
+	public void setPermits(String permits) {
+		this.permits = permits;
 	}
 
 }

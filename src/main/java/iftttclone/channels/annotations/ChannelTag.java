@@ -13,4 +13,6 @@ public @interface ChannelTag {
 	String description();
 	
 	boolean withConnection();
+	
+	String permits() default "N/A";
 }

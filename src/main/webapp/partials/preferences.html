@@ -36,7 +36,7 @@
 <div class="row" data-ng-repeat='channel in user.channelConnectors'>
   <div class="col-lg-8">
     <p>
-      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> authorizations for {{channel.channel}}: ...
+      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> {{channel.channel}}: {{channel.account}} / {{channel.permits}}
     </p>
   </div>
   <div class="col-lg-4">
