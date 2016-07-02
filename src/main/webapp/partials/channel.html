@@ -1,12 +1,9 @@
-<div class="alert alert-danger" data-ng-show="error">
-    Il canale selezionato non esiste
-</div>
-
+<div class="alert alert-danger" data-ng-show="error">The selected channel does not exist.</div>
 
 <div class="row">
-   <!-- // here i put the channel discription-->
+   <!-- here i put the channel description -->
   <div class="col-lg-5 col-lg-offset-1">
-    <img src={{channel.link}} width="220px"/>
+    <img src={{channel.link}} alt={{channel.title}}/>
   </div>
 
   <div class="col-lg-5">
@@ -22,7 +19,7 @@
       <form method="post" action={{channel.activate}} data-ng-show="toConnect">
         <input type ='submit' class="btn btn-primary" value = 'Connect'/>
       </form>
-      <a data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="">Already connected</a>
+      <a data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="">Connected</a>
     </div>
 
   </div>
@@ -32,17 +29,14 @@
 <br /> <hr /> <br />
 
 <div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in recipes" data-ng-click="controller.importRecipe(recipe.id)">
-    <div class="card-block">
-      <div class="card-title" style="align:center">
-        <p style="vertical-align:middle;font-weight:bold;font-size:2em">
-          if <img src={{recipe.triggerChannel}} width="80px" /> then <img src={{recipe.actionChannel}} width="80px" />
-        </p>
-      </div>
-      <div class="card-text row">
-        <div class="col-lg-10 col-lg-offset-1">
-          {{recipe.title}}
-        </div>
-      </div>
-    </div>
+  <div class="card-block">
+    <h2 class="card-title">{{recipe.title}}</h2>
+    <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+      if <img data-ng-src={{recipe.triggerChannel}} width="80px"/> then <img data-ng-src={{recipe.actionChannel}} width="80px"/>
+    </p>
+    <p class="card-text">
+      <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
+    </p>
+  </div>
 </div>
 <!-- Here it goes the list of public recipes which use that channel-->
