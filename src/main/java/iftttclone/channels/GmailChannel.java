@@ -47,7 +47,7 @@ import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldType;
 import iftttclone.exceptions.SchedulerException;
 
-@ChannelTag(name = "Gmail", description = "Gmail is a free email service provided by Google.", withConnection = true)
+@ChannelTag(name = "Gmail", description = "Gmail is a free email service provided by Google.", withConnection = true, permits = "Read and send messages")
 public class GmailChannel extends AbstractChannel {
 
 	@TriggerTag(name = "New email from with subject", description = "This trigger fires when you recive an email from someone with a specific subject.")

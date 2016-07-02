@@ -37,7 +37,7 @@ This application requires a relational database. The dependencies declared in th
 This file is required in order to interact with the APIs of Google for managing Gmail and Google Calendar.
 
 1. Connect to the [Google APIs Console](https://console.developers.google.com)
-2. Enable the Gmail and Google Calendar APIs
+2. Enable the Gmail, Google Calendar and Google Plus APIs (the last is only to get the email of the user in any of the Google APIs)
 3. Add a new project and then create an OAuth client ID for a web application
 4. Enter as *Authorized JavaScript origins* the domain of your application
 5. Enter as *Authorized redirect URIs*:

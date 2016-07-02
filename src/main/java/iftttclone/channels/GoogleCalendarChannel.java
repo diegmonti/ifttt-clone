@@ -36,7 +36,7 @@ import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldType;
 import iftttclone.exceptions.SchedulerException;
 
-@ChannelTag(name = "Google Calendar", description = "Google Calendar is a time-management web application created by Google.", withConnection = true)
+@ChannelTag(name = "Google Calendar", description = "Google Calendar is a time-management web application created by Google.", withConnection = true, permits = "Read and write the primary calendar")
 public class GoogleCalendarChannel extends AbstractChannel {
 
 	@TriggerTag(name = "Event starts", description = "This trigger fires within 15 minutes of the starting time of an event. It is optionally possible to filter the events by setting a keyword or phrase.")
