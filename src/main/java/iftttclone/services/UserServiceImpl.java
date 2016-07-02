@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUser() {
-		//return utils.getCurrentUser();
 		User user = utils.getCurrentUser();
 		if(user != null){
 			Set<ChannelConnector> channelConnectors = user.getChannelConnectors();

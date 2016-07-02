@@ -3,9 +3,7 @@ package iftttclone.services;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-//import java.util.ArrayList;
 import java.util.Collection;
-//import java.util.Collections;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,6 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-/*import com.google.api.services.gmail.Gmail;
-import com.google.api.services.gmail.model.Profile;*/
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.PlusScopes;
 import com.google.api.services.plus.model.Person;
@@ -53,7 +49,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 	private HttpTransport httpTransport;
 
 	private String channelPath;
-	//private String scope;
 	private Collection<String> scopes;
 	private String callback;
 
@@ -65,8 +60,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		this.channelPath = channelPath;
-		//this.scope = scope;
-		//((ArrayList<String>)scopes).add(PlusScopes.USERINFO_EMAIL);	// deprecated but maintained
 		scopes.add(PlusScopes.USERINFO_EMAIL);	// deprecated but maintained
 		this.scopes = scopes;
 		this.callback = callback;
@@ -99,8 +92,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets,
 				scopes).setAccessType("offline").build();
-		/*GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, jsonFactory, secrets,
-				Collections.singleton(scope)).setAccessType("offline").build();*/
 		String url = flow.newAuthorizationUrl().setRedirectUri(path + callback).setState(uuid).build();
 
 		channelConnectorRepository.save(channelConnector);
@@ -143,11 +134,6 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 			Credential credentials = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory)
 					.setClientSecrets(secrets).build().setAccessToken(tokenResponse.getAccessToken())
 					.setRefreshToken(tokenResponse.getRefreshToken());
-			/*Gmail gmail = new Gmail.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
-			Profile profile = gmail.users().getProfile("me").execute();
-			if (profile.getEmailAddress() == null) {
-				return;
-			}*/
 			Plus plus = new Plus.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
 			Person person = plus.people().get("me").execute();
 			String account = null;
@@ -163,12 +149,11 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 			channelConnector.setToken(tokenResponse.getAccessToken());
 			channelConnector.setRefreshToken(tokenResponse.getRefreshToken());
 			channelConnector.setConnectionTime(System.currentTimeMillis());
-			//channelConnector.setAccount(profile.getEmailAddress());
 			channelConnector.setAccount(account);
 
 			channelConnectorRepository.save(channelConnector);
 		} catch (IOException e) {
-			//e.printStackTrace();
+			
 		}
 
 	}
