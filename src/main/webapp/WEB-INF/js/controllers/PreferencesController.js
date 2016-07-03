@@ -1,5 +1,5 @@
 iftttclone.controller('PreferencesController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
-    function ($scope, $rootScope, $http, $location, $routeParams) {
+    function ($scope, $rootScope, $http) {
         $scope.user = {};
         $scope.timezones = [];
         var self = this;

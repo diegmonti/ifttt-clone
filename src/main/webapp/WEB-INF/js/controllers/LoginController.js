@@ -9,8 +9,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
 
         var authenticate = function (credentials, callback) {
             var headers = credentials ? {
-                authorization: "Basic "
-                + btoa(credentials.username + ":" + credentials.password)
+                authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
             } : {};
 
             $http.get('api/user', {headers: headers}).then(function (response) {
@@ -45,6 +44,6 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
                 $rootScope.authenticated = false;
                 $location.path("/");
             });
-        }
+        };
 
     }]);

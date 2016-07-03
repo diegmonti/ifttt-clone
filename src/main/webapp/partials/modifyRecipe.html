@@ -3,7 +3,7 @@
 </div>
 
 <div class="row">
-    <input  class="form-control form-control-lg col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
+    <input  class="form-control form-control-lg col-lg-6" type="text" value={{recipe.title}} data-ng-model="recipe.title">
 </div>
 
 <br/> <hr /> <br />
@@ -51,9 +51,7 @@
 
 <div class="row">
   <div class="col-lg-offset-5">
-    <button class="btn btn-primary" data-ng-click="controller.updateRecipe()">
-      Modifica
-    </button>
+    <button class="btn btn-primary" data-ng-click="controller.updateRecipe()">Update</button>
   </div>
 </div>
 
@@ -69,7 +67,7 @@
       </div>
       <div class="modal-body row">
         <select class="col-lg-offset-1" data-ng-model="selectedIngredient">
-          <option data-ng-repeat='ingredient in recipe.trigger.ingredients' value={{ingredient.name}}>{{ingredient.name}}</option>
+          <option data-ng-repeat="ingredient in recipe.trigger.ingredients" value={{ingredient.name}}>{{ingredient.name}}</option>
         </select>
       </div>
       <div class="modal-footer">

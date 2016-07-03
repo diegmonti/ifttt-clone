@@ -18,11 +18,11 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
             if (response.data.connectionTime === null && response.data.withConnection === true) {
                 $scope.toConnect = true;
                 $scope.channel.activate = 'api/channels/' + $routeParams.channelID + '/activate';
-            }
-            else
+            } else {
                 $scope.toConnect = false;
+            }
 
-            // now i need to download all the publicrecipes that are contained in this channel
+            // now i need to download all the public recipes that are contained in this channel
             return $http({
                 method: 'GET',
                 url: 'api/publicrecipes'
@@ -34,11 +34,11 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
     )
         .then(function successCallback(response) {
             response.data.forEach(function (element) {
-                if (element.trigger.channel == $scope.channel.id || element.action.channel == $scope.channel.id) {
+                if (element.trigger.channel === $scope.channel.id || element.action.channel === $scope.channel.id) {
                     element.triggerChannel = 'img/' + element.trigger.channel + '.png';
                     element.actionChannel = 'img/' + element.action.channel + '.png';
                     $scope.recipes.push(element);
                 }
-            })
+            });
         });
 }]);

@@ -1,23 +1,27 @@
 var iftttclone = angular.module('iftttcloneApp', ['ngRoute']);
 
 iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
-    $routeProvider.when('/', {
-        templateUrl: 'partials/channels.html',
-        controller: 'ChannelsController',
-        controllerAs: 'controller'
-    }).when('/login', {
-        templateUrl: 'partials/login.html',
-        controller: 'LoginController',
-        controllerAs: 'controller'
-    }).when('/login/:registered', {
-        templateUrl: 'partials/login.html',
-        controller: 'LoginController',
-        controllerAs: 'controller'
-    }).when('/signIn', {
-        templateUrl: 'partials/signIn.html',
-        controller: 'SignInController',
-        controllerAs: 'controller'
-    })
+    $routeProvider
+        .when('/', {
+            templateUrl: 'partials/channels.html',
+            controller: 'ChannelsController',
+            controllerAs: 'controller'
+        })
+        .when('/login', {
+            templateUrl: 'partials/login.html',
+            controller: 'LoginController',
+            controllerAs: 'controller'
+        })
+        .when('/login/:registered', {
+            templateUrl: 'partials/login.html',
+            controller: 'LoginController',
+            controllerAs: 'controller'
+        })
+        .when('/signIn', {
+            templateUrl: 'partials/signIn.html',
+            controller: 'SignInController',
+            controllerAs: 'controller'
+        })
         .when('/channel/:channelID', {
             templateUrl: 'partials/channel.html',
             controller: 'ChannelController',
@@ -88,7 +92,7 @@ iftttclone.factory('fieldInputFactory', function () {
             });
         } else if (type === 'INTEGER') {
             input = $('<input>').attr('type', 'number');
-            // now i need to transform the value in the corrispondent number
+            // now i need to transform the value in the correspondent number
             field.value = Number(field.value);
         } else if (type === 'TIME') {
             input = $('<input>').attr({
@@ -113,6 +117,6 @@ iftttclone.factory('fieldInputFactory', function () {
         });
 
         return input;
-    }
+    };
     return factory;
 });

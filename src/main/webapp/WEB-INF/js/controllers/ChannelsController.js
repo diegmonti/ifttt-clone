@@ -6,13 +6,14 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
             method: 'GET',
             url: 'api/channels'
         }).then(function successCallback(response) {
+            var i;
 
-            for (var i = 0; i < (response.data.length / 4) + 1; i++) {
+            for (i = 0; i < (response.data.length / 4) + 1; i++) {
                 $scope.channels[i] = [];
             }
 
             for (i = 0; i < response.data.length; i++) {
-                $scope.channels[Math.floor(i / 3)][i % 3] = {
+                $scope.channels[Math.floor(i / 2)][i % 2] = {
                     id: response.data[i].id,
                     title: response.data[i].name,
                     description: response.data[i].description,
@@ -25,9 +26,8 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
 
         self.selectChannel = function (channelID) {
             console.log("selectChannel" + channelID);
-
             $location.path('/channel/' + channelID);
-        }
+        };
         $scope.connectToService = function (postUrl) {
             console.log(postUrl);
             $http({
@@ -38,6 +38,6 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
             }, function errorCallback(response) {
                 console.log(response);
             });
-        }
+        };
     }]
-);
+    );

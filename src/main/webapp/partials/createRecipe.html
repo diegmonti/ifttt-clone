@@ -4,31 +4,29 @@
 
 <!-- title -->
 <div class="row">
-    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title" />
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Title" data-ng-model="recipe.title" />
 </div>
 
-<!-- IF TTT LINKS AND IMAGES-->
+<!-- IFTTT LINKS AND IMAGES-->
 <div class="row">
-  <div class='col-lg-4 col-lg-offset-4'>
+  <div class="col-lg-4 col-lg-offset-4">
     <span>if</span>
     <span id="triggerDiv">
-       <button data-ng-click="controller.selectTriggerClicked()" class="btn btn-link"> This </button>
+       <button data-ng-click="controller.selectTriggerClicked()" class="btn btn-link">this</button>
     </span>
     <span> then </span>
-    <span id="actionDiv">
-      that
-    </span>
+    <span id="actionDiv">that</span>
   </div>
 </div>
 
 <!-- Trigger channels -->
-<div id="channlelTriggersDiv" class="container">
+<div id="channelTriggersDiv" class="container">
   <ol class="breadcrumb" data-ng-show="triggerChannels.length != 0">
-    <li class="active">Trigger Channes</li>
+    <li class="active">Trigger channels</li>
   </ol>
   <div>
-    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id)">
-      <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="110px">
+    <div class="card col-lg-3 col-lg-offset-2" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id)">
+      <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="100%">
       <div class="card-block">
         <h4 class="card-title">{{channel.title}}</h4>
       </div>
@@ -50,7 +48,7 @@
   </div>
 
   <div class="alert alert-warning" role="alert" data-ng-show='triggerChannelNotConnected'>
-    You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.trigger.channel}}" class="alert-link">here</a>
+    You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.trigger.channel}}" class="alert-link" target="_blank">here</a>.
   </div>
 </div>
 
@@ -64,13 +62,13 @@
 
 <br />
 
-<div id="channlelActionsDiv" class="container">
+<div id="channelActionsDiv" class="container">
   <ol class="breadcrumb" data-ng-show="actionChannels.length != 0">
     <li class="active">Action channels</li>
   </ol>
 
-  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in actionChannels" data-ng-click="controller.channelSelected(channel.id)">
-    <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="110px">
+  <div class="card col-lg-3 col-lg-offset-2" data-ng-repeat="channel in actionChannels" data-ng-click="controller.channelSelected(channel.id)">
+    <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="100%">
     <div class="card-block">
       <h4 class="card-title">{{channel.title}}</h4>
     </div>
@@ -80,10 +78,10 @@
 
 <div id="actionsChoicesDiv" class="container">
   <ol class="breadcrumb" data-ng-show="actions.length != 0">
-    <li class="active">Channel actions</li>
+    <li class="active">Action channels</li>
   </ol>
   <div class="alert alert-warning" role="alert" data-ng-show='actionChannelNotConnected'>
-    You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.action.channel}}" class="alert-link">here</a>
+    You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.action.channel}}" class="alert-link" target="_blank">here</a>.
   </div>
   <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.method, action.title)">
     <div class="card-block">

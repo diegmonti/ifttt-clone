@@ -13,6 +13,13 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
         });
 
         self.signIn = function () {
+            // check if the passwords are equal
+            if (self.credentials.password !== self.credentials.confirm) {
+                self.error = true;
+                $scope.errorMessage = "The provided passwords are not equal.";
+                return;
+            }
+
             $http({
                 method: 'POST',
                 url: 'api/user',
@@ -34,6 +41,6 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
                 self.error = true;
                 $scope.errorMessage = response.data.message;
             });
-        }
+        };
 
     }]);
