@@ -57,7 +57,8 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 
 		this.channelPath = channelPath;
-		scopes.add(PlusScopes.USERINFO_EMAIL);	// deprecated but maintained
+		// Deprecated but maintained
+		scopes.add(PlusScopes.USERINFO_EMAIL);
 		this.scopes = scopes;
 		this.callback = callback;
 	}
@@ -111,9 +112,10 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 		if (channelConnector == null) {
 			return;
 		}
-		
-		if(denied != null){
-			channelConnectorRepository.delete(channelConnector);	// clean the db
+
+		if (denied != null) {
+			// Clean the database
+			channelConnectorRepository.delete(channelConnector);
 			return;
 		}
 
@@ -132,19 +134,20 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 				// This should not happen
 				return;
 			}
-			
-			Credential credentials = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory)
-					.setClientSecrets(secrets).build().setAccessToken(tokenResponse.getAccessToken())
-					.setRefreshToken(tokenResponse.getRefreshToken());
-			Plus plus = new Plus.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE").build();
+
+			Credential credentials = new GoogleCredential.Builder().setTransport(httpTransport)
+					.setJsonFactory(jsonFactory).setClientSecrets(secrets).build()
+					.setAccessToken(tokenResponse.getAccessToken()).setRefreshToken(tokenResponse.getRefreshToken());
+			Plus plus = new Plus.Builder(httpTransport, jsonFactory, credentials).setApplicationName("IFTTT-CLONE")
+					.build();
 			Person person = plus.people().get("me").execute();
 			String account = null;
-			for(Emails email : person.getEmails()){
-				if(email.getType().equals("account")){
+			for (Emails email : person.getEmails()) {
+				if (email.getType().equals("account")) {
 					account = email.getValue();
 				}
 			}
-			if(account == null){
+			if (account == null) {
 				return;
 			}
 
@@ -155,7 +158,7 @@ public abstract class GoogleConnectorService implements AbstractConnectorService
 
 			channelConnectorRepository.save(channelConnector);
 		} catch (IOException e) {
-			
+			// e.printStackTrace();
 		}
 
 	}
