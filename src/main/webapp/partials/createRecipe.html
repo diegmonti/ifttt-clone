@@ -4,7 +4,7 @@
 
 <!-- title -->
 <div class="row">
-    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title" required="true"/>
+    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Titolo della ricetta" data-ng-model="recipe.title" />
 </div>
 
 <!-- IF TTT LINKS AND IMAGES-->
@@ -101,7 +101,7 @@
 </div>
 
 
-<div id='confirmDiv' class="row"> </div>
+<div id="confirmDiv" class="row"> </div>
 
 <div class="modal fade" id='ingredientsModal'>
   <div class="modal-dialog" role="document">
@@ -113,7 +113,7 @@
         <h4 class="modal-title">Ingredients</h4>
       </div>
       <div class="modal-body row">
-        <select class="col-lg-offset-1" ng-model = 'selectedIngredient'>
+        <select class="col-lg-offset-1" data-ng-model="selectedIngredient">
           <option data-ng-repeat='ingredient in recipe.trigger.ingredients' value={{ingredient.name}}>{{ingredient.name}}</option>
         </select>
       </div>

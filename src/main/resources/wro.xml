@@ -1,37 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.isdc.ro/wro wro.xsd">
-	<group name="bootstrap">
-		<js>webjar:bootstrap/4.0.0-alpha.2/js/bootstrap.min.js</js>
-		<css>webjar:bootstrap/4.0.0-alpha.2/css/bootstrap.min.css</css>
-		<css>classpath:META-INF/resources/webjars/font-awesome/4.6.3/css/font-awesome.min.css</css>
-	</group>
-	<group name="jquery">
+	<group name="lib">
 		<js>webjar:jquery/2.2.3/jquery.js</js>
-	</group>
-	<group name="angular">
+		<js>webjar:tether/1.3.2/dist/js/tether.min.js</js>
+		<js>webjar:bootstrap/4.0.0-alpha.2/js/bootstrap.min.js</js>
 		<js>webjar:angularjs/1.5.5/angular.js</js>
 		<js>webjar:angularjs/1.5.5/angular-route.js</js>
 		<js>webjar:angularjs/1.5.5/angular-resource.js</js>
-	</group>
-	<group name="tether">
-		<js>webjar:tether/1.3.2/dist/js/tether.min.js</js>
-		<css>webjar:tether/1.3.2/dist/css/tether.min.css</css>
-	</group>
-	<group name="moment">
 		<js>webjar:momentjs/2.13.0/min/moment.min.js</js>
+
+		<css>webjar:tether/1.3.2/dist/css/tether.min.css</css>
+		<css>webjar:bootstrap/4.0.0-alpha.2/css/bootstrap.min.css</css>
+		<css>classpath:META-INF/resources/webjars/font-awesome/4.6.3/css/font-awesome.min.css</css>
 	</group>
 	<group name="app">
-		<js>classpath:js/app.js</js>
-		<js>classpath:js/ChannelController.js</js>
-		<js>classpath:js/CreateRecipeController.js</js>
-		<js>classpath:js/FavoriteRecipeController.js</js>
-		<js>classpath:js/ImportPublicRecipeController.js</js>
-		<js>classpath:js/ModifyRecipeController.js</js>
-		<js>classpath:js/PreferencesController.js</js>
-		<js>classpath:js/PrivateRecipeController.js</js>
-		<js>classpath:js/PublicRecipesController.js</js>
-		<js>classpath:js/PublishRecipeController.js</js>
-		<js>classpath:js/RecipeLogController.js</js>
+		<js>/WEB-INF/js/app.js</js>
+		<js>/WEB-INF/js/controllers/**</js>
 	</group>
 </groups>
