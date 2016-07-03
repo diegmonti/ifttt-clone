@@ -21,4 +21,17 @@
 	<group name="moment">
 		<js>webjar:momentjs/2.13.0/min/moment.min.js</js>
 	</group>
+	<group name="app">
+		<js>classpath:js/app.js</js>
+		<js>classpath:js/ChannelController.js</js>
+		<js>classpath:js/CreateRecipeController.js</js>
+		<js>classpath:js/FavoriteRecipeController.js</js>
+		<js>classpath:js/ImportPublicRecipeController.js</js>
+		<js>classpath:js/ModifyRecipeController.js</js>
+		<js>classpath:js/PreferencesController.js</js>
+		<js>classpath:js/PrivateRecipeController.js</js>
+		<js>classpath:js/PublicRecipesController.js</js>
+		<js>classpath:js/PublishRecipeController.js</js>
+		<js>classpath:js/RecipeLogController.js</js>
+	</group>
 </groups>

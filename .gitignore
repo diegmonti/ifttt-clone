@@ -7,7 +7,7 @@ bin
 doc
 src/main/webapp/css
 src/main/webapp/fonts
-src/main/webapp/js/libs
+src/main/webapp/js
 src/main/resources/application.properties
 src/main/resources/twitter4j.properties
 src/main/resources/client_secret.json

@@ -82,4 +82,4 @@ It is possible to run the tests related to the channels with the command `mvn te
 This will create a set of recipes using a fake test channel and a regular channel: the result of their execution will be printed to the standard output.
 
 ## Compilation
-In order to compile the project it is sufficient to run the command `mvn package`. This will create the resulting .war file.
+In order to compile the project it is sufficient to run the command `mvn package -Dmaven.test.skip=true`. This will create the resulting .war file.
