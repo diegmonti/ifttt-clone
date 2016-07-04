@@ -127,6 +127,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         }
 
         function downloadActions() {
+        	$scope.actions = [];
             $http({
                 method: 'GET',
                 url: 'api/channels/' + $scope.recipe.action.channel
@@ -138,7 +139,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                         return;
                     }
                     $scope.actionChannelNotConnected = false;
-                    $scope.actions = [];
                     for (element in result.data.actions) {
                         if (result.data.actions.hasOwnProperty(element)) {
                             $scope.actions.push({
