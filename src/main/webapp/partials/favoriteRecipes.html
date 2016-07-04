@@ -2,6 +2,12 @@
     <h1>Your favorite recipes</h1>
     <br />
 </div>
+<div class="alert alert-danger" data-ng-show="error">
+    {{errorMessage}}
+</div>
+<div class="alert alert-info" data-ng-show="info">
+    {{infoMessage}}
+</div>
 
 <div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in favoriteRecipes"
      data-ng-click="controller.importRecipe(recipe.id)">

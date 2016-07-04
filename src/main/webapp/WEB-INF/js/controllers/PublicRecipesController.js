@@ -6,6 +6,11 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
         url: 'api/publicrecipes'
     }).then(function successCallback(response) {
         $scope.publicRecipes = response.data;
+        if ($scope.publicRecipes.length === 0) {
+            $scope.info = true;
+            $scope.infoMessage = "There are no public recipes to show.";
+            return;
+        }
         $scope.publicRecipes.forEach(function (recipe) {
             recipe.triggerChannel = 'img/' + recipe.trigger.channel + '.png';
             recipe.actionChannel = 'img/' + recipe.action.channel + '.png';
