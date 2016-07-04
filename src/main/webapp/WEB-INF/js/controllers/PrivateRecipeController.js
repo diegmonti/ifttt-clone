@@ -46,6 +46,9 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
                         url: 'api/myrecipes/' + element.id + '/on'
                     }).then(function successCallback() {
                         element.active = true;
+                    }, function errorCallback(result) {
+                        $scope.error = true;
+                        $scope.errorMessage = result.data.message;
                     });
                 }
             }
@@ -69,8 +72,9 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
                 }
             }
 
-        }, function errorCallback(response) {
-            console.log(response);
+        }, function errorCallback(result) {
+            $scope.error = true;
+            $scope.errorMessage = "There was an error.";
         });
     };
 

@@ -21,7 +21,6 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
                 $scope.channel.activate = 'api/channels/' + $routeParams.channelID + '/activate';
             } else {
                 $scope.toConnect = false;
-                //$scope.channel.deactivate = 'api/channels/' + $routeParams.channelID + '/deactivate';
             }
 
             // now i need to download all the public recipes that are contained in this channel
