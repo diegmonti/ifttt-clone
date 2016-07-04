@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.Utils;
 import iftttclone.core.Validator;
+import iftttclone.core.Validator.FieldContext;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.PublicRecipe;
@@ -125,7 +126,8 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (publicRecipe.getPublicRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				PublicRecipeTriggerField recipeTriggerField = publicRecipe.getPublicRecipeTriggerFields()
 						.get(triggerField.getParameter());
-				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
+				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName(),
+						FieldContext.TRIGGER);
 				recipeTriggerField.setParameter(triggerField.getParameter());
 				recipeTriggerField.setPublicRecipe(publicRecipe);
 				validTriggerFields++;
@@ -145,7 +147,8 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (publicRecipe.getPublicRecipeActionFields().containsKey(actionField.getParameter())) {
 				PublicRecipeActionField recipeActionField = publicRecipe.getPublicRecipeActionFields()
 						.get(actionField.getParameter());
-				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
+				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName(),
+						FieldContext.ACTION);
 				recipeActionField.setParameter(actionField.getParameter());
 				recipeActionField.setPublicRecipe(publicRecipe);
 				validActionFields++;
@@ -201,7 +204,8 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (stub.getPublicRecipeTriggerFields().containsKey(triggerField.getParameter())) {
 				PublicRecipeTriggerField recipeTriggerField = stub.getPublicRecipeTriggerFields()
 						.get(triggerField.getParameter());
-				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName());
+				Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName(),
+						FieldContext.TRIGGER);
 				recipeTriggerField.setParameter(triggerField.getParameter());
 				recipeTriggerField.setPublicRecipe(publicRecipe);
 				validTriggerFields++;
@@ -224,7 +228,8 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 			if (stub.getPublicRecipeActionFields().containsKey(actionField.getParameter())) {
 				PublicRecipeActionField recipeActionField = stub.getPublicRecipeActionFields()
 						.get(actionField.getParameter());
-				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName());
+				Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName(),
+						FieldContext.ACTION);
 				recipeActionField.setParameter(actionField.getParameter());
 				recipeActionField.setPublicRecipe(publicRecipe);
 				validActionFields++;

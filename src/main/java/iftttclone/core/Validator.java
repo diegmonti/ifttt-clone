@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 import iftttclone.channels.WeatherChannel;
-import iftttclone.exceptions.InvalidRequestException;
+import iftttclone.exceptions.InvalidFieldException;
 
 @Component
 public class Validator {
@@ -35,97 +35,109 @@ public class Validator {
 	}
 
 	/**
+	 * This enumeration contains the possible contexts of a field
+	 */
+	public static enum FieldContext {
+		TRIGGER, ACTION
+	}
+
+	/**
 	 * This method is in charge of validating the fields of a recipe, according
 	 * to the specified FieldType. If the validation is not successful an
 	 * exception is thrown.
-	 * @param value the string to validate
-	 * @param type the type of the string
-	 * @param field the name of the field
+	 * 
+	 * @param value
+	 *            the string to validate
+	 * @param type
+	 *            the type of the string
+	 * @param field
+	 *            the name of the field
+	 * @param context
+	 *            the context of the field
 	 */
-	public static void validate(String value, FieldType type, String field) {
+	public static void validate(String value, FieldType type, String field, FieldContext context) {
 		if (value == null) {
-			throw new InvalidRequestException("The field " + field + " cannot be null.");
+			throw new InvalidFieldException(field, context);
 		}
 
 		if (value.length() > MAX_VARCHAR) {
-			throw new InvalidRequestException(
-					"The field " + field + " cannot be longer than " + MAX_VARCHAR + " characters.");
+			throw new InvalidFieldException(field, context);
 		}
 
 		switch (type) {
 		case TEXT:
-			validateText(value, field);
+			validateText(value, field, context);
 			break;
 		case NULLABLETEXT:
 			// This is always correct
 			break;
 		case LONGTEXT:
-			validateText(value, field);
+			validateText(value, field, context);
 			break;
 		case EMAIL:
 			if (!isValidEmail(value)) {
-				throw new InvalidRequestException("The field " + field + " must contain a valid email.");
+				throw new InvalidFieldException(field, context);
 			}
 			break;
 		case INTEGER:
-			validateInteger(value, field);
+			validateInteger(value, field, context);
 			break;
 		case TIMESTAMP:
-			validateTimestamp(value, field);
+			validateTimestamp(value, field, context);
 			break;
 		case TIME:
-			validateTime(value, field);
+			validateTime(value, field, context);
 			break;
 		case TEMPERATURE:
 			if (!value.equals("C") && !value.equals("F")) {
-				throw new InvalidRequestException("The field " + field + " must contain a temperature unit.");
+				throw new InvalidFieldException(field, context);
 			}
 			break;
 		case LOCATION:
 			if (!WeatherChannel.isValidLocation(value)) {
-				throw new InvalidRequestException("The field " + field + " must contain a valid location.");
+				throw new InvalidFieldException(field, context);
 			}
 			break;
 		}
 	}
 
-	private static void validateText(String value, String field) {
+	private static void validateText(String value, String field, FieldContext context) {
 		if (value.equals("")) {
-			throw new InvalidRequestException("The field " + field + " cannot be empty.");
+			throw new InvalidFieldException(field, context);
 		}
 	}
 
-	private static void validateInteger(String value, String field) {
+	private static void validateInteger(String value, String field, FieldContext context) {
 		try {
 			Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			throw new InvalidRequestException("The field " + field + " must contain an integer.");
+			throw new InvalidFieldException(field, context);
 		}
 	}
 
-	private static void validateTimestamp(String value, String field) {
+	private static void validateTimestamp(String value, String field, FieldContext context) {
 		DateFormat format = new SimpleDateFormat(TIMESTAMP_FORMAT);
 		try {
 			format.parse(value);
 		} catch (ParseException e) {
-			throw new InvalidRequestException(
-					"The field " + field + " must contain a timestamp with format " + TIMESTAMP_FORMAT + ".");
+			throw new InvalidFieldException(field, context);
 		}
 	}
 
-	private static void validateTime(String value, String field) {
+	private static void validateTime(String value, String field, FieldContext context) {
 		DateFormat format = new SimpleDateFormat(TIME_FORMAT);
 		try {
 			format.parse(value);
 		} catch (ParseException e) {
-			throw new InvalidRequestException(
-					"The field " + field + " must contain a time with format " + TIME_FORMAT + ".");
+			throw new InvalidFieldException(field, context);
 		}
 	}
 
 	/**
 	 * This method checks if a string is a formally correct email address.
-	 * @param email email address
+	 * 
+	 * @param email
+	 *            email address
 	 * @return if it is valid or not
 	 */
 	public static boolean isValidEmail(String email) {

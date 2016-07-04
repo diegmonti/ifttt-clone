@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import iftttclone.core.Utils;
 import iftttclone.core.Validator;
+import iftttclone.core.Validator.FieldContext;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
 import iftttclone.entities.Channel;
@@ -94,8 +95,8 @@ public class RecipeServiceImpl implements RecipeService {
 						"The trigger field " + triggerField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeTriggerField recipeTriggerField = recipe.getRecipeTriggerFields().get(triggerField.getParameter());
-			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
-					triggerField.getName().toLowerCase());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName(),
+					FieldContext.TRIGGER);
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -123,8 +124,8 @@ public class RecipeServiceImpl implements RecipeService {
 						"The action field " + actionField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeActionField recipeActionField = recipe.getRecipeActionFields().get(actionField.getParameter());
-			Validator.validate(recipeActionField.getValue(), actionField.getType(),
-					actionField.getName().toLowerCase());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName(),
+					FieldContext.ACTION);
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}
@@ -179,8 +180,8 @@ public class RecipeServiceImpl implements RecipeService {
 						"The trigger field " + triggerField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeTriggerField recipeTriggerField = stub.getRecipeTriggerFields().get(triggerField.getParameter());
-			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(),
-					triggerField.getName().toLowerCase());
+			Validator.validate(recipeTriggerField.getValue(), triggerField.getType(), triggerField.getName(),
+					FieldContext.TRIGGER);
 			recipeTriggerField.setParameter(triggerField.getParameter());
 			recipeTriggerField.setRecipe(recipe);
 		}
@@ -202,8 +203,8 @@ public class RecipeServiceImpl implements RecipeService {
 						"The action field " + actionField.getName().toLowerCase() + " is not present.");
 			}
 			RecipeActionField recipeActionField = stub.getRecipeActionFields().get(actionField.getParameter());
-			Validator.validate(recipeActionField.getValue(), actionField.getType(),
-					actionField.getName().toLowerCase());
+			Validator.validate(recipeActionField.getValue(), actionField.getType(), actionField.getName(),
+					FieldContext.ACTION);
 			recipeActionField.setParameter(actionField.getParameter());
 			recipeActionField.setRecipe(recipe);
 		}
@@ -272,8 +273,8 @@ public class RecipeServiceImpl implements RecipeService {
 		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.ACTIVE);
 		recipeLogRepository.save(recipeLog);
 
-		// Turn on
-		recipe.setLastRun(System.currentTimeMillis());	// do not process things that happened while off
+		// Turn on and do not process things that happened while off
+		recipe.setLastRun(System.currentTimeMillis()); 
 		recipe.setActive(true);
 		recipeRepository.save(recipe);
 	}
