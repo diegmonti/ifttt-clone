@@ -10,13 +10,15 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         $scope.actions = [];
         $scope.triggerChannelNotConnected = false;
 
-        function downloadChannels() {
+        function downloadChannels($event) {
+        	console.log($event.target);
             $scope.channels = [];
             $http({
                 method: 'GET',
                 url: 'api/channels'
             }).then(
                 function successCallback(result) {
+                	$($event.target).prop('disabled', true);
                     result.data.forEach(function (element) {
                         if (self.currentSelected === "trigger" && element.triggers) {
                             $scope.triggerChannels.push({
@@ -259,14 +261,14 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             });
         }
 
-        self.selectTriggerClicked = function () {
+        self.selectTriggerClicked = function ($event) {
             self.currentSelected = "trigger";
-            downloadChannels();
+            downloadChannels($event);
         };
 
-        self.selectActionClicked = function () {
+        self.selectActionClicked = function ($event) {
             self.currentSelected = "action";
-            downloadChannels();
+            downloadChannels($event);
         };
 
         self.channelSelected = function (id) {
@@ -309,10 +311,12 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             }
             $('#acceptTriggerButton').hide();
 
-            var link = $('<a>').attr({
+            /*var link = $('<a>').attr({
                 class: 'btn btn-link'
-            }).text('that').on('click', self.selectActionClicked);
+            }).text('that').on('click', self.selectActionClicked);*/
+            var link = $('<button data-ng-click="controller.selectActionClicked($event)" class="btn btn-link">that</button>');
             $('#actionDiv').html(link);
+            $compile(link)($scope);
         };
 
         self.actionSelected = function (id, name) {
