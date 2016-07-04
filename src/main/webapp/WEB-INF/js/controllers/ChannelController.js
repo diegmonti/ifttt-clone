@@ -23,10 +23,10 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
                 $scope.toConnect = false;
             }
 
-            // now i need to download all the public recipes that are contained in this channel
+            // now i need to download the public recipes that are contained in this channel
             return $http({
                 method: 'GET',
-                url: 'api/publicrecipes'
+                url: 'api/channels/' + $routeParams.channelID + '/publicrecipes'
             });
         },
         function (response) { // error callback
@@ -35,17 +35,15 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
     )
         .then(function successCallback(response) {
             response.data.forEach(function (element) {
-                if (element.trigger.channel === $scope.channel.id || element.action.channel === $scope.channel.id) {
-                    element.triggerChannel = 'img/' + element.trigger.channel + '.png';
-                    element.actionChannel = 'img/' + element.action.channel + '.png';
-                    $scope.recipes.push(element);
-                }
+                element.triggerChannel = 'img/' + element.trigger.channel + '.png';
+                element.actionChannel = 'img/' + element.action.channel + '.png';
+                $scope.recipes.push(element);
             });
         });
-    
+
     self.deactivateChannel = function () {
         $http.post('api/channels/' + $routeParams.channelID + '/deactivate').then(function successCallback(response) {
-        	$scope.toConnect = true;
+            $scope.toConnect = true;
             $scope.channel.activate = 'api/channels/' + $routeParams.channelID + '/activate';
         }, function (response) {
             console.log("error");

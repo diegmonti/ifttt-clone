@@ -12,6 +12,8 @@ public interface PublicRecipeService {
 	public List<PublicRecipe> getPublicRecipes(Integer page);
 
 	public List<PublicRecipe> getPublicRecipesByTitle(String title, Integer page);
+	
+	public List<PublicRecipe> getPublicRecipesByChannel(String channelId);
 
 	public PublicRecipe getPublicRecipe(Long publicRecipeId);
 

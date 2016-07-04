@@ -15,6 +15,7 @@ import iftttclone.core.Validator;
 import iftttclone.core.Validator.FieldContext;
 import iftttclone.entities.Action;
 import iftttclone.entities.ActionField;
+import iftttclone.entities.Channel;
 import iftttclone.entities.PublicRecipe;
 import iftttclone.entities.PublicRecipeActionField;
 import iftttclone.entities.PublicRecipeTriggerField;
@@ -24,6 +25,7 @@ import iftttclone.entities.User;
 import iftttclone.exceptions.ForbiddenException;
 import iftttclone.exceptions.InvalidRequestException;
 import iftttclone.exceptions.ResourceNotFoundException;
+import iftttclone.repositories.ChannelRepository;
 import iftttclone.repositories.PublicRecipeRepository;
 import iftttclone.repositories.UserRepository;
 import iftttclone.services.interfaces.PublicRecipeService;
@@ -31,10 +33,12 @@ import iftttclone.services.interfaces.PublicRecipeService;
 @Component
 @Transactional
 public class PublicRecipeServiceImpl implements PublicRecipeService {
-	private static final Integer PAGE_SIZE = 25;
+	private static final Integer PAGE_SIZE = 12;
 
 	@Autowired
 	private PublicRecipeRepository publicRecipeRepository;
+	@Autowired
+	private ChannelRepository channelRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -58,6 +62,19 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
 		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAllByTitleContaining(title, pageable);
+		setFavorite(publicRecipes);
+		return publicRecipes;
+	}
+	
+	@Override
+	public List<PublicRecipe> getPublicRecipesByChannel(String channelId) {
+		Channel channel = channelRepository.findOne(channelId);
+		if (channel == null) {
+			throw new InvalidRequestException("The channel is unknown.");
+		}
+		// Get only the first six results
+		Pageable pageable = new PageRequest(0, 6);
+		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAllByChannel(channel, pageable);
 		setFavorite(publicRecipes);
 		return publicRecipes;
 	}
