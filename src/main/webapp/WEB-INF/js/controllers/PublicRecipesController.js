@@ -11,7 +11,8 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
             recipe.actionChannel = 'img/' + recipe.action.channel + '.png';
         });
     }, function errorCallback(result) {
-        console.error(result);
+        $scope.error = true;
+        $scope.errorMessage = result.data.message;
     });
 
     self.importRecipe = function (recipeId) {
