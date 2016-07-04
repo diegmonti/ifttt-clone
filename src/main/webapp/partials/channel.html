@@ -14,12 +14,15 @@
       <p>{{channel.description}}</p>
     </div>
 
-    <!-- only if the user is authenticated i can tell him if he is connected to this service or not -->
-    <div class="row" data-ng-show="authenticated">
+    <!-- only if the user is authenticated I can tell him if he is connected to this service or not, show only if it needs connection -->
+    <div class="row" data-ng-show="authenticated && channel.withConnection">
       <form method="post" action={{channel.activate}} data-ng-show="toConnect">
         <input type="submit" class="btn btn-primary" value="Connect"/>
       </form>
-      <a data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="">Connected</a>
+      <button data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="controller.deactivateChannel()">Disconnect</button>
+      <!--<form method="post" action={{channel.deactivate}} data-ng-show="!toConnect">
+        <input type="submit" class="btn btn-primary" value="Disconnect"/>
+      </form>-->
     </div>
 
   </div>

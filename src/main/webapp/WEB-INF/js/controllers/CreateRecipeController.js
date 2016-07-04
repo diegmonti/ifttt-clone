@@ -11,7 +11,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         $scope.triggerChannelNotConnected = false;
 
         function downloadChannels($event) {
-        	console.log($event.target);
             $scope.channels = [];
             $http({
                 method: 'GET',
@@ -311,9 +310,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             }
             $('#acceptTriggerButton').hide();
 
-            /*var link = $('<a>').attr({
-                class: 'btn btn-link'
-            }).text('that').on('click', self.selectActionClicked);*/
             var link = $('<button data-ng-click="controller.selectActionClicked($event)" class="btn btn-link">that</button>');
             $('#actionDiv').html(link);
             $compile(link)($scope);
