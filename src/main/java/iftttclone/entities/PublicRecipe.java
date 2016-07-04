@@ -1,6 +1,7 @@
 package iftttclone.entities;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,12 +11,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -77,6 +81,11 @@ public class PublicRecipe {
 	@JsonView(JsonViews.Summary.class)
 	@Column(nullable = false)
 	private Integer favorites;
+
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "public_recipe_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	private Set<User> favoriteByUser;
 
 	@JsonView(JsonViews.Summary.class)
 	@Transient
@@ -152,6 +161,14 @@ public class PublicRecipe {
 
 	public void setFavorites(Integer favorites) {
 		this.favorites = favorites;
+	}
+
+	public Set<User> getFavoriteByUser() {
+		return favoriteByUser;
+	}
+
+	public void setFavoriteByUser(Set<User> favoriteByUser) {
+		this.favoriteByUser = favoriteByUser;
 	}
 
 	public boolean isFavorite() {

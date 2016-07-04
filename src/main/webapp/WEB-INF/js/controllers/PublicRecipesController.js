@@ -18,22 +18,45 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
     self.importRecipe = function (recipeId) {
         $location.path('/importPublicRecipe/' + recipeId);
     };
-    
-    self.favoriteRecipe = function (recipe, $event) {
-		console.log(recipe.id);
-        var promise;
-        if (recipe.favorite == true)
-            promise = $http.post('api/publicrecipes/' + recipe.id + '/remove');
-        else
-            promise = $http.post('api/publicrecipes/' + recipe.id + '/add');
 
-        promise.then(function successCallback() {
-            recipe.favorite = !recipe.favorite;
+    self.favoriteRecipe = function (recipe, $event) {
+        console.log(recipe.id);
+
+        function errorCallback(response) {
+            console.error(response);
+        }
+
+        if (recipe.favorite === true) {
+            $http.post('api/publicrecipes/' + recipe.id + '/remove').then(function successCallback() {
+                recipe.favorite = false;
+                recipe.favorites--;
+            }, errorCallback);
+        } else {
+            $http.post('api/publicrecipes/' + recipe.id + '/add').then(function successCallback() {
+                recipe.favorite = true;
+                recipe.favorites++;
+            }, errorCallback);
+        }
+
+        $event.stopPropagation();
+    };
+
+    self.deleteRecipe = function (recipe, $event) {
+        $http({
+            method: 'DELETE',
+            url: 'api/publicrecipes/' + recipe.id
+        }).then(function successCallback() {
+            var i;
+            for (i = 0; i < $scope.publicRecipes.length; i++) {
+                if ($scope.publicRecipes[i] === recipe) {
+                    $scope.publicRecipes.splice(i, 1);
+                    break;
+                }
+            }
         }, function errorCallback(response) {
             console.error(response);
-        })
-        
-        $event.stopPropagation();
-    }
+        });
 
+        $event.stopPropagation();
+    };
 }]);

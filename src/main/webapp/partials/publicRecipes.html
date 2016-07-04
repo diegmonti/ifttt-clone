@@ -1,5 +1,4 @@
-<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in publicRecipes"
-     data-ng-click="controller.importRecipe(recipe.id)">
+<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in publicRecipes" data-ng-click="controller.importRecipe(recipe.id)">
     <div class="card-block">
         <h2 class="card-title">{{recipe.title}}</h2>
         <p style="vertical-align:middle;font-weight:bold;font-size:2em">
@@ -7,10 +6,15 @@
         </p>
         <p class="card-text">
             <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
-            <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe(recipe, $event)' data-ng-show="authenticated">
-		      <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
-		      <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
-		    </button>
+            <div data-ng-show="authenticated">
+                <button class="btn btn-secondary" data-ng-click="controller.favoriteRecipe(recipe, $event)">
+                  <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show="!recipe.favorite"></i>
+                  <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show="recipe.favorite"></i>
+                </button>
+                <button class="btn btn-secondary" data-ng-click="controller.deleteRecipe(recipe, $event)" data-ng-show="username === recipe.user">
+                    <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+                </button>
+            </div>
         </p>
     </div>
 </div>

@@ -2,7 +2,6 @@ package iftttclone.entities;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,10 +48,9 @@ public class User {
 	private Set<ChannelConnector> channelConnectors;
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "public_recipe_id"))
 	private Set<PublicRecipe> favoritePublicRecipes;
-
 
 	public Long getId() {
 		return id;
