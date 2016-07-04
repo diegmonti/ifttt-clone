@@ -3,6 +3,10 @@ iftttclone.controller('FavoriteRecipesController', ['$scope', '$rootScope', '$ht
     var self = this;
     $http.get('api/publicrecipes/favorite').then(function successCallback(response) {
         $scope.favoriteRecipes = response.data;
+        $scope.favoriteRecipes.forEach(function (recipe) {
+            recipe.triggerChannel = 'img/' + recipe.trigger.channel + '.png';
+            recipe.actionChannel = 'img/' + recipe.action.channel + '.png';
+        });
     }, function errorCallback(result) {
         console.error(result);
     });
