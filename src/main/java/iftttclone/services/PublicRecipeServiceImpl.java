@@ -312,7 +312,12 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	@Override
 	public Set<PublicRecipe> getFavoritePublicRecipes() {
 		User user = utils.getCurrentUser();
-		return user.getFavoritePublicRecipes();
+		//return user.getFavoritePublicRecipes();
+		Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
+		for (PublicRecipe favoriteRecipe : favoritePublicRecipes) {
+			favoriteRecipe.setFavorite(true);
+		}
+		return favoritePublicRecipes;
 	}
 
 	@Override

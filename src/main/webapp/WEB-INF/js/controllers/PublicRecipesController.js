@@ -20,7 +20,6 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
     };
     
     self.favoriteRecipe = function (recipe, $event) {
-		console.log(recipe.id);
         var promise;
         if (recipe.favorite == true)
             promise = $http.post('api/publicrecipes/' + recipe.id + '/remove');
@@ -34,6 +33,6 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
         })
         
         $event.stopPropagation();
-    }
+    };
 
 }]);
