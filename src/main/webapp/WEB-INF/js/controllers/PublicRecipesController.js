@@ -20,8 +20,6 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
     };
 
     self.favoriteRecipe = function (recipe, $event) {
-        console.log(recipe.id);
-
         function errorCallback(response) {
             console.error(response);
         }

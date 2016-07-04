@@ -14,5 +14,21 @@ iftttclone.controller('FavoriteRecipesController', ['$scope', '$rootScope', '$ht
     self.importRecipe = function (recipeId) {
         $location.path('/importPublicRecipe/' + recipeId);
     };
+    
+    self.favoriteRecipe = function (recipe, $event) {
+        var promise;
+        if (recipe.favorite == true)
+            promise = $http.post('api/publicrecipes/' + recipe.id + '/remove');
+        else
+            promise = $http.post('api/publicrecipes/' + recipe.id + '/add');
+
+        promise.then(function successCallback() {
+            recipe.favorite = !recipe.favorite;
+        }, function errorCallback(response) {
+            console.error(response);
+        })
+        
+        $event.stopPropagation();
+    };
 
 }]);
