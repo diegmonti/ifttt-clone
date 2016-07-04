@@ -210,6 +210,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                             f1(index, element);
                         }
                     }
+                    $('#confirmDiv').empty();
                     div = $('<div>').attr({class: 'row', id: 'acceptActionButton'});
                     button = $('<button>').attr({
                         class: 'btn btn-primary col-lg-4 col-lg-offset-3'
@@ -331,6 +332,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 class: 'btn btn-primary col-lg-4 col-lg-offset-3'
             }).text('Confirm');
             button.on('click', createRecipe);
+            //$('#confirmDiv').empty().append(button);
             $('#confirmDiv').append(button);
         };
 
