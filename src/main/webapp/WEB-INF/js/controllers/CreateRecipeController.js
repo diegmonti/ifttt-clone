@@ -179,6 +179,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                         button.append($('<i>').attr({'class': 'fa fa-flask'}));
                         button.on('click', function () {
                             $scope.inputSelected = input;
+                            $scope.model = index;
                         });
 
                         $(input).change(function () {
@@ -332,14 +333,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 class: 'btn btn-primary col-lg-4 col-lg-offset-3'
             }).text('Confirm');
             button.on('click', createRecipe);
-            //$('#confirmDiv').empty().append(button);
             $('#confirmDiv').append(button);
         };
 
         self.insertIngredient = function () {
             var $txt, caretPos, textAreaTxt, txtToAdd;
-            // in $scope.inputSelected i have the input where i should place the new element
-            // in $scope.selectedIngredient i have the ingredient that that user wants to insert
+            // in $scope.inputSelected I have the input where I should place the new element
+            // in $scope.selectedIngredient I have the ingredient that that user wants to insert
             // $scope.model contains the selected action field
             $txt = $($scope.inputSelected);
             caretPos = $txt[0].selectionStart;
