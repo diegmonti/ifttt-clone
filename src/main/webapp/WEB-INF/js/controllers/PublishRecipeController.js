@@ -26,7 +26,9 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                 data: JSON.stringify(sentRecipe)
             }).then(function successCallback() {
                 $location.path('/myRecipes');
-            }, function errorCallback() {
+            }, function errorCallback(result) {
+                $scope.error = true;
+                $scope.errorMessage = result.data.message;
             });
 
         };
