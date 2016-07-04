@@ -1,47 +1,59 @@
 <div class="alert alert-danger" data-ng-show="controller.error">
-  {{errorMessage}}
+    {{errorMessage}}
+</div>
+<div class="alert alert-success" data-ng-show="controller.success">
+    {{successMessage}}
 </div>
 
 <form role="form" data-ng-submit="controller.updateProfile()">
-  <div class="form-group">
-    <label for="username">Username:</label> <input type="text" class="form-control" id="username" name="username"
-                                                   data-ng-model="user.username" disabled/>
-  </div>
-  <div class="form-group">
-    <label for="password">Password:</label> <input type="password" class="form-control" id="password"
-                                                   name="password" data-ng-model="user.password"/>
-  </div>
-  <div class="form-group">
-    <label for="email">Email:</label> <input type="text" class="form-control" id="email"
-                                             name="email" data-ng-model="user.email"/>
-  </div>
-  <div class="form-group">
-    <label for="timezone">Timezone:</label>
-    <select class="form-control" id="timezone" name="timezone" data-ng-model="user.timezone">
-      <option data-ng-repeat="tz in timezones">{{tz}}</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-primary">Update profile</button>
+    <div class="form-group">
+        <label for="username">Username:</label> <input type="text" class="form-control" id="username" name="username"
+                                                       data-ng-model="user.username" disabled/>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label> <input type="password" class="form-control" id="password"
+                                                       name="password" data-ng-model="user.password"/>
+    </div>
+    <div class="form-group">
+        <label for="password">Confirm Password:</label> <input type="password" class="form-control" id="confirm"
+                                                               name="confirm" data-ng-model="user.confirm"/>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label> <input type="text" class="form-control" id="email"
+                                                 name="email" data-ng-model="user.email"/>
+    </div>
+    <div class="form-group">
+        <label for="timezone">Timezone:</label>
+        <select class="form-control" id="timezone" name="timezone" data-ng-model="user.timezone">
+            <option data-ng-repeat="tz in timezones">{{tz}}</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update profile</button>
 </form>
 
-<br/> <hr /> <br />
-
-<div class="row" data-ng-show='user.channelConnectors.length > 0'>
-  <div class="col-lg-6 col-lg-offset-3">
+<div class="row" data-ng-show="user.channelConnectors.length > 0">
+    <br/>
+    <hr/>
+    <br/>
     <h1>Connected channels</h1>
-  </div>
-</div>
-<br /> <br />
-
-<div class="row" data-ng-repeat='channel in user.channelConnectors'>
-	<div data-ng-if='channel.connectionTime'>
-	  <div class="col-lg-8">
-	    <p>
-	      <img data-ng-src='img/{{channel.channel}}.png' width="65px"/> {{channel.account}} / {{channel.permits}}
-	    </p>
-	  </div>
-	  <div class="col-lg-4">
-	    <a class="btn btn-danger" data-ng-click='controller.deactivateChannel(channel.channel)'><i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
-	  </div>
-  </div>
+    <br/>
+    <table class="table table-hover">
+        <tr>
+            <th>Channel</th>
+            <th>Permission</th>
+            <th>Account</th>
+            <th>Deactivate</th>
+        </tr>
+        <tr data-ng-repeat="channel in user.channelConnectors">
+            <div data-ng-if="channel.connectionTime">
+                <td><img data-ng-src="img/{{channel.channel}}.png" width="65px" alt="{{channel.channel}}"/></td>
+                <td>{{channel.permits}}</td>
+                <td>{{channel.account}}</td>
+                <td>
+                    <a class="btn btn-danger" data-ng-click="controller.deactivateChannel(channel.channel)"><i
+                            class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+                </td>
+            </div>
+        </tr>
+    </table>
 </div>
