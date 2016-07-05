@@ -1,5 +1,8 @@
 iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http', '$timeout', '$compile', '$location', 'fieldInputFactory',
     function ($scope, $rootScope, $http, $timeout, $compile, $location, fieldInputFactory) {
+        if ($rootScope.authenticated === false) {
+            $location.path("/login");
+        }
 
         var self = this, fieldsErrorsNumber = 0;
         self.currentSelected = "";

@@ -28,9 +28,9 @@ public class PublicRecipeController {
 	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public List<PublicRecipe> getPublicRecipes(
-			@RequestParam(value = "title", required = false, defaultValue = "") String title,
+			@RequestParam(value = "search", required = false, defaultValue = "") String search,
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
-		return publicRecipeService.getPublicRecipesByTitle(title, page);
+		return publicRecipeService.getPublicRecipesBySearch(search, page);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

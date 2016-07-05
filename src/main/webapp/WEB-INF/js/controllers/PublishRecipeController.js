@@ -1,5 +1,8 @@
 iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', 'fieldInputFactory', '$compile',
     function ($scope, $rootScope, $routeParams, $location, $http, $window, fieldInputFactory, $compile) {
+        if ($rootScope.authenticated !== true) {
+            $location.path('/login');
+        }
 
         var self = this;
         $scope.recipe = {};
@@ -43,8 +46,8 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
             var txtToAdd = "{{" + $scope.selectedIngredient + "}}";
             $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
         }
-        // now i need to populate the recipe object
 
+        // now i need to populate the recipe object
         $http({
             method: 'GET',
             url: 'api/myrecipes/' + $routeParams.recipeID

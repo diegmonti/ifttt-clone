@@ -1,5 +1,9 @@
 iftttclone.controller('RecipeLogController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
     function ($scope, $rootScope, $http, $location, $routeParams) {
+        if ($rootScope.authenticated !== true) {
+            $location.path('/login');
+        }
+
         var self = this;
         $scope.recipe = {};
         $scope.logs = [];

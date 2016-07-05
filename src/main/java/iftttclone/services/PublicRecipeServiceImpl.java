@@ -56,16 +56,17 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	}
 
 	@Override
-	public List<PublicRecipe> getPublicRecipesByTitle(String title, Integer page) {
+	public List<PublicRecipe> getPublicRecipesBySearch(String search, Integer page) {
 		if (page < 0) {
 			throw new InvalidRequestException("Page cannot be negative.");
 		}
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
-		List<PublicRecipe> publicRecipes = publicRecipeRepository.findAllByTitleContaining(title, pageable);
+		List<PublicRecipe> publicRecipes = publicRecipeRepository
+				.findAllByTitleContainingOrDescriptionContaining(search, search, pageable);
 		setFavorite(publicRecipes);
 		return publicRecipes;
 	}
-	
+
 	@Override
 	public List<PublicRecipe> getPublicRecipesByChannel(String channelId) {
 		Channel channel = channelRepository.findOne(channelId);
