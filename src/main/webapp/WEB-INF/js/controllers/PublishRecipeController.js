@@ -103,7 +103,8 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                         }));
                         button.append($('<i>').attr({'class': 'fa fa-flask'}));
                         button.on('click', function () {
-                            $scope.inputSelected = input
+                            $scope.inputSelected = input;
+                            $scope.model = arg;
                         });
                         $(input).change(function () {
                             if ($(input).hasClass('ng-invalid')) {

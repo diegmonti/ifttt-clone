@@ -20,11 +20,11 @@
 </div>
 
 <!-- Trigger channels -->
-<div id="channelTriggersDiv" class="container">
+<div id="channelTriggersDiv" class="container-fluid">
   <ol class="breadcrumb" data-ng-show="triggerChannels.length != 0">
     <li class="active">Trigger channels</li>
   </ol>
-  <div>
+  <div class="container">
     <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id)">
       <img class="card-img-top" data-ng-src="img/{{channel.id}}.png" alt={{channel.title}} width="100%" style="padding:15%">
       <div class="card-block">
