@@ -270,6 +270,9 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         self.selectActionClicked = function ($event) {
             self.currentSelected = "action";
             downloadChannels($event);
+            $('html,body').animate({
+              scrollTop: $("#channelActionsDiv").offset().top
+              }, 'slow');
         };
 
         self.channelSelected = function (id) {
@@ -289,6 +292,9 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $scope.recipe.trigger.channel = id;
                 $("#triggerDiv").html(image);
                 downloadTriggers();
+
+                $('html,body').animate({scrollTop: $("#triggerChoicesDiv").offset().top}, 'slow');
+
             } else if (self.currentSelected === "action") {
                 $('#actionFieldsDiv').empty();
                 delete ($scope.recipe.recipeActionFields);
@@ -297,6 +303,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $scope.recipe.action.channel = id;
                 $("#actionDiv").html(image);
                 downloadActions();
+                $('html,body').animate({scrollTop: $("#actionsChoicesDiv").offset().top}, 'slow');
             }
         };
 
@@ -315,6 +322,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             var link = $('<button data-ng-click="controller.selectActionClicked($event)" class="btn btn-link">that</button>');
             $('#actionDiv').html(link);
             $compile(link)($scope);
+
+            $('html,body').animate({
+              scrollTop: $("body").offset().top
+              }, 'slow');
+
         };
 
         self.actionSelected = function (id, name) {

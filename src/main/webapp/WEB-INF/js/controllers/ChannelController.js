@@ -33,13 +33,13 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
             $scope.error = true;
         }
     )
-        .then(function successCallback(response) {
-            response.data.forEach(function (element) {
-                element.triggerChannel = 'img/' + element.trigger.channel + '.png';
-                element.actionChannel = 'img/' + element.action.channel + '.png';
-                $scope.recipes.push(element);
-            });
-        });
+      .then(function successCallback(response) {
+          response.data.forEach(function (element) {
+              element.triggerChannel = 'img/' + element.trigger.channel + '.png';
+              element.actionChannel = 'img/' + element.action.channel + '.png';
+              $scope.recipes.push(element);
+          });
+      });
 
     self.deactivateChannel = function () {
         $http.post('api/channels/' + $routeParams.channelID + '/deactivate').then(function successCallback(response) {

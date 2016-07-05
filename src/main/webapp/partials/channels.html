@@ -1,12 +1,9 @@
 <div class="container">
-  <div class="row" data-ng-repeat="group in channels"> <!-- the $scope.channels is a structure which contains arrays of channel objects.  -->
-    <div class="card col-lg-3 col-lg-offset-2" data-ng-repeat="channel in group" data-ng-click="controller.selectChannel(channel.id)"> <!-- Each element is  -->
-
-      <img class="card-img-top" data-ng-src={{channel.link}} alt={{channel.title}} width="100%" style="padding-top: 15px">
+    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in channels" data-ng-click="controller.selectChannel(channel.id)"> <!-- Each element is  -->
+      <img class="card-img-top" data-ng-src="img/{{channel.id}}.png" alt={{channel.title}} width="100%" style="padding:15%">
       <div class="card-block">
         <h4 class="card-title">{{channel.title}}</h4>
         <p class="card-text">{{channel.description}}</p>
       </div>
     </div>
-  </div>
 </div>
