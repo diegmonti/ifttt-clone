@@ -92,7 +92,8 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
                 }));
                 button.append($('<i>').attr({'class': 'fa fa-flask'}));
                 button.on('click', function () {
-                    $scope.inputSelected = input
+                    $scope.inputSelected = input;
+                    $scope.model = property;
                 });
 
                 $(input).change(function () {
@@ -154,6 +155,8 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
         var $txt = $($scope.inputSelected);
         var caretPos = $txt[0].selectionStart;
         var textAreaTxt = $txt.val();
+        console.log($scope.model);
+        console.log($scope.recipe.recipeActionFields);
         var txtToAdd = "{{" + $scope.selectedIngredient + "}}";
         $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
     }
