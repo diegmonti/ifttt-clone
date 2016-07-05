@@ -1,6 +1,11 @@
 iftttclone.controller('FavoriteRecipesController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
+    if ($rootScope.authenticated === false) {
+        $location.path("/login");
+    }
+
     $scope.favoriteRecipes = [];
     var self = this;
+
     $http.get('api/publicrecipes/favorite').then(function successCallback(response) {
         $scope.favoriteRecipes = response.data;
         if ($scope.favoriteRecipes.length === 0) {

@@ -4,11 +4,11 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
         var self = this;
         self.credentials = {};
 
-        if ($routeParams.registered != null) {
+        if ($routeParams.registered !== undefined) {
             self.registered = true;
         }
 
-        var authenticate = function (credentials, callback) {
+        function authenticate(credentials, callback) {
             var headers = credentials ? {
                 authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
             } : {};
@@ -20,13 +20,17 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
                 } else {
                     $rootScope.authenticated = false;
                 }
-                callback && callback();
+                if (callback !== undefined) {
+                    callback();
+                }
             }, function () {
                 $rootScope.authenticated = false;
-                callback && callback();
+                if (callback !== undefined) {
+                    callback();
+                }
             });
 
-        };
+        }
         authenticate();
 
         self.login = function () {

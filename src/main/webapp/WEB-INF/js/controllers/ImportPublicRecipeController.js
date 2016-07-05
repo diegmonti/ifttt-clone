@@ -1,9 +1,9 @@
 iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '$http', '$location', '$routeParams', '$compile', 'fieldInputFactory', function ($scope, $rootScope, $http, $location, $routeParams, $compile, fieldInputFactory) {
-
-    var self = this, fieldsErrorsNumber = 0;
     if ($rootScope.authenticated !== true) {
         $location.path('/login');
     }
+
+    var self = this, fieldsErrorsNumber = 0;
     $scope.recipe = {};
 
     $http({

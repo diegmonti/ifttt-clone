@@ -1,4 +1,7 @@
 iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
+    if ($rootScope.authenticated !== true) {
+        $location.path('/login');
+    }
 
     var self = this;
     // first, i need to download all the recipes of this guy

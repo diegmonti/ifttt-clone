@@ -36,7 +36,6 @@ iftttclone.controller('SignInController', ['$scope', '$rootScope', '$http', '$lo
                 $rootScope.authenticated = false;
                 var loginPage = "/login/registered";
                 $location.path(loginPage);
-
             }, function errorCallback(response) {
                 self.error = true;
                 $scope.errorMessage = response.data.message;

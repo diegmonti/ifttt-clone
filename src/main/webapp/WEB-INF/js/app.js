@@ -7,12 +7,7 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
             controller: 'ChannelsController',
             controllerAs: 'controller'
         })
-        .when('/login', {
-            templateUrl: 'partials/login.html',
-            controller: 'LoginController',
-            controllerAs: 'controller'
-        })
-        .when('/login/:registered', {
+        .when('/login/:registered?', {
             templateUrl: 'partials/login.html',
             controller: 'LoginController',
             controllerAs: 'controller'

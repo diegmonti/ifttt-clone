@@ -1,5 +1,8 @@
 iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window', 'fieldInputFactory', '$compile',
     function ($scope, $rootScope, $routeParams, $location, $http, $window, fieldInputFactory, $compile) {
+        if ($rootScope.authenticated !== true) {
+            $location.path('/login');
+        }
 
         var self = this;
         $scope.recipe = {};
