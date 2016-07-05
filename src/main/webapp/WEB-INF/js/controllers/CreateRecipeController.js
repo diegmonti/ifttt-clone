@@ -4,6 +4,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         var self = this, fieldsErrorsNumber = 0;
         self.currentSelected = "";
         $scope.recipe = {};
+        $scope.recipe.title = "";
         $scope.triggerChannels = [];
         $scope.actionChannels = [];
         $scope.triggers = [];
@@ -153,7 +154,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         }
 
         function downloadActionFields() {
-            $scope.recipe.recipeTriggerFields = {};
+            $scope.recipe.recipeActionFields = {};
             $http({
                 method: 'GET',
                 url: 'api/channels/' + $scope.recipe.action.channel
@@ -165,8 +166,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                         var label, input;
                         div = $('<div>').attr({class: 'input-group row'});
                         label = $('<span>').attr({class: 'input-group-addon'}).text(element.name);
-
-                        $scope.recipe.recipeActionFields = {};
                         $scope.recipe.recipeActionFields[index] = {value: ''};
 
                         input = fieldInputFactory.createInput(element.type, $scope.recipe.recipeActionFields[index], 'recipe.recipeActionFields.' + index + '.value');
@@ -255,28 +254,26 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $('#actionFieldsHeaderDiv').empty().append(ol);
                 $('#actionFieldsDiv').show();
 
-
                 $('#acceptTriggerButton').empty();
                 $('#acceptActionButton').empty();
 
+                $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
             });
         }
 
         self.selectTriggerClicked = function ($event) {
             self.currentSelected = "trigger";
             downloadChannels($event);
+            $('html,body').animate({scrollTop: $("#channelTriggersDiv").offset().top}, 'slow');
         };
 
         self.selectActionClicked = function ($event) {
             self.currentSelected = "action";
             downloadChannels($event);
-            $('html,body').animate({
-              scrollTop: $("#channelActionsDiv").offset().top
-              }, 'slow');
+            $('html,body').animate({scrollTop: $("#channelActionsDiv").offset().top}, 'slow');
         };
 
         self.channelSelected = function (id) {
-
             var image = $('<img>');
             $(image).attr("src", "img/" + id + ".png");
             $(image).attr("width", "110px");
@@ -292,7 +289,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $scope.recipe.trigger.channel = id;
                 $("#triggerDiv").html(image);
                 downloadTriggers();
-
                 $('html,body').animate({scrollTop: $("#triggerChoicesDiv").offset().top}, 'slow');
 
             } else if (self.currentSelected === "action") {
@@ -311,6 +307,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             $scope.recipe.trigger.method = id;
             $scope.recipe.trigger.name = name;
             downloadTriggerFields();
+            $('html,body').animate({scrollTop: $("#triggerFieldsContainer").offset().top}, 'slow');
         };
 
         self.acceptTriggerFields = function () {
@@ -323,9 +320,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             $('#actionDiv').html(link);
             $compile(link)($scope);
 
-            $('html,body').animate({
-              scrollTop: $("body").offset().top
-              }, 'slow');
+            $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
 
         };
 
@@ -333,6 +328,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             $scope.recipe.action.method = id;
             $scope.recipe.action.name = name;
             downloadActionFields();
+            $('html,body').animate({scrollTop: $("#actionFieldsContainer").offset().top}, 'slow');
         };
 
         self.acceptActionsFields = function () {

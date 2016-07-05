@@ -4,11 +4,11 @@
 
 <!-- title -->
 <div class="row">
-    <input type="text" class="form-control form-control-lg col-lg-6" placeholder="Title" data-ng-model="recipe.title" />
+    <input type="text" name="inputRecipeTitle" class="form-control form-control-lg col-lg-6" placeholder="Title" data-ng-model="recipe.title" required/>
 </div>
 
 <!-- IFTTT LINKS AND IMAGES-->
-<div class="row">
+<div class="row" data-ng-show="recipe.title.length != 0 ">
   <div class="col-lg-4 col-lg-offset-4">
     <span>if</span>
     <span id="triggerDiv">
@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<div style="min-height:580px">
+<div style="min-height:580px" id="triggerFieldsContainer">
   <ol class="breadcrumb" data-ng-show="recipe.recipeTriggerFields" >
     <li class="active">Trigger fields</li>
   </ol>
@@ -75,7 +75,7 @@
 </div>
 
 
-<div id="actionsChoicesDiv" class="container">
+<div id="actionsChoicesDiv" class="container" style="min-height:580px">
   <ol class="breadcrumb" data-ng-show="actions.length != 0">
     <li class="active">Action channels</li>
   </ol>
@@ -90,7 +90,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container" id="actionFieldsContainer">
   <ol class="breadcrumb" data-ng-show="recipe.recipeActionFields">
     <li class="active">Action fields</li>
   </ol>
