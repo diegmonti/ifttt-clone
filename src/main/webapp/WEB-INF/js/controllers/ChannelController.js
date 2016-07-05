@@ -9,11 +9,9 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
         url: 'api/channels/' + $routeParams.channelID
     }).then(
         function (response) { // successCallback
-            $scope.channel.id = response.data.id;
-            $scope.channel.title = response.data.name;
+            $scope.csrftoken = response.config.headers['X-XSRF-TOKEN'];
+            $scope.channel = response.data;
             $scope.channel.link = "img/" + response.data.id + ".png";
-            $scope.channel.description = response.data.description;
-            $scope.channel.withConnection = response.data.withConnection;
             $scope.error = false;
 
             if (response.data.connectionTime === null && response.data.withConnection === true) {
@@ -32,14 +30,13 @@ iftttclone.controller('ChannelController', ['$scope', '$rootScope', '$http', '$l
         function (response) { // error callback
             $scope.error = true;
         }
-    )
-      .then(function successCallback(response) {
-          response.data.forEach(function (element) {
-              element.triggerChannel = 'img/' + element.trigger.channel + '.png';
-              element.actionChannel = 'img/' + element.action.channel + '.png';
-              $scope.recipes.push(element);
-          });
-      });
+    ).then(function successCallback(response) {
+        response.data.forEach(function (element) {
+            element.triggerChannel = 'img/' + element.trigger.channel + '.png';
+            element.actionChannel = 'img/' + element.action.channel + '.png';
+            $scope.recipes.push(element);
+        });
+    });
 
     self.deactivateChannel = function () {
         $http.post('api/channels/' + $routeParams.channelID + '/deactivate').then(function successCallback(response) {

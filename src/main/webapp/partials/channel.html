@@ -3,12 +3,12 @@
 <div class="row">
    <!-- here i put the channel description -->
   <div class="col-lg-5 col-lg-offset-1">
-    <img src={{channel.link}} alt={{channel.title}}/>
+    <img src={{channel.link}} alt={{channel.name}}/>
   </div>
 
   <div class="col-lg-5">
     <div class="row">
-      <h1>{{channel.title}}</h1>
+      <h1>{{channel.name}}</h1>
     </div>
     <div class="row">
       <p>{{channel.description}}</p>
@@ -17,6 +17,7 @@
     <!-- only if the user is authenticated I can tell him if he is connected to this service or not, show only if it needs connection -->
     <div class="row" data-ng-show="authenticated && channel.withConnection">
       <form method="post" action={{channel.activate}} data-ng-show="toConnect">
+        <input type="hidden" name="_csrf" value="{{csrftoken}}"/>
         <input type="submit" class="btn btn-primary" value="Connect"/>
       </form>
       <button data-ng-show="!toConnect" class="btn btn-secondary" data-ng-click="controller.deactivateChannel()">Disconnect</button>

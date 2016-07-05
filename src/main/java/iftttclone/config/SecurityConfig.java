@@ -36,16 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// XXX CSRF must be enabled when JS works! This is only for easier testing.
-		// disable() -> and() to enable again.
-		http.httpBasic().and()
-			.authorizeRequests()
-			.antMatchers("/user/timezones").permitAll() // get timezones
-			.antMatchers("/user").permitAll() // to login
-		.and()
-		.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and()
-		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class).csrf()
-				.csrfTokenRepository(csrfTokenRepository()).disable().logout().logoutUrl("/api/user/logout");
+		http.httpBasic().and().authorizeRequests().antMatchers("/api/myrecipes/**").hasRole("USER")
+				.antMatchers("/**").permitAll().anyRequest().authenticated().and()
+				.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class).csrf()
+				.csrfTokenRepository(csrfTokenRepository()).and().logout().logoutUrl("/api/user/logout");
 	}
 
 	private CsrfTokenRepository csrfTokenRepository() {

@@ -30,7 +30,7 @@ import twitter4j.auth.AccessToken;
  * (15 every 15 minutes per user), write calls limits are shared for all
  * applications in a per user basis.
  */
-@ChannelTag(name = "Twitter", description = "Twitter is a free online social networking service that enables users to send and read short 140-character messages called \"tweets\".", withConnection = true, permits = "Read and post tweets")
+@ChannelTag(name = "Twitter", description = "Twitter is a free online social networking service that enables users to send and read short messages called \"tweets\".", withConnection = true, permits = "Read and post tweets")
 public class TwitterChannel extends AbstractChannel {
 
 	@TriggerTag(name = "New tweet by you", description = "This trigger fires when you post a new tweet.")

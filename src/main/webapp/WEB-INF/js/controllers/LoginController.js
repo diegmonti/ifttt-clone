@@ -3,6 +3,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
 
         var self = this;
         self.credentials = {};
+
         if ($routeParams.registered != null) {
             self.registered = true;
         }
@@ -27,6 +28,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
 
         };
         authenticate();
+
         self.login = function () {
             authenticate(self.credentials, function () {
                 if ($rootScope.authenticated) {
