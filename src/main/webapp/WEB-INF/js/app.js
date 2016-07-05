@@ -62,7 +62,7 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
             controller: 'PreferencesController',
             controllerAs: 'controller'
         })
-        .when('/recipeLog/:recipeId', {
+        .when('/recipeLog/:recipeId/:pageId?', {
             templateUrl: 'partials/recipeLog.html',
             controller: 'RecipeLogController',
             controllerAs: 'controller'

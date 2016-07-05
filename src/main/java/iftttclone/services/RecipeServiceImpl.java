@@ -35,7 +35,7 @@ import iftttclone.services.interfaces.RecipeService;
 @Component
 @Transactional
 public class RecipeServiceImpl implements RecipeService {
-	private static final Integer PAGE_SIZE = 25;
+	private static final Integer PAGE_SIZE = 15;
 
 	@Autowired
 	private RecipeRepository recipeRepository;
@@ -145,7 +145,7 @@ public class RecipeServiceImpl implements RecipeService {
 		recipeRepository.save(recipe);
 
 		// Add log entry
-		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.NEW);
+		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.CREATED);
 		recipeLogRepository.save(recipeLog);
 
 		return recipe;
@@ -220,7 +220,7 @@ public class RecipeServiceImpl implements RecipeService {
 		recipeRepository.save(recipe);
 
 		// Add log entry
-		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.UPDATE);
+		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.UPDATED);
 		recipeLogRepository.save(recipeLog);
 
 		return recipe;
@@ -270,7 +270,7 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Add log entry
-		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.ACTIVE);
+		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.ACTIVATED);
 		recipeLogRepository.save(recipeLog);
 
 		// Turn on and do not process things that happened while off
@@ -292,7 +292,7 @@ public class RecipeServiceImpl implements RecipeService {
 		}
 
 		// Add log entry
-		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.INACTIVE);
+		RecipeLog recipeLog = new RecipeLog(recipe, RecipeLogEvent.DEACTIVATED);
 		recipeLogRepository.save(recipeLog);
 
 		// Turn off

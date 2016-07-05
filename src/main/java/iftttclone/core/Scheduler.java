@@ -65,9 +65,9 @@ public class Scheduler {
 						runAction(recipe, triggerResult);
 						recipe.setLastRun(System.currentTimeMillis());
 						recipe.setRuns(recipe.getRuns() + 1);
-						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.RUN));
+						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.TRIGGERED));
 					} else {
-						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.CHECK));
+						recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.CHECKED));
 					}
 
 					recipeRepository.save(recipe);
@@ -76,7 +76,7 @@ public class Scheduler {
 			} catch (ReflectiveOperationException e) {
 				System.err.println("----SCHEDULER: Scheduler exception");
 				// e.printStackTrace();
-				recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.ERROR));
+				recipeLogRepository.save(new RecipeLog(recipe, RecipeLogEvent.FAILED));
 			}
 		}
 		System.err.println("----SCHEDULER: End processing recipes");
