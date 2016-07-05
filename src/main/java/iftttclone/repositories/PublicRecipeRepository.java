@@ -14,7 +14,7 @@ public interface PublicRecipeRepository extends Repository<PublicRecipe, Long> {
 
 	List<PublicRecipe> findAll(Pageable pageable);
 
-	List<PublicRecipe> findAllByTitleContaining(String title, Pageable pageable);
+	List<PublicRecipe> findAllByTitleContainingOrDescriptionContaining(String title, String description, Pageable pageable);
 	
 	List<PublicRecipe> findAllByUser(User user, Pageable pageable);
 	
