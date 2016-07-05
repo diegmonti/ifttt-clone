@@ -46,4 +46,10 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
             });
         };
 
+        /*
+        This function is called by the navbar, which see this as its controller
+        */
+        self.searchRecipe = function(){
+          $location.path('/publicRecipes/' + $rootScope.searchText);
+        }
     }]);

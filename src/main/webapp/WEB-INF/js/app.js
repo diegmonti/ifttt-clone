@@ -56,6 +56,10 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
             templateUrl: 'partials/publicRecipes.html',
             controller: 'PublicRecipesController',
             controllerAs: 'controller'
+        }).when('/publicRecipes/:search', {
+            templateUrl: 'partials/publicRecipes.html',
+            controller: 'PublicRecipesController',
+            controllerAs: 'controller'
         })
         .when('/preferences', {
             templateUrl: 'partials/preferences.html',

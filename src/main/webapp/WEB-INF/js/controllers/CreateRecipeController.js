@@ -266,28 +266,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             }, function errorCallback(result) {
                 $scope.error = true;
                 $scope.errorMessage = result.data.message;
-
-                console.log($scope.recipe);
-                (function () {
-                    var ol = $('<ol>').attr('class', 'breadcrumb');
-                    ol.append(
-                        $('<li>').attr('class', 'active').text('Trigger: ' + $scope.recipe.trigger.name)
-                    );
-                    $('#triggerFieldsHeaderDiv').empty().append(ol);
-                }());
-
-                $('#triggerFieldsDiv').show();
-
-                var ol = $('<ol>').attr('class', 'breadcrumb');
-                ol.append(
-                    $('<li>').attr('class', 'active').text('Action: ' + $scope.recipe.action.name)
-                );
-                $('#actionFieldsHeaderDiv').empty().append(ol);
-                $('#actionFieldsDiv').show();
-
-                $('#acceptTriggerButton').empty();
-                $('#acceptActionButton').empty();
-
                 $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
             });
         }

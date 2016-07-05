@@ -1,10 +1,21 @@
-iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
+iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http', '$location', '$routeParams', function ($scope, $rootScope, $http, $location, $routeParams) {
     $scope.publicRecipes = [];
     var self = this;
-    $http({
+
+    var recipesPromise;
+    if($routeParams.search == null){
+      recipesPromise = $http({
         method: 'GET',
         url: 'api/publicrecipes'
-    }).then(function successCallback(response) {
+      });
+    } else{
+        recipesPromise = $http({
+          method: 'GET',
+          url: 'api/publicrecipes?search='+$routeParams.search
+        });
+      }
+
+    recipesPromise.then(function successCallback(response) {
         $scope.publicRecipes = response.data;
         if ($scope.publicRecipes.length === 0) {
             $scope.info = true;
