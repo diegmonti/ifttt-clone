@@ -1,8 +1,9 @@
-iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$routeParams',
-    function ($rootScope, $http, $location, $routeParams) {
+iftttclone.controller('LoginController', ['$rootScope', '$scope', '$http', '$location', '$routeParams',
+    function ($rootScope, $scope, $http, $location, $routeParams) {
 
         var self = this;
         self.credentials = {};
+        $scope.searchText = '';
 
         if ($routeParams.registered !== undefined) {
             self.registered = true;
@@ -56,6 +57,6 @@ iftttclone.controller('LoginController', ['$rootScope', '$http', '$location', '$
         This function is called by the navbar, which see this as its controller
         */
         self.searchRecipe = function(){
-          $location.path('/publicRecipes/' + $rootScope.searchText);
+          $location.path('/publicRecipes/' + $scope.searchText);
         }
     }]);
