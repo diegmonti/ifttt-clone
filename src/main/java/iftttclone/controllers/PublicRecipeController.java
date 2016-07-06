@@ -1,7 +1,6 @@
 package iftttclone.controllers;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,8 +68,9 @@ public class PublicRecipeController {
 
 	@JsonView(JsonViews.Summary.class)
 	@RequestMapping(value = "/favorite", method = RequestMethod.GET)
-	public Set<PublicRecipe> getFavoritePublicRecipes() {
-		return publicRecipeService.getFavoritePublicRecipes();
+	public List<PublicRecipe> getFavoritePublicRecipes(
+			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page) {
+		return publicRecipeService.getFavoritePublicRecipes(page);
 	}
 
 	@JsonView(JsonViews.Summary.class)

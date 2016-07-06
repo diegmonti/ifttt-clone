@@ -48,7 +48,7 @@ public class User {
 	private Set<ChannelConnector> channelConnectors;
 
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "public_recipe_favorite", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "public_recipe_id"))
 	private Set<PublicRecipe> favoritePublicRecipes;
 

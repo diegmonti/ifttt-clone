@@ -311,9 +311,13 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 	}
 
 	@Override
-	public Set<PublicRecipe> getFavoritePublicRecipes() {
+	public List<PublicRecipe> getFavoritePublicRecipes(Integer page) {
+		if (page < 0) {
+			throw new InvalidRequestException("Page cannot be negative.");
+		}
 		User user = utils.getCurrentUser();
-		Set<PublicRecipe> favoritePublicRecipes = user.getFavoritePublicRecipes();
+		Pageable pageable = new PageRequest(page, PAGE_SIZE);
+		List<PublicRecipe> favoritePublicRecipes = publicRecipeRepository.findAllByFavoriteByUser(user, pageable);
 		for (PublicRecipe favoriteRecipe : favoritePublicRecipes) {
 			favoriteRecipe.setFavorite(true);
 		}

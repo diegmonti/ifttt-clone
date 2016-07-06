@@ -1,7 +1,6 @@
 package iftttclone.services.interfaces;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -33,7 +32,7 @@ public interface PublicRecipeService {
 	public void removeFromFavorite(Long publicRecipeId);
 
 	@PreAuthorize("isAuthenticated()")
-	public Set<PublicRecipe> getFavoritePublicRecipes();
+	public List<PublicRecipe> getFavoritePublicRecipes(Integer page);
 
 	@PreAuthorize("isAuthenticated()")
 	public List<PublicRecipe> getPublishedPublicRecipes(Integer page);

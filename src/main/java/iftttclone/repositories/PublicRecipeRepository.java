@@ -20,6 +20,9 @@ public interface PublicRecipeRepository extends Repository<PublicRecipe, Long> {
 	
 	@Query("FROM PublicRecipe WHERE (trigger IN (FROM Trigger WHERE channel = ?1) OR action IN (FROM Action WHERE channel = ?1)) ORDER BY favorites DESC")
 	List<PublicRecipe> findAllByChannel(Channel channel, Pageable pageable);
+	
+	@Query("SELECT pr FROM PublicRecipe pr JOIN pr.favoriteByUser u WHERE u = ?1")
+	List<PublicRecipe> findAllByFavoriteByUser(User user, Pageable pageable);
 
 	PublicRecipe findOne(Long id);
 	
