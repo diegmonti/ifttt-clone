@@ -1,5 +1,5 @@
 <div class="row">
-    <h1>Your favorite recipes</h1>
+    <h1>Recipes you published</h1>
     <br />
 </div>
 <div class="alert alert-danger" data-ng-show="error">
@@ -10,16 +10,19 @@
 </div>
 
 
-  <div class="card col-lg-10" data-ng-repeat="recipe in publishedRecipes">
-       <div class="card-block">
-          <h2 class="card-title">{{recipe.title}}</h2>
-          <p style="vertical-align:middle;font-weight:bold;font-size:2em">
-              if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
-          </p>
-          <p class="card-text">
-              <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
-          </p>
-      </div>
+  <div data-ng-repeat="recipe in publishedRecipes">
+    <div class="clearfix" data-ng-if="$index % 3 == 0"></div>
+    <div class="card col-lg-4" >
+         <div class="card-block">
+           if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
+            <h4 class="card-title">{{recipe.title}}</h4>
+            <p style="vertical-align:bold;font-size:2em">
+            </p>
+            <p class="card-text">
+                <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
+            </p>
+        </div>
+    </div>
   </div>
 
 

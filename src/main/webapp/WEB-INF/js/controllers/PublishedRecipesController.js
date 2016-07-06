@@ -1,5 +1,5 @@
-iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$http', '$rootScope',
-    function ($scope, $rootScope, $http, $rootScope) {
+iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$http', '$rootScope', '$location',
+    function ($scope, $rootScope, $http, $rootScope, $location) {
       if ($rootScope.authenticated === false) {
           $location.path("/login");
       }
