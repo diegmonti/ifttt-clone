@@ -14,7 +14,7 @@
      <div class="card-block">
         <h2 class="card-title">{{recipe.title}}</h2>
         <p style="vertical-align:middle;font-weight:bold;font-size:2em">
-            if <img data-ng-src={{recipe.triggerChannel}} width="80px"/> then <img data-ng-src={{recipe.actionChannel}} width="80px"/>
+            if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
         </p>
         <p class="card-text">
             <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
@@ -25,3 +25,7 @@
         </p>
     </div>
 </div>
+
+<div class="row">
+  <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary" data-ng-show="controller.hasNextPage" data-ng-click="controller.downloadFavoriteRecipes()">Show More</button>
+<div>
