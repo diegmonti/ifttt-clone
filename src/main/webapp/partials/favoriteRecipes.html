@@ -9,21 +9,24 @@
     {{infoMessage}}
 </div>
 
-<div class="card col-lg-4 col-lg-offset-1" data-ng-repeat="recipe in favoriteRecipes"
-     data-ng-click="controller.importRecipe(recipe.id)">
-     <div class="card-block">
-        <h2 class="card-title">{{recipe.title}}</h2>
-        <p style="vertical-align:middle;font-weight:bold;font-size:2em">
-            if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
-        </p>
-        <p class="card-text">
-            <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
-            <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe(recipe, $event)' data-ng-show="authenticated">
-		      <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
-		      <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
-		    </button>
-        </p>
-    </div>
+<div data-ng-repeat="recipe in favoriteRecipes">
+  <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
+  <div class="card col-lg-4 col-lg-offset-1"
+       data-ng-click="controller.importRecipe(recipe.id)">
+       <div class="card-block">
+          <h2 class="card-title">{{recipe.title}}</h2>
+          <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+              if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
+          </p>
+          <p class="card-text">
+              <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
+              <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe(recipe, $event)' data-ng-show="authenticated">
+  		      <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
+  		      <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
+  		    </button>
+          </p>
+      </div>
+  </div>
 </div>
 
 <div class="row">

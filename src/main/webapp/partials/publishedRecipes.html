@@ -11,8 +11,8 @@
 
 
   <div data-ng-repeat="recipe in publishedRecipes">
-    <div class="clearfix" data-ng-if="$index % 3 == 0"></div>
-    <div class="card col-lg-4" >
+    <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
+    <div class="card col-lg-4 col-lg-offset-1" >
          <div class="card-block">
            if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
             <h4 class="card-title">{{recipe.title}}</h4>
