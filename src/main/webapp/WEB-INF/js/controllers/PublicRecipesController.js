@@ -1,35 +1,62 @@
 iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http', '$location', '$routeParams', function ($scope, $rootScope, $http, $location, $routeParams) {
     $scope.publicRecipes = [];
     var self = this;
+    self.currentPage = -1;
+    self.hasNextPage = true;
 
-    var recipesPromise;
-    if($routeParams.search == null){
-      recipesPromise = $http({
-        method: 'GET',
-        url: 'api/publicrecipes'
-      });
-    } else{
+    function downloadPublicRecipes(){
+      var recipesPromise;
+      self.currentPage++;
+      checkNextPage();
+      if($routeParams.search == null){
         recipesPromise = $http({
           method: 'GET',
-          url: 'api/publicrecipes?search='+$routeParams.search
+          url: 'api/publicrecipes?page='+self.currentPage
         });
-      }
-
-    recipesPromise.then(function successCallback(response) {
-        $scope.publicRecipes = response.data;
+      } else{
+          recipesPromise = $http({
+            method: 'GET',
+            url: 'api/publicrecipes?search='+$routeParams.search+"&page="+self.currentPage
+          });
+        }
+      recipesPromise.then(function successCallback(response) {
+        response.data.forEach(function(element){
+          $scope.publicRecipes.push(element);
+        });
         if ($scope.publicRecipes.length === 0) {
             $scope.info = true;
             $scope.infoMessage = "There are no public recipes to show.";
             return;
         }
-        $scope.publicRecipes.forEach(function (recipe) {
-            recipe.triggerChannel = 'img/' + recipe.trigger.channel + '.png';
-            recipe.actionChannel = 'img/' + recipe.action.channel + '.png';
+          if ($scope.publicRecipes.length === 0) {
+              $scope.info = true;
+              $scope.infoMessage = "There are no public recipes to show.";
+              return;
+          }
+      }, function errorCallback(result) {
+          $scope.error = true;
+          $scope.errorMessage = result.data.message;
+      });
+    }
+
+    function checkNextPage(){
+      var recipesPromise;
+      if($routeParams.search == null){
+        recipesPromise = $http({
+          method: 'GET',
+          url: 'api/publicrecipes?page='+(self.currentPage+1)
         });
-    }, function errorCallback(result) {
-        $scope.error = true;
-        $scope.errorMessage = result.data.message;
-    });
+      } else{
+          recipesPromise = $http({
+            method: 'GET',
+            url: 'api/publicrecipes?search='+$routeParams.search + '&page='+(self.currentPage+1)
+          });
+        }
+        recipesPromise.then(function successCallback(response){
+          self.hasNextPage = (response.data.length != 0)
+        })
+
+    }
 
     self.importRecipe = function (recipeId) {
         $location.path('/importPublicRecipe/' + recipeId);
@@ -73,4 +100,12 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
 
         $event.stopPropagation();
     };
+
+    self.showMore = function(){
+      downloadPublicRecipes();
+    }
+
+    downloadPublicRecipes();
+
+
 }]);
