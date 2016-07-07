@@ -44,16 +44,14 @@
             <th>Account</th>
             <th>Deactivate</th>
         </tr>
-        <tr data-ng-repeat="channel in user.channelConnectors">
-            <div data-ng-if="channel.connectionTime">
-                <td><img data-ng-src="img/{{channel.channel}}.png" width="65px" alt="{{channel.channel}}"/></td>
-                <td>{{channel.permits}}</td>
-                <td>{{channel.account}}</td>
-                <td>
-                    <a class="btn btn-danger" data-ng-click="controller.deactivateChannel(channel.channel)"><i
-                            class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
-                </td>
-            </div>
+        <tr data-ng-repeat="channel in user.channelConnectors" data-ng-if="channel.connectionTime">
+            <td><img data-ng-src="img/{{channel.channel}}.png" width="65px" alt="{{channel.channel}}"/></td>
+            <td>{{channel.permits}}</td>
+            <td>{{channel.account}}</td>
+            <td>
+                <a class="btn btn-danger" data-ng-click="controller.deactivateChannel(channel.channel)"><i
+                        class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+            </td>
         </tr>
     </table>
 </div>

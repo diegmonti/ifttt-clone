@@ -1,6 +1,6 @@
 <div class="row">
-    <h1>Recipes you published</h1>
-    <br />
+    <h1>Published recipes</h1>
+    <br/>
 </div>
 <div class="alert alert-danger" data-ng-show="error">
     {{errorMessage}}
@@ -9,23 +9,24 @@
     {{infoMessage}}
 </div>
 
-
-  <div data-ng-repeat="recipe in publishedRecipes">
+<div data-ng-repeat="recipe in publishedRecipes">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
-    <div class="card col-lg-4 col-lg-offset-1" >
-         <div class="card-block">
-           if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
-            <h4 class="card-title">{{recipe.title}}</h4>
-            <p style="vertical-align:bold;font-size:2em">
+    <div class="card col-lg-4 col-lg-offset-1">
+        <div class="card-block">
+            <h2 class="card-title">{{recipe.title}}</h2>
+            <p style="vertical-align:middle;font-weight:bold;font-size:2em">
+                if <img data-ng-src="img/{{recipe.trigger.channel}}.png" width="80px"/> then <img
+                    data-ng-src="img/{{recipe.action.channel}}.png" width="80px"/>
             </p>
             <p class="card-text">
                 <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
             </p>
         </div>
     </div>
-  </div>
+</div>
 
-
-<div class="row">
-  <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary" data-ng-show="controller.morePages" data-ng-click="controller.downloadPublishedRecipes()">Show More</button>
+<div class="row" data-ng-show="controller.morePages">
+    <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary"
+            data-ng-click="controller.downloadPublishedRecipes()">Show More
+    </button>
 </div>

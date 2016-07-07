@@ -5,7 +5,7 @@ iftttclone.controller('FavoriteRecipesController', ['$scope', '$rootScope', '$ht
     $scope.favoriteRecipes = [];
     var self = this;
     self.currentPage = -1;
-    self.hasNextPage = true;
+    self.hasNextPage = false;
 
     function checkMorePages(){
       $http.get('api/publicrecipes/favorite?page='+self.currentPage+1).then(function successCallback(response) {

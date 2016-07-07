@@ -2,7 +2,7 @@ iftttclone.controller('PublicRecipesController', ['$scope', '$rootScope', '$http
     $scope.publicRecipes = [];
     var self = this;
     self.currentPage = -1;
-    self.hasNextPage = true;
+    self.hasNextPage = false;
 
     function downloadPublicRecipes(){
       var recipesPromise;
