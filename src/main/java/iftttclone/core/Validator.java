@@ -35,7 +35,7 @@ public class Validator {
 	}
 
 	/**
-	 * This enumeration contains the possible contexts of a field
+	 * This enumeration contains the possible contexts of a field.
 	 */
 	public static enum FieldContext {
 		TRIGGER, ACTION

@@ -1,6 +1,6 @@
 <div class="row">
-    <h1>Recipes you published</h1>
-    <br />
+    <h1>Published recipes</h1>
+    <br/>
 </div>
 <div class="alert alert-danger" data-ng-show="error">
     {{errorMessage}}
@@ -9,8 +9,7 @@
     {{infoMessage}}
 </div>
 
-
-  <div data-ng-repeat="recipe in publishedRecipes">
+<div data-ng-repeat="recipe in publishedRecipes">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
     <div class="card col-lg-4 col-lg-offset-1" >
          <div class="card-block">
@@ -24,9 +23,10 @@
             </p>
         </div>
     </div>
-  </div>
+</div>
 
-
-<div class="row">
-  <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary" data-ng-show="controller.morePages" data-ng-click="controller.downloadPublishedRecipes()">Show More</button>
+<div class="row" data-ng-show="controller.morePages">
+    <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary"
+            data-ng-click="controller.downloadPublishedRecipes()">Show More
+    </button>
 </div>
