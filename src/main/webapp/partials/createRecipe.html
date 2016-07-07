@@ -39,19 +39,23 @@
   <ol class="breadcrumb" data-ng-show="triggers.length != 0">
     <li class="active">Triggers</li>
   </ol>
+
   <!-- Put here the choices -->
-  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="trigger in triggers" data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
-    <div class="card-block">
-      <h4 class="card-title">{{trigger.title}}</h4>
-      <p class="card-text">{{trigger.description}}</p>
+  <div data-ng-repeat="trigger in triggers">
+    <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
+    <div class="card col-lg-5 col-lg-offset-1"  data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
+      <div class="card-block">
+        <h4 class="card-title">{{trigger.title}}</h4>
+        <p class="card-text">{{trigger.description}}</p>
+      </div>
     </div>
   </div>
 
+<div>
   <div class="alert alert-warning" role="alert" data-ng-show='triggerChannelNotConnected'>
     You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.trigger.channel}}" class="alert-link" target="_blank">here</a>.
   </div>
 </div>
-
 <div style="min-height:580px" id="triggerFieldsContainer">
   <ol class="breadcrumb" data-ng-show="recipe.recipeTriggerFields" >
     <li class="active">Trigger fields</li>
@@ -82,12 +86,16 @@
   <div class="alert alert-warning" role="alert" data-ng-show='actionChannelNotConnected'>
     You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.action.channel}}" class="alert-link" target="_blank">here</a>.
   </div>
-  <div class="card col-lg-5 col-lg-offset-1" data-ng-repeat="action in actions" data-ng-click="controller.actionSelected(action.method, action.title)">
-    <div class="card-block">
-      <h4 class="card-title">{{action.title}}</h4>
-      <p class="card-text">{{action.description}}</p>
+  <div data-ng-repeat="action in actions">
+    <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
+    <div class="card col-lg-5 col-lg-offset-1"  data-ng-click="controller.actionSelected(action.method, action.title)">
+      <div class="card-block">
+        <h4 class="card-title">{{action.title}}</h4>
+        <p class="card-text">{{action.description}}</p>
+      </div>
     </div>
   </div>
+
 </div>
 
 <div class="container" id="actionFieldsContainer">
