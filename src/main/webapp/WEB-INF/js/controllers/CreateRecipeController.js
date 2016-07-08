@@ -101,7 +101,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     // first i need to save the ingredients
                     $scope.recipe.trigger.ingredients = result.data.triggers[$scope.recipe.trigger.method].ingredients;
 
-                    function checkField(index, element) {
+                    function createTriggerField(index, element) {
                         var label, input;
                         div = $('<div>').attr({class: 'input-group row'});
                         label = $('<span>').attr({class: 'input-group-addon'}).text(element.name);
@@ -131,7 +131,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     triggerFields = result.data.triggers[$scope.recipe.trigger.method].triggerFields;
                     for (index in triggerFields) {
                         if (triggerFields.hasOwnProperty(index)) {
-                            checkField(index, triggerFields[index]);
+                            createTriggerField(index, triggerFields[index]);
                         }
                     }
                     div = $('<div>').attr({class: 'row', id: 'acceptTriggerButton'});
@@ -190,7 +190,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 function successCallback(result) {
                     var index, actionFields, element, div, button;
 
-                    function f1(index, element) {
+                    function createActionField(index, element) {
                         var label, input;
                         div = $('<div>').attr({class: 'input-group row'});
                         label = $('<span>').attr({class: 'input-group-addon'}).text(element.name);
@@ -235,7 +235,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     for (index in actionFields) {
                         if (actionFields.hasOwnProperty(index)) {
                             element = result.data.actions[$scope.recipe.action.method].actionFields[index];
-                            f1(index, element);
+                            createActionField(index, element);
                         }
                     }
                     $('#confirmDiv').empty();
@@ -269,7 +269,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $scope.error = true;
                 $scope.errorMessage = "Error in for the " + result.data.context + " " + result.data.field;
                 $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
-
 
                 // Now i need to sign as red the wrong field, and remove it from the others.
                 $('#triggerFieldsDiv').children().each(function (index, value) {
@@ -412,10 +411,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
          * It inserts in the correct place the selected ingredient.
          */
         self.insertIngredient = function () {
-            var $txt, caretPos, textAreaTxt, txtToAdd;
             // in $scope.inputSelected I have the input where I should place the new element
             // in $scope.selectedIngredient I have the ingredient that that user wants to insert
             // $scope.model contains the selected action field
+            var $txt, caretPos, textAreaTxt, txtToAdd;
             $txt = $($scope.inputSelected);
             caretPos = $txt[0].selectionStart;
             textAreaTxt = $txt.val();

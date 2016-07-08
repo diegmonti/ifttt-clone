@@ -61,7 +61,13 @@ iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$h
             $event.stopPropagation();
         };
 
-        self.deleteRecipe = function (recipe, $event) {
+        self.selectRecipe = function (recipe, $event) {
+            $scope.selectedRecipe = recipe;
+            angular.element('#deleteRecipeModalShower').trigger('click');
+            $event.stopPropagation();
+        };
+
+        self.deleteRecipe = function (recipe) {
             $http({
                 method: 'DELETE',
                 url: 'api/publicrecipes/' + recipe.id
@@ -76,8 +82,6 @@ iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$h
             }, function errorCallback(response) {
                 console.error(response);
             });
-
-            $event.stopPropagation();
         };
 
         self.downloadPublishedRecipes();

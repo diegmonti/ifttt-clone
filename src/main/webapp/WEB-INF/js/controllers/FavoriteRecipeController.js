@@ -65,5 +65,28 @@ iftttclone.controller('FavoriteRecipesController', ['$scope', '$rootScope', '$ht
             $event.stopPropagation();
         };
 
+        self.selectRecipe = function (recipe, $event) {
+            $scope.selectedRecipe = recipe;
+            angular.element('#deleteRecipeModalShower').trigger('click');
+            $event.stopPropagation();
+        };
+
+        self.deleteRecipe = function (recipe) {
+            $http({
+                method: 'DELETE',
+                url: 'api/publicrecipes/' + recipe.id
+            }).then(function successCallback() {
+                var i;
+                for (i = 0; i < $scope.favoriteRecipes.length; i++) {
+                    if ($scope.favoriteRecipes[i] === recipe) {
+                        $scope.favoriteRecipes.splice(i, 1);
+                        break;
+                    }
+                }
+            }, function errorCallback(response) {
+                console.error(response);
+            });
+        };
+
         self.downloadFavoriteRecipes();
     }]);

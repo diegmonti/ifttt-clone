@@ -67,9 +67,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             // if the function works, i need to remove it from the array
             for (i = 0; i < $scope.recipes.length; i++) {
                 if ($scope.recipes[i].id === recipeID) {
-                    console.log('removing element ' + i + 'from array');
                     $scope.recipes.splice(i, 1);
-                    console.log($scope.recipes);
                     break;
                 }
             }
@@ -86,11 +84,15 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
     };
 
     self.publishRecipe = function (recipeID) {
-        console.log('publishRecipe');
         $location.path('/publishRecipe/' + recipeID);
     };
 
     self.showLog = function (recipeId) {
         $location.path('/recipeLog/' + recipeId);
+    };
+
+    self.selectRecipe = function (recipeId) {
+        $scope.selectedRecipe = recipeId;
+        angular.element('#deleteRecipeModalShower').trigger('click');
     };
 }]);

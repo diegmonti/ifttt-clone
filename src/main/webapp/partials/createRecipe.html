@@ -89,7 +89,7 @@
   </div>
   <div data-ng-repeat="action in actions">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
-    <div class="card col-lg-5 col-lg-offset-1"  data-ng-click="controller.actionSelected(action.method, action.title)">
+    <div class="card col-lg-5 col-lg-offset-1" data-ng-click="controller.actionSelected(action.method, action.title)">
       <div class="card-block">
         <h4 class="card-title">{{action.title}}</h4>
         <p class="card-text">{{action.description}}</p>
