@@ -24,10 +24,10 @@
 </table>
 
 <nav>
-    <ul class="pager">
-        <li data-ng-show="controller.pageId > 0"><a
-                href="#recipeLog/{{recipe.id}}/{{controller.pageId - 1}}">Newer</a></li>
-        <li data-ng-show="logs.length === 15"><a href="#recipeLog/{{recipe.id}}/{{controller.pageId * 1 + 1}}">Older</a>
-        </li>
+    <ul data-ng-show="loaded" class="pager">
+        <li data-ng-show="currentPage > 0"><a href="#recipeLog/{{recipe.id}}/{{currentPage - 1}}">Previous</a></li>
+        <li class="disabled" data-ng-show="currentPage == 0"><a href="#recipeLog/{{recipe.id}}/{{currentPage}}">Previous</a></li>
+        <li data-ng-show="hasNextPage"><a href="#recipeLog/{{recipe.id}}/{{currentPage + 1}}">Next</a></li>
+        <li class="disabled" data-ng-show="!hasNextPage"><a href="#recipeLog/{{recipe.id}}/{{currentPage}}">Next</a></li>
     </ul>
 </nav>

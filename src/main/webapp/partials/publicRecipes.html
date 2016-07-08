@@ -7,7 +7,7 @@
 
 <div data-ng-repeat="recipe in publicRecipes">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
-    <div class="card col-lg-4 col-lg-offset-1" data-ng-click="controller.importRecipe(recipe.id)">
+    <div class="card col-lg-4" data-ng-class="$index % 2 == 0 ? 'col-lg-offset-1' : 'col-lg-offset-2'" data-ng-click="controller.importRecipe(recipe.id)">
         <div class="card-block">
             <h2 class="card-title">{{recipe.title}}</h2>
             <p style="vertical-align:middle;font-weight:bold;font-size:2em">
@@ -31,8 +31,12 @@
     </div>
 </div>
 
-<div class="row" data-ng-show="controller.hasNextPage">
-    <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary"
-            data-ng-click="controller.showMore()">Show More
-    </button>
-</div>
+<div class="clearfix"></div>
+<nav>
+    <ul data-ng-show="loaded" class="pager">
+        <li data-ng-show="currentPage > 0"><a href="{{prevPageLink}}">Previous</a></li>
+        <li class="disabled" data-ng-show="currentPage == 0"><a href="{{currPageLink}}">Previous</a></li>
+        <li data-ng-show="hasNextPage"><a href="{{nextPageLink}}">Next</a></li>
+        <li class="disabled" data-ng-show="!hasNextPage"><a href="{{currPageLink}}">Next</a></li>
+    </ul>
+</nav>

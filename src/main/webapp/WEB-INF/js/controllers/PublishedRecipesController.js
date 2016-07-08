@@ -1,40 +1,45 @@
-iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$http', '$rootScope', '$location',
-    function ($scope, $rootScope, $http, $rootScope, $location) {
-      if ($rootScope.authenticated === false) {
-          $location.path("/login");
-      }
+iftttclone.controller('PublishedRecipesController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
+    function ($scope, $rootScope, $http, $location, $routeParams) {
+        if ($rootScope.authenticated === false) {
+            $location.path("/login");
+        }
 
-      var self = this;
-      self.currentPage = -1;
-      self.morePages = false;
+        var self = this;
+        $scope.publishedRecipes = [];
+        $scope.hasNextPage = false;
+        $scope.loaded = false;
 
-      $scope.publishedRecipes = [];
-      $scope.info = false;
-      $scope.error = false;
-      $scope.infoMessage = "You don't have any published recipe.";
-      $scope.errorMessage = '';
+        if ($routeParams.pageId === undefined || $routeParams.pageId < 0) {
+            $scope.currentPage = 0;
+        } else {
+            $scope.currentPage = parseInt($routeParams.pageId, 10);
+        }
 
-      function checkMorePages(){
-        $http.get('api/publicrecipes/published?page='+self.currentPage+1).then(function successCallback(response) {
-          self.morePages = (response.data.length != 0);
-          console.log(response.data)
-        });
-      }
+        function checkNextPage() {
+            $http.get('api/publicrecipes/published?page=' + ($scope.currentPage + 1))
+                .then(function successCallback(response) {
+                    $scope.hasNextPage = (response.data.length !== 0);
+                });
+        }
 
-      self.downloadPublishedRecipes = function(){
-        self.currentPage++;
-        checkMorePages();
-        $http.get('api/publicrecipes/published?page='+self.currentPage)
-          .then(function successCallback(response){
-            response.data.forEach(function(element){
-              $scope.publishedRecipes.push(element);
-            });
-            if($scope.publishedRecipes == 0) $scope.info = true;
-            else {
-              //$('card').matchHeigth();
-            }
-          });
-      }
+        self.downloadPublishedRecipes = function () {
+            checkNextPage();
+            $http.get('api/publicrecipes/published?page=' + $scope.currentPage)
+                .then(function successCallback(response) {
+                    response.data.forEach(function (element) {
+                        $scope.publishedRecipes.push(element);
+                    });
+                    if ($scope.publishedRecipes.length === 0) {
+                        $scope.info = true;
+                        $scope.infoMessage = "You don't have any published recipe.";
+                    }
+                    $scope.loaded = true;
+                }, function errorCallback(response) {
+                    console.error(response);
+                    $scope.error = true;
+                    $scope.errorMessage = "There was an error loading your published recipes.";
+                });
+        };
 
-      self.downloadPublishedRecipes();
-  }]);
+        self.downloadPublishedRecipes();
+    }]);

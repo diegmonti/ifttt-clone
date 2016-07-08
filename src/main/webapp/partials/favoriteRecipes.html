@@ -11,7 +11,7 @@
 
 <div data-ng-repeat="recipe in favoriteRecipes">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
-    <div class="card col-lg-4 col-lg-offset-1" data-ng-click="controller.importRecipe(recipe.id)">
+    <div class="card col-lg-4" data-ng-class="$index % 2 == 0 ? 'col-lg-offset-1' : 'col-lg-offset-2'" data-ng-click="controller.importRecipe(recipe.id)">
         <div class="card-block">
             <h2 class="card-title">{{recipe.title}}</h2>
             <p style="vertical-align:middle;font-weight:bold;font-size:2em">
@@ -21,17 +21,24 @@
             <p class="card-text">
                 <small class="text-muted">Created by {{recipe.user}}, liked by {{recipe.favorites}} users.</small>
             </p>
-            <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe(recipe, $event)'
-                    data-ng-show="authenticated">
-                <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
-                <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
+            <button class="btn btn-secondary" data-ng-click="controller.favoriteRecipe(recipe, $event)">
+                <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show="!recipe.favorite"></i>
+                <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show="recipe.favorite"></i>
+            </button>
+            <button class="btn btn-secondary" data-ng-click="controller.deleteRecipe(recipe, $event)"
+                    data-ng-show="username === recipe.user">
+                <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
             </button>
         </div>
     </div>
 </div>
 
-<div class="row" data-ng-show="controller.hasNextPage">
-    <button type="button" name="button" class="col-lg-2 col-lg-offset-5 btn btn-primary"
-            data-ng-click="controller.downloadFavoriteRecipes()">Show More
-    </button>
-</div>
+<div class="clearfix"></div>
+<nav>
+    <ul data-ng-show="loaded" class="pager">
+        <li data-ng-show="currentPage > 0"><a href="#favoriteRecipes/{{currentPage - 1}}">Previous</a></li>
+        <li class="disabled" data-ng-show="currentPage == 0"><a href="#favoriteRecipes/{{currentPage}}">Previous</a></li>
+        <li data-ng-show="hasNextPage"><a href="#favoriteRecipes/{{currentPage + 1}}">Next</a></li>
+        <li class="disabled" data-ng-show="!hasNextPage"><a href="#favoriteRecipes/{{currentPage}}">Next</a></li>
+    </ul>
+</nav>
