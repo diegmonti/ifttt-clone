@@ -9,7 +9,7 @@
 
 <!-- IFTTT LINKS AND IMAGES-->
 <div class="row" data-ng-show="recipe.title.length != 0 ">
-  <div class="col-lg-4 col-lg-offset-4">
+  <div class="col-lg-6 col-lg-offset-4" style="vertical-align:middle;font-weight:bold;font-size:3em">
     <span>if</span>
     <span id="triggerDiv">
        <button data-ng-click="controller.selectTriggerClicked($event)" class="btn btn-link">this</button>
@@ -43,7 +43,7 @@
   <!-- Put here the choices -->
   <div data-ng-repeat="trigger in triggers">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
-    <div class="card col-lg-5 col-lg-offset-1"  data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
+    <div class="card col-lg-5 col-lg-offset-1" data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
       <div class="card-block">
         <h4 class="card-title">{{trigger.title}}</h4>
         <p class="card-text">{{trigger.description}}</p>

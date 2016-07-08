@@ -14,7 +14,6 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         $scope.actions = [];
         $scope.triggerChannelNotConnected = false;
 
-
         /**
          * This function downloads the channels. Based on the self.currentSelected
          * property, it filters them checking that they support triggers/actions
@@ -137,7 +136,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     }
                     div = $('<div>').attr({class: 'row', id: 'acceptTriggerButton'});
                     button = $('<button>').attr({
-                        class: 'btn btn-primary col-lg-4 col-lg-offset-3'
+                        class: 'btn btn-primary col-lg-4 col-lg-offset-4'
                     }).text("Confirm");
                     div.append($('<br>')).append(button);
                     $('#triggerFieldsDiv').append(div);
@@ -242,7 +241,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     $('#confirmDiv').empty();
                     div = $('<div>').attr({class: 'row', id: 'acceptActionButton'});
                     button = $('<button>').attr({
-                        class: 'btn btn-primary col-lg-4 col-lg-offset-3'
+                        class: 'btn btn-primary col-lg-4 col-lg-offset-4'
                     }).text("Confirm");
                     div.append($('<br>')).append(button);
                     $('#actionFieldsDiv').append(div);
