@@ -268,10 +268,9 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $location.path('myRecipes');
             }, function errorCallback(result) {
                 $scope.error = true;
-                $scope.errorMessage = "Error in for the " + result.data.context + " " + result.data.field;
-                $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
+                $scope.errorMessage = "There was an error in the " + result.data.context.toLowerCase() + " field " + result.data.field;
 
-
+                if(result.data.context == "TRIGGER"){
                 /* Now i need to sign as red the wrong field, and remove it from the others. */
                 $('#triggerFieldsDiv').children().each(function(index, value){
                   // i know this are divs that contain a span and an input / textArea
@@ -280,8 +279,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                   if(error == true){
                     $($(value).children()[1]).addClass('alert-danger');
                     fieldsErrorsNumber++;
+                    $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                   }
                 });
+              }else{
                 $('#actionFieldsDiv').children().each(function(index, value){
                   // i know this are divs that contain a span and an input / textArea
                   var error = false;
@@ -289,10 +290,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                   if(error == true){
                     $($(value).children()[1]).addClass('alert-danger');
                     fieldsErrorsNumber++;
+                    $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                   }
                 });
-
-
+              }
             });
         }
 
