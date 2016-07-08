@@ -16,9 +16,6 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
             // response.data contains the public recipe
             $scope.recipe = response.data;
 
-            // it is not what i need in the private recipe
-            delete ($scope.recipe.description);
-
             // now i need to create the private recipeTriggerFields and recipeActionField
             $scope.recipe.recipeTriggerFields = {};
             $scope.recipe.recipeActionFields = {};
