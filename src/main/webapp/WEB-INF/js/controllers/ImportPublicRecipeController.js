@@ -154,7 +154,7 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
             $txt = $($scope.inputSelected);
             caretPos = $txt[0].selectionStart;
             textAreaTxt = $txt.val();
-            txtToAdd = "{{" + $scope.selectedIngredient + "}}";
+            txtToAdd = "{{" + $scope.selectedIngredient.name + "}}";
             $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
         };
 
