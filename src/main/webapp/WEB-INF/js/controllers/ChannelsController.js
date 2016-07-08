@@ -1,5 +1,5 @@
-iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http', '$window',
-    function ($scope, $rootScope, $routeParams, $location, $http, $window) {
+iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routeParams', '$location', '$http',
+    function ($scope, $rootScope, $routeParams, $location, $http) {
         var self = this;
         $scope.channels = [];
         $http({
@@ -11,15 +11,14 @@ iftttclone.controller('ChannelsController', ['$scope', '$rootScope', '$routePara
                 $scope.channels.push({
                     id: response.data[i].id,
                     title: response.data[i].name,
-                    description: response.data[i].description,
+                    description: response.data[i].description
                 });
             }
         }, function errorCallback(response) {
-            console.log("error: " + response);
+            console.error(response);
         });
 
         self.selectChannel = function (channelID) {
-            console.log("selectChannel" + channelID);
             $location.path('/channel/' + channelID);
         };
     }]);

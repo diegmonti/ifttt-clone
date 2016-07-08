@@ -1,18 +1,20 @@
 iftttclone.controller('PreferencesController', ['$scope', '$rootScope', '$http', '$location', '$routeParams',
     function ($scope, $rootScope, $http, $location) {
-        if ($rootScope.authenticated !== true) {
+        if ($rootScope.authenticated === false) {
             $location.path('/login');
         }
 
+        var self = this;
         $scope.user = {};
         $scope.timezones = [];
-        var self = this;
+
         $http.get('api/user').then(function successCallback(response) {
             $scope.user = response.data;
         });
         $http.get('api/user/timezones').then(function successCallback(response) {
             $scope.timezones = response.data;
         });
+
         self.updateProfile = function () {
             var updateUser = {};
             if ($scope.user.password !== undefined) {
@@ -26,7 +28,6 @@ iftttclone.controller('PreferencesController', ['$scope', '$rootScope', '$http',
             }
             updateUser.email = $scope.user.email;
             updateUser.timezone = $scope.user.timezone;
-            console.log(updateUser);
             $http({
                 method: 'PUT',
                 url: 'api/user',
@@ -41,13 +42,14 @@ iftttclone.controller('PreferencesController', ['$scope', '$rootScope', '$http',
                 $scope.errorMessage = response.data.message;
             });
         };
+
         self.deactivateChannel = function (channel) {
             console.log('api/channels/' + channel + '/deactivate');
-            $http.post('api/channels/' + channel + '/deactivate').then(function successCallback(response) {
-                console.log(response);
-                $http.get('api/user').then(function successCallback(response) {
-                    $scope.user = response.data;
+            $http.post('api/channels/' + channel + '/deactivate')
+                .then(function successCallback() {
+                    $http.get('api/user').then(function successCallback(response) {
+                        $scope.user = response.data;
+                    });
                 });
-            });
         };
     }]);

@@ -1,6 +1,5 @@
 iftttclone.controller('LoginController', ['$rootScope', '$scope', '$http', '$location', '$routeParams',
     function ($rootScope, $scope, $http, $location, $routeParams) {
-
         var self = this;
         self.credentials = {};
         $scope.searchText = '';

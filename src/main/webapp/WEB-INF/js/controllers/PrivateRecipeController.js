@@ -1,19 +1,21 @@
 iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http', '$location', function ($scope, $rootScope, $http, $location) {
-    if ($rootScope.authenticated !== true) {
+    if ($rootScope.authenticated === false) {
         $location.path('/login');
     }
 
     var self = this;
     // first, i need to download all the recipes of this guy
     $scope.recipes = [];
+
     $http({
         method: 'GET',
         url: 'api/myrecipes'
     }).then(function successCallback(response) {
         $scope.error = false;
-        response.data.forEach(function (element) {
-            // calling this for each element of the array response.data
 
+        // calling this for each element of the array response.data
+        response.data.forEach(function (element) {
+            // now i need to update the recipe so it also contains the name of the trigger and action channels
             var recipe = {
                 id: element.id,
                 title: element.title,
@@ -25,15 +27,13 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
                 actionChannelImage: 'img/' + element.action.channel + '.png'
             };
             $scope.recipes.push(recipe);
-
-            // now i need to update the recipe so it also contains the name of the trigger and action channels
         });
-    }, function errorCallback() {
+    }, function errorCallback(response) {
+        console.error(response);
         $scope.error = true;
     });
 
     self.turnRecipeOnOff = function (recipeID) {
-
         $scope.recipes.forEach(function (element) {
             if (element.id === recipeID) {
                 if (element.active === true) {
@@ -56,7 +56,6 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
                 }
             }
         });
-
     };
 
     self.deleteRecipe = function (recipeID) {
@@ -76,6 +75,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             }
 
         }, function errorCallback(result) {
+            console.error(result);
             $scope.error = true;
             $scope.errorMessage = "There was an error.";
         });
