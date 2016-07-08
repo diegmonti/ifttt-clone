@@ -40,7 +40,6 @@
     <li class="active">Triggers</li>
   </ol>
 
-  <!-- Put here the choices -->
   <div data-ng-repeat="trigger in triggers">
     <div class="clearfix" data-ng-if="$index % 2 == 0"></div>
     <div class="card col-lg-5 col-lg-offset-1" data-ng-click="controller.triggerSelected(trigger.method, trigger.title)">
@@ -109,7 +108,7 @@
 
 <div id="confirmDiv" class="row" style="min-height:580px; margin-top:20px"> </div>
 
-<div class="modal fade" id='ingredientsModal'>
+<div class="modal fade" id="ingredientsModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
