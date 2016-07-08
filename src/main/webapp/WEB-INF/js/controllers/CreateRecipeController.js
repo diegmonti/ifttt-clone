@@ -268,8 +268,31 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 $location.path('myRecipes');
             }, function errorCallback(result) {
                 $scope.error = true;
-                $scope.errorMessage = result.data.message;
+                $scope.errorMessage = "Error in for the " + result.data.context + " " + result.data.field;
                 $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
+
+
+                /* Now i need to sign as red the wrong field, and remove it from the others. */
+                $('#triggerFieldsDiv').children().each(function(index, value){
+                  // i know this are divs that contain a span and an input / textArea
+                  var error = false;
+                  if ($($(value).children()[0]).text() === result.data.field) error = true;
+                  if(error == true){
+                    $($(value).children()[1]).addClass('alert-danger');
+                    fieldsErrorsNumber++;
+                  }
+                });
+                $('#actionFieldsDiv').children().each(function(index, value){
+                  // i know this are divs that contain a span and an input / textArea
+                  var error = false;
+                  if ($($(value).children()[0]).text() === result.data.field) error = true;
+                  if(error == true){
+                    $($(value).children()[1]).addClass('alert-danger');
+                    fieldsErrorsNumber++;
+                  }
+                });
+
+
             });
         }
 
@@ -298,12 +321,12 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         Depending on the current status of currentSelected, either the function
         downloadTriggers or downloadActions will be called.
         */
-        self.channelSelected = function (id) {
+        self.channelSelected = function (id, currentSelected) {
             var image = $('<img>');
             $(image).attr("src", "img/" + id + ".png");
             $(image).attr("width", "110px");
 
-            if (self.currentSelected === "trigger") {
+            if (currentSelected === "trigger") {
                 $('#triggerFieldsDiv').empty();
                 $('#actionFieldsDiv').empty();
 
@@ -316,7 +339,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 downloadTriggers();
                 $('html,body').animate({scrollTop: $("#triggerChoicesDiv").offset().top}, 'slow');
 
-            } else if (self.currentSelected === "action") {
+            } else if (currentSelected === "action") {
                 $('#actionFieldsDiv').empty();
                 delete ($scope.recipe.recipeActionFields);
 

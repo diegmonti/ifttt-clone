@@ -25,7 +25,7 @@
     <li class="active">Trigger channels</li>
   </ol>
   <div class="container">
-    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id)">
+    <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in triggerChannels" data-ng-click="controller.channelSelected(channel.id, 'trigger')">
       <img class="card-img-top" data-ng-src="img/{{channel.id}}.png" alt={{channel.title}} width="100%" style="padding:15%">
       <div class="card-block">
         <h4 class="card-title">{{channel.title}}</h4>
@@ -56,6 +56,7 @@
     You did not authorize this channel. Do it <a data-ng-href="#/channel/{{recipe.trigger.channel}}" class="alert-link" target="_blank">here</a>.
   </div>
 </div>
+</div>
 <div style="min-height:580px" id="triggerFieldsContainer">
   <ol class="breadcrumb" data-ng-show="recipe.recipeTriggerFields" >
     <li class="active">Trigger fields</li>
@@ -70,7 +71,7 @@
     <li class="active">Action channels</li>
   </ol>
 
-  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in actionChannels" data-ng-click="controller.channelSelected(channel.id)">
+  <div class="card col-lg-3 col-lg-offset-1" data-ng-repeat="channel in actionChannels" data-ng-click="controller.channelSelected(channel.id, 'action')">
     <img class="card-img-top" data-ng-src="img/{{channel.id}}.png" alt={{channel.title}} width="100%" style="padding:15%">
     <div class="card-block">
       <h4 class="card-title">{{channel.title}}</h4>
