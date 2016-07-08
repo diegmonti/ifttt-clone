@@ -331,7 +331,9 @@ public class PublicRecipeServiceImpl implements PublicRecipeService {
 		}
 		User user = utils.getCurrentUser();
 		Pageable pageable = new PageRequest(page, PAGE_SIZE);
-		return publicRecipeRepository.findAllByUser(user, pageable);
+		List<PublicRecipe> publishedPublicRecipes = publicRecipeRepository.findAllByUser(user, pageable);
+		setFavorite(publishedPublicRecipes);
+		return publishedPublicRecipes;
 	}
 
 }
