@@ -4,7 +4,7 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
    if ($rootScope.authenticated !== true) {
      $location.path('/login');
    }
-   
+
    var self = this;
    var fieldsErrorsNumber = 0;
    $scope.recipe = {};
@@ -78,6 +78,12 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
        inputGroup.append(span).append(input);
        $('#triggersDiv').append(inputGroup);
        $compile(input)($scope);
+
+       if ($scope.recipe.trigger.triggerFields[arg].type != 'NULLABLETEXT')){
+         $(input).addClass('alert-danger');
+         fieldsErrorsNumber++;
+       }
+
     	 $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
      }
 
@@ -117,6 +123,10 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
       	      $('#actionsDiv').append(inputGroup);
       	      $compile(input)($scope);
+              if ($scope.recipe.trigger.triggerFields[arg].type != 'NULLABLETEXT')){
+                $(input).addClass('alert-danger');
+                fieldsErrorsNumber++;
+              }
        })(arg);
 
      }

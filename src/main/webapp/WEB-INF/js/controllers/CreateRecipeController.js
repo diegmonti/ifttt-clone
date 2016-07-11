@@ -125,6 +125,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                         });
                         $compile(input)($scope);
 
+                        if (element.type != 'NULLABLETEXT' ){
+                          $(input).addClass('alert-danger');
+                          fieldsErrorsNumber++;
+                        }
+
                         div.append(label).append(input);
                         $('#triggerFieldsDiv').append(div);
                     }
@@ -225,6 +230,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                         });
 
                         $compile(input)($scope);
+
+                        if (element.type != 'NULLABLETEXT' ){
+                          $(input).addClass('alert-danger');
+                          fieldsErrorsNumber++;
+                        }
+
+
                         div.append(label).append(input);
                         if (element.type === 'TEXT' || element.type === 'LONGTEXT' || element.type === 'NULLABLETEXT') {
                             div.append(button);

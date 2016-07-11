@@ -72,6 +72,10 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
                 inputGroup.append(span).append(input);
                 $('#triggersDiv').append(inputGroup);
                 $compile(input)($scope);
+                if ($scope.recipe.trigger.triggerFields[property].type != 'NULLABLETEXT')){
+                  $(input).addClass('alert-danger');
+                  fieldsErrorsNumber++;
+                }
             })(property);
 
         }
@@ -119,6 +123,10 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
 
                 $('#actionsDiv').append(inputGroup);
                 $compile(input)($scope);
+                if ($scope.recipe.trigger.triggerFields[property].type != 'NULLABLETEXT')){
+                  $(input).addClass('alert-danger');
+                  fieldsErrorsNumber++;
+                }
             })(property);
         }
 
