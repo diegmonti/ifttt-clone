@@ -39,48 +39,47 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                 $location.path('/myRecipes');
             }, function errorCallback(response) {
                 $scope.error = true;
-                if(response.data.hasOwnProperty('message')){
-                  $scope.errorMessage  = response.data.message;
-                  $('html,body').animate({scrollTop: $('body').offset().top}, 'slow');
-                }
-                else{
-                  $scope.errorMessage  = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
-                  if(response.data.context == "TRIGGER"){
-                  /* Now i need to sign as red the wrong field, and remove it from the others. */
-                  $('#triggerFieldsDiv').children().each(function(index, value){
-                    // i know this are divs that contain a span and an input / textArea
-                    var error = false;
-                    if ($($(value).children()[0]).text() === response.data.field) error = true;
-                    if(error == true){
-                      $(value).addClass('has-danger');
-                      fieldsErrorsNumber++;
-                      $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+                if (response.data.hasOwnProperty('message')) {
+                    $scope.errorMessage = response.data.message;
+                    $('html,body').animate({scrollTop: $('body').offset().top}, 'slow');
+                } else {
+                    $scope.errorMessage = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
+                    if (response.data.context === "TRIGGER") {
+                        // Now i need to sign as red the wrong field, and remove it from the others.
+                        $('#triggerFieldsDiv').children().each(function (index, value) {
+                            // I know this are divs that contain a span and an input / textArea
+                            var error = false;
+                            if ($($(value).children()[0]).text() === response.data.field) {
+                                error = true;
+                            }
+                            if (error === true) {
+                                $(value).addClass('has-danger');
+                                // fieldsErrorsNumber++;
+                                $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+                            }
+                        });
+                    } else {
+                        $('#actionFieldsDiv').children().each(function (index, value) {
+                            // i know this are divs that contain a span and an input / textArea
+                            var error = false;
+                            if ($($(value).children()[0]).text() === response.data.field) {
+                                error = true;
+                            }
+                            if (error === true) {
+                                $(value).addClass('has-danger');
+                                // fieldsErrorsNumber++;
+                                $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+                            }
+                        });
                     }
-                  });
-                }else{
-                  $('#actionFieldsDiv').children().each(function(index, value){
-                    // i know this are divs that contain a span and an input / textArea
-                    var error = false;
-                    if ($($(value).children()[0]).text() === response.data.field) error = true;
-                    if(error == true){
-                      $(value).addClass('has-danger');
-                      fieldsErrorsNumber++;
-                      $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
-                    }
-                  });
                 }
-              }
-
-
-
             });
-
         };
 
         self.insertIngredient = function () {
-            // in $scope.inputSelected i have the input where i should place the new element
-            // in $scope.selectedIngredient i have the ingredient that that user wants to insert
-            // $scope.model contains the selected action field
+            // In $scope.inputSelected I have the input where I should place the new element.
+            // In $scope.selectedIngredient I have the ingredient that that user wants to insert.
+            // $scope.model contains the selected action field.
             var $txt, caretPos, textAreaTxt, txtToAdd;
             $txt = $($scope.inputSelected);
             caretPos = $txt[0].selectionStart;
@@ -89,7 +88,7 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
             $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
         };
 
-        // now i need to populate the recipe object
+        // Now I need to populate the recipe object
         $http({
             method: 'GET',
             url: 'api/myrecipes/' + $routeParams.recipeID
