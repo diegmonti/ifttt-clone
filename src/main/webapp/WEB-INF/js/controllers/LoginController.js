@@ -1,6 +1,5 @@
 iftttclone.controller('LoginController', ['$rootScope', '$scope', '$http', '$location', '$routeParams',
     function ($rootScope, $scope, $http, $location, $routeParams) {
-
         var self = this;
         self.credentials = {};
         $scope.searchText = '';
@@ -32,6 +31,7 @@ iftttclone.controller('LoginController', ['$rootScope', '$scope', '$http', '$loc
             });
 
         }
+
         authenticate();
 
         self.login = function () {
@@ -53,10 +53,10 @@ iftttclone.controller('LoginController', ['$rootScope', '$scope', '$http', '$loc
             });
         };
 
-        /*
-        This function is called by the navbar, which see this as its controller
-        */
-        self.searchRecipe = function(){
-          $location.path('/publicRecipes/' + $scope.searchText);
-        }
+        /**
+         * This function is called by the navbar, which see this as its controller.
+         */
+        self.searchRecipe = function () {
+            $location.path('/publicRecipes/0/' + $scope.searchText);
+        };
     }]);

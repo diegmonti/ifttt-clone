@@ -3,31 +3,28 @@
 </div>
 
 <div class="row">
-    <input  class="form-control form-control col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
+    <input class="form-control form-control col-lg-6" type='text' value={{recipe.title}} data-ng-model="recipe.title">
 </div>
 
 <br/> <hr /> <br />
 
 <div class="row">
-  <div class="col-lg-6 col-lg-offset-3">
-    <h1 style="display:inline"> if </h1>
-    <span>
-      <img data-ng-src={{triggerChannelImage}} style="height:110px"/>
-    </span>
-    <h1 style="display:inline"> then </h1>
-    <span>
-      <img data-ng-src={{actionChannelImage}} style="height:110px"/>
-    </span>
-  </div>
+  <p class="col-lg-6 col-lg-offset-4" style="vertical-align:middle;font-weight:bold;font-size:3em">
+    if <img data-ng-src="{{triggerChannelImage}}" width="110px"/> then <img
+          data-ng-src="{{actionChannelImage}}" width="110px"/>
+  </p>
+</div>
+<br/>
+<div class="row">
+  <p>{{recipe.description}}</p>
 </div>
 
-<br/> <hr /> <br />
+<hr /> <br />
 
 <div class="row">
   <ol class="breadcrumb">
     <li class="active">Trigger: {{recipe.trigger.name}}</li>
   </ol>
-
 </div>
 
 <div id="triggersDiv"></div>
@@ -45,18 +42,11 @@
 
 
 <div class="row">
-  <div class="col-lg-3 col-lg-offset-5">
+  <div class="col-lg-offset-5">
     <button class="btn btn-primary" data-ng-click="controller.importRecipe()">Import</button>
-  </div>
-  <div class="col-lg-1">
-    <button class="btn btn-secondary" data-ng-click='controller.favoriteRecipe()'>
-      <i class="fa fa-heart-o fa-2x" aria-hidden="true" data-ng-show='!recipe.favorite'></i>
-      <i class="fa fa-heart fa-2x" aria-hidden="true" data-ng-show='recipe.favorite'></i>
-    </button>
   </div>
 </div>
 
-<br />
 <div class="modal fade" id='ingredientsModal'>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -66,10 +56,27 @@
         </button>
         <h4 class="modal-title">Ingredients</h4>
       </div>
-      <div class="modal-body row">
-        <select class="col-lg-offset-1" data-ng-model = 'selectedIngredient'>
-          <option data-ng-repeat='ingredient in recipe.trigger.ingredients' value={{ingredient.name}}>{{ingredient.name}}</option>
-        </select>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="ingredient" class="col-sm-2 form-control-label">Ingredient:</label>
+            <div class="col-sm-10">
+              <select id="ingredient" class="form-control" data-ng-model="selectedIngredient" data-ng-options="ingredient.name for ingredient in recipe.trigger.ingredients"/>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 form-control-label">Description:</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">{{selectedIngredient.description}}</p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-2 form-control-label">Example:</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">{{selectedIngredient.example}}</p>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

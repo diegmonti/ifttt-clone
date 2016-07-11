@@ -53,8 +53,9 @@ This file is required in order to interact with the APIs of Twitter.
 3. On *Website* put the domain of your application
 4. On *Callback URL* put: https://[DOMAIN]/[PATH]/api/channels/twitter/authorize
 5. Under the *Keys and Access Tokens* tab you will find your *Consumer Key* and *Consumer Secret*; put them in the file.
+6. In the *Permissions* tab select *Read and Write*.
 
-It is a good idea to check *Enable Callback Locking* and to encrypt the contents of the file.
+It is also a good idea to check *Enable Callback Locking*.
 
     oauth.consumerKey=
     oauth.consumerSecret=

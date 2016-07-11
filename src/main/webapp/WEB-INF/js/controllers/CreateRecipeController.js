@@ -14,14 +14,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         $scope.actions = [];
         $scope.triggerChannelNotConnected = false;
 
-
-        /*
-        this function download the channels. based on the self.currentSelected
-        property, it filters them checking that they support triggers/actions
-        and then puts thm in the right array (triggerChannels/actionChannels).
-        using the ng-repeat directive, the interface will be populated
-        accordingly
-        */
+        /**
+         * This function downloads the channels. Based on the self.currentSelected
+         * property, it filters them checking that they support triggers/actions
+         * and then puts them in the right array (triggerChannels/actionChannels).
+         * Using the ng-repeat directive, the interface will be populated
+         * accordingly.
+         */
         function downloadChannels($event) {
             $scope.channels = [];
             $http({
@@ -29,7 +28,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 url: 'api/channels'
             }).then(
                 function successCallback(result) {
-                	$($event.target).prop('disabled', true);
+                    $($event.target).prop('disabled', true);
                     result.data.forEach(function (element) {
                         if (self.currentSelected === "trigger" && element.triggers) {
                             $scope.triggerChannels.push({
@@ -54,11 +53,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
-        /*
-        This function downloads the triggers for the selected channel and
-        puts them into the triggers array.
-        the ng-directive will populate the view accordingly
-        */
+        /**
+         * This function downloads the triggers for the selected channel and
+         * puts them into the triggers array.
+         * The ng-directive will populate the view accordingly.
+         */
         function downloadTriggers() {
             $scope.triggers = [];
             $http({
@@ -85,10 +84,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
-        /*
-        This function downloads the trigger fields and directly inserts them
-        into the view, appending them to the div with id triggerFieldsDiv.
-        */
+        /**
+         * This function downloads the trigger fields and directly inserts them
+         * into the view, appending them to the div with id triggerFieldsDiv.
+         */
         function downloadTriggerFields() {
             $scope.recipe.recipeTriggerFields = {};
             $('#triggerFieldsDiv').empty();
@@ -102,7 +101,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     // first i need to save the ingredients
                     $scope.recipe.trigger.ingredients = result.data.triggers[$scope.recipe.trigger.method].ingredients;
 
-                    function checkField(index, element) {
+                    function createTriggerField(index, element) {
                         var label, input;
                         div = $('<div>').attr({class: 'input-group row'});
                         label = $('<span>').attr({class: 'input-group-addon'}).text(element.name);
@@ -137,12 +136,12 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     triggerFields = result.data.triggers[$scope.recipe.trigger.method].triggerFields;
                     for (index in triggerFields) {
                         if (triggerFields.hasOwnProperty(index)) {
-                            checkField(index, triggerFields[index]);
+                            createTriggerField(index, triggerFields[index]);
                         }
                     }
                     div = $('<div>').attr({class: 'row', id: 'acceptTriggerButton'});
                     button = $('<button>').attr({
-                        class: 'btn btn-primary col-lg-4 col-lg-offset-3'
+                        class: 'btn btn-primary col-lg-4 col-lg-offset-4'
                     }).text("Confirm");
                     div.append($('<br>')).append(button);
                     $('#triggerFieldsDiv').append(div);
@@ -152,13 +151,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
-        /*
-        This function downloads the actions for the selected channel and
-        puts them into the actions array.
-        the ng-directive will populate the view accordingly
-        */
+        /**
+         * This function downloads the actions for the selected channel and
+         * puts them into the actions array.
+         * The ng-directive will populate the view accordingly.
+         */
         function downloadActions() {
-        	$scope.actions = [];
+            $scope.actions = [];
             $http({
                 method: 'GET',
                 url: 'api/channels/' + $scope.recipe.action.channel
@@ -183,10 +182,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
-        /*
-        This function downloads the action fields and directly inserts them
-        into the view, appending them to the div with id actionFieldsDiv.
-        */
+        /**
+         * This function downloads the action fields and directly inserts them
+         * into the view, appending them to the div with id actionFieldsDiv.
+         */
         function downloadActionFields() {
             $scope.recipe.recipeActionFields = {};
             $http({
@@ -196,7 +195,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                 function successCallback(result) {
                     var index, actionFields, element, div, button;
 
-                    function f1(index, element) {
+                    function createActionField(index, element) {
                         var label, input;
                         div = $('<div>').attr({class: 'input-group row'});
                         label = $('<span>').attr({class: 'input-group-addon'}).text(element.name);
@@ -248,13 +247,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                     for (index in actionFields) {
                         if (actionFields.hasOwnProperty(index)) {
                             element = result.data.actions[$scope.recipe.action.method].actionFields[index];
-                            f1(index, element);
+                            createActionField(index, element);
                         }
                     }
                     $('#confirmDiv').empty();
                     div = $('<div>').attr({class: 'row', id: 'acceptActionButton'});
                     button = $('<button>').attr({
-                        class: 'btn btn-primary col-lg-4 col-lg-offset-3'
+                        class: 'btn btn-primary col-lg-4 col-lg-offset-4'
                     }).text("Confirm");
                     div.append($('<br>')).append(button);
                     $('#actionFieldsDiv').append(div);
@@ -263,11 +262,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
-        /*
-        It takes the $scope.recipe and sends it to the server.
-        If the response is negative, the page is scrolled back to the top where
-        an error message will appear
-        */
+        /**
+         * This function takes the $scope.recipe and sends it to the server.
+         * If the response is negative, the page is scrolled back to the top where
+         * an error message will appear.
+         */
         function createRecipe() {
             $http({
                 method: 'POST',
@@ -309,31 +308,30 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             });
         }
 
-        /*
-        Called when the user clicks on the trigger link, it sets to 'trigger'
-        the variable currentSelected, then calls downloadChannels
-        */
+        /**
+         * This function is called when the user clicks on the trigger link, it sets to 'trigger'
+         * the variable currentSelected, then calls downloadChannels.
+         */
         self.selectTriggerClicked = function ($event) {
             self.currentSelected = "trigger";
             downloadChannels($event);
             $('html,body').animate({scrollTop: $("#channelTriggersDiv").offset().top}, 'slow');
         };
 
-        /*
-        This function is called when the user clicks on the card with the
-        action he wants
-        */
+        /**
+         * This function is called when the user clicks on the card with the action he wants.
+         */
         self.selectActionClicked = function ($event) {
             self.currentSelected = "action";
             downloadChannels($event);
             $('html,body').animate({scrollTop: $("#channelActionsDiv").offset().top}, 'slow');
         };
 
-        /*
-        called when a card representing a channel is clicked.
-        Depending on the current status of currentSelected, either the function
-        downloadTriggers or downloadActions will be called.
-        */
+        /**
+         * This function is called when a card representing a channel is clicked.
+         * Depending on the current status of currentSelected, either the function
+         * downloadTriggers or downloadActions will be called.
+         */
         self.channelSelected = function (id, currentSelected) {
             var image = $('<img>');
             $(image).attr("src", "img/" + id + ".png");
@@ -365,11 +363,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
         };
 
 
-        /*
-        This function is called when the user clicks on the card with the
-        trigger he wants. sets the proper values on $scope.recipe, then
-        calls downloadTriggerFields
-        */
+        /**
+         * This function is called when the user clicks on the card with the
+         * trigger he wants. It sets the proper values on $scope.recipe, then
+         * calls downloadTriggerFields.
+         */
         self.triggerSelected = function (id, name) {
             $scope.recipe.trigger.method = id;
             $scope.recipe.trigger.name = name;
@@ -377,10 +375,10 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             $('html,body').animate({scrollTop: $("#triggerFieldsContainer").offset().top}, 'slow');
         };
 
-        /*
-        Called when the user clicks on the confirm button for the trigger, it
-        creates a link in the top recipe notation and then scrolls to it
-        */
+        /**
+         * This function is called when the user clicks on the confirm button for the trigger, it
+         * creates a link in the top recipe notation and then scrolls to it.
+         */
         self.acceptTriggerFields = function () {
             if (fieldsErrorsNumber !== 0) {
                 return;
@@ -395,11 +393,11 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
 
         };
 
-        /*
-        This function is called when the user clicks on the card with the
-        action he wants. sets the proper values on $scope.recipe, then
-        calls downloadActionFields
-        */
+        /**
+         * This function is called when the user clicks on the card with the
+         * action he wants. It sets the proper values on $scope.recipe, then
+         * calls downloadActionFields.
+         */
         self.actionSelected = function (id, name) {
             $scope.recipe.action.method = id;
             $scope.recipe.action.name = name;
@@ -407,28 +405,30 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             $('html,body').animate({scrollTop: $("#actionFieldsContainer").offset().top}, 'slow');
         };
 
-        /*
-        Called when the user clicks on the confirm button for the action
-        triggers, it calls createRecipe
-        */
+        /**
+         * This function is called when the user clicks on the confirm button for the action
+         * triggers, it calls createRecipe.
+         */
         self.acceptActionsFields = function () {
-            if (fieldsErrorsNumber !== 0)  return;
+            if (fieldsErrorsNumber !== 0) {
+                return;
+            }
             createRecipe();
         };
 
-        /*
-        This function is called when the insert button is pressed in the modal.
-        it inserts in the correct place the selected ingredient
-        */
+        /**
+         * This function is called when the insert button is pressed in the modal.
+         * It inserts in the correct place the selected ingredient.
+         */
         self.insertIngredient = function () {
-            var $txt, caretPos, textAreaTxt, txtToAdd;
             // in $scope.inputSelected I have the input where I should place the new element
             // in $scope.selectedIngredient I have the ingredient that that user wants to insert
             // $scope.model contains the selected action field
+            var $txt, caretPos, textAreaTxt, txtToAdd;
             $txt = $($scope.inputSelected);
             caretPos = $txt[0].selectionStart;
             textAreaTxt = $txt.val();
-            txtToAdd = "{{" + $scope.selectedIngredient + "}}";
+            txtToAdd = "{{" + $scope.selectedIngredient.name + "}}";
             $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
         };
 

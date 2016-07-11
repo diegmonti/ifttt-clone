@@ -47,11 +47,7 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
             controller: 'ImportPublicRecipeController',
             controllerAs: 'controller'
         })
-        .when('/publicRecipes', {
-            templateUrl: 'partials/publicRecipes.html',
-            controller: 'PublicRecipesController',
-            controllerAs: 'controller'
-        }).when('/publicRecipes/:search', {
+        .when('/publicRecipes/:pageId?/:search?', {
             templateUrl: 'partials/publicRecipes.html',
             controller: 'PublicRecipesController',
             controllerAs: 'controller'
@@ -66,11 +62,12 @@ iftttclone.config(['$routeProvider', '$httpProvider', function ($routeProvider, 
             controller: 'RecipeLogController',
             controllerAs: 'controller'
         })
-        .when('/favoriteRecipes', {
+        .when('/favoriteRecipes/:pageId?', {
             templateUrl: 'partials/favoriteRecipes.html',
             controller: 'FavoriteRecipesController',
             controllerAs: 'controller'
-        }).when('/publishedRecipes', {
+        })
+        .when('/publishedRecipes/:pageId?', {
             templateUrl: 'partials/publishedRecipes.html',
             controller: 'PublishedRecipesController',
             controllerAs: 'controller'
