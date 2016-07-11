@@ -4,7 +4,7 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
     }
 
     var self = this;
-    // first, i need to download all the recipes of this guy
+    // First, I need to download all the recipes of this guy
     $scope.recipes = [];
 
     $http({
@@ -13,9 +13,9 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
     }).then(function successCallback(response) {
         $scope.error = false;
 
-        // calling this for each element of the array response.data
+        // Calling this for each element of the array response.data
         response.data.forEach(function (element) {
-            // now i need to update the recipe so it also contains the name of the trigger and action channels
+            // Now I need to update the recipe so it also contains the name of the trigger and action channels
             var recipe = {
                 id: element.id,
                 title: element.title,
@@ -64,14 +64,13 @@ iftttclone.controller('PrivateRecipeController', ['$scope', '$rootScope', '$http
             url: 'api/myrecipes/' + recipeID
         }).then(function successCallback() {
             var i;
-            // if the function works, i need to remove it from the array
+            // If the function works, I need to remove it from the array
             for (i = 0; i < $scope.recipes.length; i++) {
                 if ($scope.recipes[i].id === recipeID) {
                     $scope.recipes.splice(i, 1);
                     break;
                 }
             }
-
         }, function errorCallback(result) {
             console.error(result);
             $scope.error = true;

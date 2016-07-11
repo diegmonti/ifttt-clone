@@ -8,6 +8,7 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
         $scope.recipe = {};
 
         self.publishRecipe = function () {
+
             var sentRecipe, element;
             sentRecipe = JSON.parse(JSON.stringify($scope.recipe));
 
@@ -45,7 +46,7 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                 } else {
                     $scope.errorMessage = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
                     if (response.data.context === "TRIGGER") {
-                        // Now i need to sign as red the wrong field, and remove it from the others.
+                        // Now I need to sign as red the wrong field, and remove it from the others.
                         $('#triggerFieldsDiv').children().each(function (index, value) {
                             // I know this are divs that contain a span and an input / textArea
                             var error = false;
@@ -54,20 +55,18 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                             }
                             if (error === true) {
                                 $(value).addClass('has-danger');
-                                // fieldsErrorsNumber++;
                                 $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                             }
                         });
                     } else {
                         $('#actionFieldsDiv').children().each(function (index, value) {
-                            // i know this are divs that contain a span and an input / textArea
+                            // I know this are divs that contain a span and an input / textArea
                             var error = false;
                             if ($($(value).children()[0]).text() === response.data.field) {
                                 error = true;
                             }
                             if (error === true) {
                                 $(value).addClass('has-danger');
-                                // fieldsErrorsNumber++;
                                 $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                             }
                         });
