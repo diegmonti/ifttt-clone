@@ -111,24 +111,18 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
 
                         $(input).change(function () {
                             if ($(input).hasClass('ng-invalid')) {
-                                if ($(input).hasClass('alert-danger') === false) {
-                                    $(input).addClass('alert-danger');
+                                if ($(input).parent().hasClass('has-danger') === false) {
+                                    $(input).parent().addClass('has-danger');
                                     fieldsErrorsNumber++;
                                 }
                             } else {
-                                if ($(input).hasClass('alert-danger')) {
-                                    $(input).removeClass('alert-danger');
+                                if ($(input).parent().hasClass('has-danger')) {
+                                    $(input).parent().removeClass('has-danger');
                                     fieldsErrorsNumber--;
                                 }
                             }
                         });
                         $compile(input)($scope);
-
-                        if (element.type != 'NULLABLETEXT' ){
-                          $(input).addClass('alert-danger');
-                          fieldsErrorsNumber++;
-                        }
-
                         div.append(label).append(input);
                         $('#triggerFieldsDiv').append(div);
                     }
@@ -149,6 +143,18 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
 
                 }
             );
+        }
+
+        function checkTriggerFields(){
+          $('#triggerFieldsDiv').children().each(function(index, element){
+            // each element has 2 children: span and input. input must have valid class
+            if($($(element).children()[1]).hasClass('ng-invalid')){
+              if($(element).hasClass('has-danger') === false){
+                $(element).addClass('has-danger');
+                fieldsErrorsNumber++;
+              }
+            }
+          });
         }
 
         /**
@@ -216,13 +222,13 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
 
                         $(input).change(function () {
                             if ($(input).hasClass('ng-invalid')) {
-                                if ($(input).hasClass('alert-danger') === false) {
-                                    $(input).addClass('alert-danger');
+                                if ($(input).parent().hasClass('has-danger') === false) {
+                                    $(input).parent().addClass('has-danger');
                                     fieldsErrorsNumber++;
                                 }
                             } else {
-                                if ($(input).hasClass('alert-danger')) {
-                                    $(input).removeClass('alert-danger');
+                                if ($(input).parent().hasClass('has-danger')) {
+                                    $(input).parent().removeClass('has-danger');
                                     fieldsErrorsNumber--;
                                 }
                             }
@@ -230,10 +236,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
 
                         $compile(input)($scope);
 
-                        if (element.type != 'NULLABLETEXT' ){
-                          $(input).addClass('alert-danger');
-                          fieldsErrorsNumber++;
-                        }
+
 
 
                         div.append(label).append(input);
@@ -262,6 +265,19 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
             );
         }
 
+
+        function checkActionFields(){
+          $('#actionFieldsDiv').children().each(function(index, element){
+            // each element has 2 children: span and input. input must have valid class
+            if($($(element).children()[1]).hasClass('ng-invalid')){
+              if($(element).hasClass('has-danger') === false){
+                $(element).addClass('has-danger');
+                fieldsErrorsNumber++;
+              }
+            }
+          });
+        }
+
         /**
          * This function takes the $scope.recipe and sends it to the server.
          * If the response is negative, the page is scrolled back to the top where
@@ -288,7 +304,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                   var error = false;
                   if ($($(value).children()[0]).text() === result.data.field) error = true;
                   if(error == true){
-                    $($(value).children()[1]).addClass('alert-danger');
+                    $(value).addClass('has-danger');
                     fieldsErrorsNumber++;
                     $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                   }
@@ -299,7 +315,7 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
                   var error = false;
                   if ($($(value).children()[0]).text() === result.data.field) error = true;
                   if(error == true){
-                    $($(value).children()[1]).addClass('alert-danger');
+                    $(value).addClass('has-danger');
                     fieldsErrorsNumber++;
                     $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
                   }
@@ -380,17 +396,17 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
          * creates a link in the top recipe notation and then scrolls to it.
          */
         self.acceptTriggerFields = function () {
-            if (fieldsErrorsNumber !== 0) {
-                return;
-            }
-            $('#acceptTriggerButton').hide();
+          checkTriggerFields();
+          if (fieldsErrorsNumber !== 0) {
+              return;
+          }
+          $('#acceptTriggerButton').hide();
 
-            var link = $('<button data-ng-click="controller.selectActionClicked($event)" class="btn btn-link">that</button>');
-            $('#actionDiv').html(link);
-            $compile(link)($scope);
+          var link = $('<button data-ng-click="controller.selectActionClicked($event)" class="btn btn-link">that</button>');
+          $('#actionDiv').html(link);
+          $compile(link)($scope);
 
-            $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
-
+          $('html,body').animate({scrollTop: $("body").offset().top}, 'slow');
         };
 
         /**
@@ -410,10 +426,9 @@ iftttclone.controller('CreateRecipeController', ['$scope', '$rootScope', '$http'
          * triggers, it calls createRecipe.
          */
         self.acceptActionsFields = function () {
-            if (fieldsErrorsNumber !== 0) {
-                return;
-            }
-            createRecipe();
+          checkActionFields();
+          if (fieldsErrorsNumber !== 0)  return;
+          createRecipe();
         };
 
         /**

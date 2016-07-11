@@ -33,7 +33,33 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
             $location.path('/myRecipes');
          }, function errorCallback(response){
            $scope.error = true;
-           $scope.errorMessage  = response.data.message;
+           $scope.errorMessage  = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
+
+           if(response.data.context == "TRIGGER"){
+             /* Now i need to sign as red the wrong field, and remove it from the others. */
+             $('#triggersDiv').children().each(function(index, value){
+               // i know this are divs that contain a span and an input / textArea
+               var error = false;
+               if ($($(value).children()[0]).text() === response.data.field) error = true;
+               if(error == true){
+                 $(value).addClass('has-danger');
+                 fieldsErrorsNumber++;
+                 $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+               }
+             });
+           }else{
+             $('#actionsDiv').children().each(function(index, value){
+               // i know this are divs that contain a span and an input / textArea
+               var error = false;
+               if ($($(value).children()[0]).text() === response.data.field) error = true;
+               if(error == true){
+                 $(value).addClass('has-danger');
+                 fieldsErrorsNumber++;
+                 $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+               }
+             });
+           }
+
          });
      }
      else {
@@ -56,35 +82,35 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
      $scope.actionChannelImage = 'img/' + response.data.action.channel + '.png';
 
      for(var arg in $scope.recipe.recipeTriggerFields){
-  		 var inputGroup = $('<div>').attr({
-  	         class : 'input-group'
-  	       });
-       var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
-       var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
-       $(input).change(function(){
-         if($(input).hasClass('ng-invalid')){
-           if($(input).hasClass('alert-danger') == false){
-             $(input).addClass('alert-danger');
-             fieldsErrorsNumber++;
-           }
-         }
-         else {
-           if($(input).hasClass('alert-danger')){
-             $(input).removeClass('alert-danger');
-             fieldsErrorsNumber--;
-           }
-         }
-       });
-       inputGroup.append(span).append(input);
-       $('#triggersDiv').append(inputGroup);
-       $compile(input)($scope);
 
-       if ($scope.recipe.trigger.triggerFields[arg].type != 'NULLABLETEXT' && ($scope.recipe.recipeTriggerFields[arg].value == null ||$scope.recipe.recipeTriggerFields[arg].value == '')){
-         $(input).addClass('alert-danger');
-         fieldsErrorsNumber++;
-       }
+       (function(arg){
+         var inputGroup = $('<div>').attr({
+    	         class : 'input-group'
+    	       });
+         var span =  ($('<span>').attr({class : 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[arg].name));
+         var input = createInputType($scope.recipe.trigger.triggerFields[arg].type, $scope.recipe.recipeTriggerFields[arg], 'recipe.recipeTriggerFields.'+ arg +'.value');
 
-    	 $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
+         $(input).change(function(){
+           if($(input).hasClass('ng-invalid')){
+
+             if($(input).parent().hasClass('has-danger') == false){
+               $(input).parent().addClass('has-danger');
+               fieldsErrorsNumber++;
+             }
+           }
+           else {
+             if($(input).parent().hasClass('has-danger')){
+               $(input).parent().removeClass('has-danger');
+               fieldsErrorsNumber--;
+             }
+           }
+         });
+         inputGroup.append(span).append(input);
+         $('#triggersDiv').append(inputGroup);
+         $compile(input)($scope);
+      	 $scope.recipe.recipeTriggerFields[arg].title = $scope.recipe.trigger.triggerFields[arg].name;
+       })(arg);
+
      }
 
      for(arg in $scope.recipe.recipeActionFields){
@@ -104,14 +130,14 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
               $(input).change(function(){
                 if($(input).hasClass('ng-invalid')){
-                  if($(input).hasClass('alert-danger') == false){
-                    $(input).addClass('alert-danger');
+                  if($(input).parent().hasClass('has-danger') == false){
+                    $(input).parent().addClass('has-danger');
                     fieldsErrorsNumber++;
                   }
                 }
                 else {
-                  if($(input).hasClass('alert-danger')){
-                    $(input).removeClass('alert-danger');
+                  if($(input).parent().hasClass('has-danger')){
+                    $(input).parent().removeClass('has-danger');
                     fieldsErrorsNumber--;
                   }
                 }
@@ -123,10 +149,6 @@ iftttclone.controller('ModifyRecipeController', ['$scope', '$rootScope', '$route
 
       	      $('#actionsDiv').append(inputGroup);
       	      $compile(input)($scope);
-              if ($scope.recipe.action.actionFields[arg].type != 'NULLABLETEXT' && ($scope.recipe.recipeActionFields[arg].value == null ||$scope.recipe.recipeActionFields[arg].value == '')){
-                $(input).addClass('alert-danger');
-                fieldsErrorsNumber++;
-              }
        })(arg);
 
      }

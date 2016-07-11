@@ -37,9 +37,42 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                 data: JSON.stringify(sentRecipe)
             }).then(function successCallback() {
                 $location.path('/myRecipes');
-            }, function errorCallback(result) {
+            }, function errorCallback(response) {
                 $scope.error = true;
-                $scope.errorMessage = result.data.message;
+                if(response.data.hasOwnProperty('message')){
+                  $scope.errorMessage  = response.data.message;
+                  $('html,body').animate({scrollTop: $('body').offset().top}, 'slow');
+                }
+                else{
+                  $scope.errorMessage  = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
+                  if(response.data.context == "TRIGGER"){
+                  /* Now i need to sign as red the wrong field, and remove it from the others. */
+                  $('#triggerFieldsDiv').children().each(function(index, value){
+                    // i know this are divs that contain a span and an input / textArea
+                    var error = false;
+                    if ($($(value).children()[0]).text() === response.data.field) error = true;
+                    if(error == true){
+                      $(value).addClass('has-danger');
+                      fieldsErrorsNumber++;
+                      $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+                    }
+                  });
+                }else{
+                  $('#actionFieldsDiv').children().each(function(index, value){
+                    // i know this are divs that contain a span and an input / textArea
+                    var error = false;
+                    if ($($(value).children()[0]).text() === response.data.field) error = true;
+                    if(error == true){
+                      $(value).addClass('has-danger');
+                      fieldsErrorsNumber++;
+                      $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+                    }
+                  });
+                }
+              }
+
+
+
             });
 
         };
@@ -66,16 +99,14 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
             $scope.triggerChannelImage = 'img/' + response.data.trigger.channel + '.png';
             $scope.actionChannelImage = 'img/' + response.data.action.channel + '.png';
 
-            function invertErrorClass() {
-                if ($(input).hasClass('ng-invalid')) {
-                    if ($(input).hasClass('alert-danger') === false) {
-                        $(input).addClass('alert-danger');
-                        fieldsErrorsNumber++;
+            function invertErrorClass(event) {
+                if ($(event.target).hasClass('ng-invalid')) {
+                    if ($(event.target).parent().hasClass('has-danger') === false) {
+                        $(event.target).parent().addClass('has-danger');
                     }
                 } else {
-                    if ($(input).hasClass('alert-danger')) {
-                        $(input).removeClass('alert-danger');
-                        fieldsErrorsNumber--;
+                    if ($(event.target).parent().hasClass('has-danger')) {
+                        $(event.target).parent().removeClass('has-danger');
                     }
                 }
             }
@@ -91,10 +122,6 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
                 inputGroup.append(span).append(input);
                 $('#triggerFieldsDiv').append(inputGroup);
                 $compile(input)($scope);
-                if (recipe.trigger.triggerFields[arg].type != 'NULLABLETEXT' && (recipe.recipeTriggerFields[arg].value == null || recipe.recipeTriggerFields[arg].value == '')){
-                  $(input).addClass('alert-danger');
-                  fieldsErrorsNumber++;
-                }
             }
 
             for (arg in $scope.recipe.recipeTriggerFields) {
@@ -136,10 +163,6 @@ iftttclone.controller('PublishRecipeController', ['$scope', '$rootScope', '$rout
 
                 $('#actionFieldsDiv').append(inputGroup);
                 $compile(input)($scope);
-                if (recipe.action.actionFields[arg].type != 'NULLABLETEXT' && (recipe.recipeActionFields[arg].value == null ||recipe.recipeActionFields[arg].value == '')){
-                  $(input).addClass('alert-danger');
-                  fieldsErrorsNumber++;
-                }
             }
 
             for (arg in $scope.recipe.recipeActionFields) {

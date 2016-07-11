@@ -85,7 +85,10 @@ iftttclone.factory('fieldInputFactory', function () {
                 .append($('<option>').val('C').text('Celsius'))
                 .append($('<option>').val('F').text('Fahrenheit'));
         } else if (type === 'EMAIL') {
-            input = $('<input>').attr('type', 'email');
+            input = $('<input>').attr({
+              'type':'email',
+              'required' : true
+            });
         } else if (type === 'LONGTEXT') {
             input = $('<textarea>').attr({
                 rows: "5",
@@ -99,7 +102,7 @@ iftttclone.factory('fieldInputFactory', function () {
             input = $('<input>').attr({
                 'type': 'text',
                 'placeholder': 'hh:mm',
-                'pattern': '([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])',
+                'pattern': '^([0-1][0-9]:[0-5][0-9])|(2[0-3]:[0-5][0-9])$',
                 'required': true
             });
         } else if (type === 'TIMESTAMP') {

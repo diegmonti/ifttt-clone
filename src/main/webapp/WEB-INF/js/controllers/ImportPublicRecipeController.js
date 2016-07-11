@@ -55,27 +55,25 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
                 });
                 var span = ($('<span>').attr({class: 'input-group-addon'}).text($scope.recipe.trigger.triggerFields[property].name));
                 var input = fieldInputFactory.createInput($scope.recipe.trigger.triggerFields[property].type, $scope.recipe.recipeTriggerFields[property], 'recipe.recipeTriggerFields.' + property + '.value');
+
                 $(input).change(function () {
                     if ($(input).hasClass('ng-invalid')) {
-                        if ($(input).hasClass('alert-danger') == false) {
-                            $(input).addClass('alert-danger');
+                        if ($(input).parent().hasClass('has-danger') == false) {
+                            $(input).parent().addClass('has-danger');
                             fieldsErrorsNumber++;
                         }
                     }
                     else {
-                        if ($(input).hasClass('alert-danger')) {
-                            $(input).removeClass('alert-danger');
+                        if ($(input).parent().hasClass('has-danger')) {
+                            $(input).parent().removeClass('has-danger');
                             fieldsErrorsNumber--;
                         }
                     }
                 });
+
                 inputGroup.append(span).append(input);
                 $('#triggersDiv').append(inputGroup);
                 $compile(input)($scope);
-                if ($scope.recipe.trigger.triggerFields[property].type != 'NULLABLETEXT' && ($scope.recipe.recipeTriggerFields[property].value == null ||$scope.recipe.recipeTriggerFields[property].value == '')){
-                  $(input).addClass('alert-danger');
-                  fieldsErrorsNumber++;
-                }
             })(property);
 
         }
@@ -102,14 +100,14 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
 
                 $(input).change(function () {
                     if ($(input).hasClass('ng-invalid')) {
-                        if ($(input).hasClass('alert-danger') == false) {
-                            $(input).addClass('alert-danger');
+                        if ($(input).parent().hasClass('has-danger') == false) {
+                            $(input).parent().addClass('has-danger');
                             fieldsErrorsNumber++;
                         }
                     }
                     else {
-                        if ($(input).hasClass('alert-danger')) {
-                            $(input).removeClass('alert-danger');
+                        if ($(input).parent().hasClass('has-danger')) {
+                            $(input).parent().removeClass('has-danger');
                             fieldsErrorsNumber--;
                         }
                     }
@@ -123,10 +121,6 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
 
                 $('#actionsDiv').append(inputGroup);
                 $compile(input)($scope);
-                if ($scope.recipe.action.actionFields[property].type != 'NULLABLETEXT' && ($scope.recipe.recipeActionFields[property].value == null ||$scope.recipe.recipeActionFields[property].value == '')){
-                  $(input).addClass('alert-danger');
-                  fieldsErrorsNumber++;
-                }
             })(property);
         }
 
@@ -150,9 +144,34 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
         }).then(function successCallback(result) {
             $location.path('myRecipes');
 
-        }, function errorCallback(result) {
+        }, function errorCallback(response) {
             $scope.error = true;
-            $scope.errorMessage = result.data.message;
+            $scope.errorMessage  = "There was an error in the " + response.data.context.toLowerCase() + " field " + response.data.field;
+
+            if(response.data.context == "TRIGGER"){
+            /* Now i need to sign as red the wrong field, and remove it from the others. */
+            $('#triggersDiv').children().each(function(index, value){
+              // i know this are divs that contain a span and an input / textArea
+              var error = false;
+              if ($($(value).children()[0]).text() === response.data.field) error = true;
+              if(error == true){
+                $(value).addClass('has-danger');
+                fieldsErrorsNumber++;
+                $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+              }
+            });
+          }else{
+            $('#actionFieldsDiv').children().each(function(index, value){
+              // i know this are divs that contain a span and an input / textArea
+              var error = false;
+              if ($($(value).children()[0]).text() === response.data.field) error = true;
+              if(error == true){
+                $(value).addClass('has-danger');
+                fieldsErrorsNumber++;
+                $('html,body').animate({scrollTop: $(value).offset().top}, 'slow');
+              }
+            });
+          }
         });
     }
 
@@ -163,8 +182,6 @@ iftttclone.controller('ImportPublicRecipeController', ['$scope', '$rootScope', '
         var $txt = $($scope.inputSelected);
         var caretPos = $txt[0].selectionStart;
         var textAreaTxt = $txt.val();
-        console.log($scope.model);
-        console.log($scope.recipe.recipeActionFields);
         var txtToAdd = "{{" + $scope.selectedIngredient + "}}";
         $scope.recipe.recipeActionFields[$scope.model].value = (textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos) );
     }
